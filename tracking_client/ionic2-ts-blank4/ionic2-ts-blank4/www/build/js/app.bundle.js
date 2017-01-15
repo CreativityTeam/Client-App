@@ -57,14 +57,21 @@ var HomePage = (function () {
         this.http = http;
         this.trackLatLng = { 'latitude': 0, 'longitude': 0 };
         this.previousTrackLatLng = { 'latitude': 0, 'longitude': 0 };
-        this.socketHost = 'https://lit-plains-83504.herokuapp.com/locations';
+        this.socketHost = 'http://localhost:3000/server/api/orders/updateshiplocation/586e28470600b0151cb655c7';
         this.markers = [];
-        this.locationGet = io(this.socketHost);
+        var connect = function (ns) {
+            return io.connect(ns, {
+                query: 'ns=' + ns,
+                resource: "socket.io"
+            });
+        };
+        this.locationGetIo = connect(this.socketHost);
+        //this.locationGetIo = io(this.socketHost);
         this.initDirection();
-        this.locationGet.on('location', function (location) {
-            if ((location[0]['latitude'] !== _this.trackLatLng['latitude']) || (location[0]['longitude'] !== _this.trackLatLng['longitude'])) {
-                _this.trackLatLng = location[0];
-                console.log("Get socket " + _this.trackLatLng['latitude'] + " " + _this.trackLatLng['longitude']);
+        this.locationGetIo.on('location', function (location) {
+            console.log('Location from server: ' + location['latitude'] + ' ' + location['longitude']);
+            _this.trackLatLng = { 'latitude': location.latitude, 'longitude': location.longitude };
+            if (_this.latLng) {
                 _this.setDirection();
                 _this.addMarker();
             }
@@ -138,7 +145,7 @@ var HomePage = (function () {
                 display.setDirections(response);
             }
             else {
-                alert('Something wrong. Maybe the shipper\'s position is unknown now!');
+                console.log('Something wrong. Maybe the shipper\'s position is unknown    now!');
             }
         });
     };

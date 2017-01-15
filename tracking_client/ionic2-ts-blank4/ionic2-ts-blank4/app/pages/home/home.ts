@@ -22,21 +22,29 @@ export class HomePage {
     directionsService: any;
     directionsDisplay: any;
     latLng: any;    
-    socketHost = 'https://lit-plains-83504.herokuapp.com/locations'
-    locationGet: any;
+    socketHost = 'http://localhost:3000/server/api/orders/updateshiplocation/586e28470600b0151cb655c7'
+    locationGetIo: any;
     markers = [];
     bounds: any;
 
     constructor(private navController: NavController, private navParams: NavParams, private http: Http) {
-        this.locationGet = io(this.socketHost);
+        var connect = function (ns) {
+            return io.connect(ns, {
+               query: 'ns='+ns,
+               resource: "socket.io"
+            });
+        }
+
+        this.locationGetIo = connect(this.socketHost);
+        //this.locationGetIo = io(this.socketHost);
         this.initDirection();
-        this.locationGet.on('location', (location) => {
-            if ((location[0]['latitude'] !== this.trackLatLng['latitude']) || (location[0]['longitude'] !== this.trackLatLng['longitude'])) {
-                this.trackLatLng = location[0];
-                console.log("Get socket " + this.trackLatLng['latitude'] + " " + this.trackLatLng['longitude']);
+        this.locationGetIo.on('location', (location) => {
+            console.log('Location from server: ' + location['latitude'] + ' ' + location['longitude']);
+            this.trackLatLng = {'latitude': location.latitude, 'longitude': location.longitude};            
+            if (this.latLng){
                 this.setDirection();
                 this.addMarker();
-            }            
+            }                                    
         })
     }
 
@@ -108,27 +116,28 @@ export class HomePage {
         this.directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});        
     }
 
-    setDirection() {
-        var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']);        
+    setDirection() {            
+        var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']);                
         var request = {
             origin: track,
             destination: this.latLng,
             travelMode: 'DRIVING'
         };
-        var display = this.directionsDisplay;
+        var display = this.directionsDisplay;                
         this.directionsService.route(request, function (response, status) {
             if (status == 'OK') {
                 console.log(response);
                 display.setDirections(response);
             }
             else {                
-                alert('Something wrong. Maybe the shipper\'s position is unknown now!');                                    
+                console.log('Something wrong. Maybe the shipper\'s position is unknown    now!');                                    
+                //alert('Something wrong. Maybe the shipper\'s position is unknown now!');                                    
             }        
         });
     }
 
-    addMarker() {
-        var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']);
+    addMarker() {        
+        var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']);        
         var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
         let marker = new google.maps.Marker({
             map: this.map,
