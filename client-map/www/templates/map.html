@@ -1,0 +1,17 @@
+<ion-view title="Map">
+    <ion-content>
+        <h1>This is map page</h1>
+        <ng-map center="{{anchor.lat}},{{anchor.lng}}">
+            <!--<shape name="circle" 
+                stroke-color="#FF0000"
+                stroke-opacity="0.8"
+                stroke-weight="2"
+                fill-color="#FF0000"
+                fill-opacity="0.35"
+                anchor="{{anchor.lat}},{{anchor.lng}}"
+                radius="50">
+            </shape>-->
+            <marker position="{{anchor.lat}},{{anchor.lng}}" animation="DROP"></marker>
+        </ng-map>
+    </ion-content>
+</ion-view>
