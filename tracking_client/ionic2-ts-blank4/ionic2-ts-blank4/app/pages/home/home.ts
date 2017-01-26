@@ -21,13 +21,13 @@ export class HomePage {
     previousTrackLatLng = { 'latitude': 0, 'longitude': 0 };
     directionsService: any;
     directionsDisplay: any;
-    latLng: any;    
-    socketHost = 'http://localhost:3000/server/api/orders/updateshiplocation/586e28470600b0151cb655c7'
+    socketHost = 'http://192.168.0.103:3000'    
     locationGetIo: any;
     markers = [];
     bounds: any;
+    mapLoaded = false;
 
-    constructor(private navController: NavController, private navParams: NavParams, private http: Http) {
+    constructor(private navController: NavController, private navParams: NavParams, private http: Http) {        
         var connect = function (ns) {
             return io.connect(ns, {
                query: 'ns='+ns,
@@ -35,16 +35,13 @@ export class HomePage {
             });
         }
 
-        this.locationGetIo = connect(this.socketHost);
-        //this.locationGetIo = io(this.socketHost);
+        this.locationGetIo = connect(this.socketHost);        
         this.initDirection();
         this.locationGetIo.on('location', (location) => {
             console.log('Location from server: ' + location['latitude'] + ' ' + location['longitude']);
-            this.trackLatLng = {'latitude': location.latitude, 'longitude': location.longitude};            
-            if (this.latLng){
-                this.setDirection();
-                this.addMarker();
-            }                                    
+            this.trackLatLng = {'latitude': location.latitude, 'longitude': location.longitude};                        
+            this.setDirection();
+            this.addMarker();                
         })
     }
 
@@ -67,8 +64,8 @@ export class HomePage {
     }
 
     ionViewDidEnter() {
-        this.presentLoadingCustom();           
-        this.loadMap();        
+        //this.presentLoadingCustom();        
+        this.loadMap();                                
     }    
 
     private getJson(response: Response) {
@@ -117,10 +114,11 @@ export class HomePage {
     }
 
     setDirection() {            
-        var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']);                
+        var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']); 
+        var latLng = new google.maps.LatLng(10.768849, 106.632194);               
         var request = {
             origin: track,
-            destination: this.latLng,
+            destination: latLng,
             travelMode: 'DRIVING'
         };
         var display = this.directionsDisplay;                
@@ -156,11 +154,13 @@ export class HomePage {
 
     loadMap() {        
         this.bounds = new google.maps.LatLngBounds();
-        Geolocation.getCurrentPosition().then((position) => {                        
-            this.latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            this.bounds.extend(this.latLng);                      
+        //Geolocation.getCurrentPosition().then((position) => { 
+            var position = {'coords':{'latitude':0,'longitude':0}};
+            position.coords = {'latitude': 10.768849, 'longitude': 106.632194}
+            var latLng = new google.maps.LatLng(10.768849, 106.632194);
+            this.bounds.extend(latLng);                      
             let mapOptions = {
-                center: this.latLng,
+                center: latLng,
                 zoom: 15,
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             }
@@ -170,7 +170,7 @@ export class HomePage {
             this.directionsDisplay.setMap(this.map);
             this.directionsDisplay.setPanel(this.directionElement.nativeElement);
 
-            this.dismissLoadingCustom();
+            //this.dismissLoadingCustom();
 
             var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
             let marker = new google.maps.Marker({
@@ -184,7 +184,7 @@ export class HomePage {
                 this.addMarker();
                 this.setDirection();                
             }
-        }
-        );
+        //}
+        //);
     };    
 }

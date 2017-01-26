@@ -45,7 +45,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var ionic_angular_1 = require('ionic-angular');
-var ionic_native_1 = require('ionic-native');
 var http_1 = require('@angular/http');
 require('rxjs/Rx');
 var Rx_1 = require('rxjs/Rx');
@@ -57,17 +56,22 @@ var HomePage = (function () {
         this.http = http;
         this.trackLatLng = { 'latitude': 0, 'longitude': 0 };
         this.previousTrackLatLng = { 'latitude': 0, 'longitude': 0 };
-        this.socketHost = 'https://lit-plains-83504.herokuapp.com/locations';
+        this.socketHost = 'https://test3721.herokuapp.com/server/api/orders/updateshiplocation/586e2af1da96c0150442d88c';
         this.markers = [];
-        this.locationGet = io(this.socketHost);
+        this.mapLoaded = false;
+        var connect = function (ns) {
+            return io.connect(ns, {
+                query: 'ns=' + ns,
+                resource: "socket.io"
+            });
+        };
+        this.locationGetIo = connect(this.socketHost);
         this.initDirection();
-        this.locationGet.on('location', function (location) {
-            if ((location[0]['latitude'] !== _this.trackLatLng['latitude']) || (location[0]['longitude'] !== _this.trackLatLng['longitude'])) {
-                _this.trackLatLng = location[0];
-                console.log("Get socket " + _this.trackLatLng['latitude'] + " " + _this.trackLatLng['longitude']);
-                _this.setDirection();
-                _this.addMarker();
-            }
+        this.locationGetIo.on('location', function (location) {
+            console.log('Location from server: ' + location['latitude'] + ' ' + location['longitude']);
+            _this.trackLatLng = { 'latitude': location.latitude, 'longitude': location.longitude };
+            _this.setDirection();
+            _this.addMarker();
         });
     }
     HomePage.prototype.presentLoadingCustom = function () {
@@ -83,7 +87,7 @@ var HomePage = (function () {
         this.loader.dismiss();
     };
     HomePage.prototype.ionViewDidEnter = function () {
-        this.presentLoadingCustom();
+        //this.presentLoadingCustom();        
         this.loadMap();
     };
     HomePage.prototype.getJson = function (response) {
@@ -126,9 +130,10 @@ var HomePage = (function () {
     };
     HomePage.prototype.setDirection = function () {
         var track = new google.maps.LatLng(this.trackLatLng['latitude'], this.trackLatLng['longitude']);
+        var latLng = new google.maps.LatLng(10.768849, 106.632194);
         var request = {
             origin: track,
-            destination: this.latLng,
+            destination: latLng,
             travelMode: 'DRIVING'
         };
         var display = this.directionsDisplay;
@@ -138,7 +143,7 @@ var HomePage = (function () {
                 display.setDirections(response);
             }
             else {
-                alert('Something wrong. Maybe the shipper\'s position is unknown now!');
+                console.log('Something wrong. Maybe the shipper\'s position is unknown    now!');
             }
         });
     };
@@ -160,32 +165,34 @@ var HomePage = (function () {
         this.map.panToBounds(this.bounds);
     };
     HomePage.prototype.loadMap = function () {
-        var _this = this;
         this.bounds = new google.maps.LatLngBounds();
-        ionic_native_1.Geolocation.getCurrentPosition().then(function (position) {
-            _this.latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-            _this.bounds.extend(_this.latLng);
-            var mapOptions = {
-                center: _this.latLng,
-                zoom: 15,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            _this.map = new google.maps.Map(_this.mapElement.nativeElement, mapOptions);
-            _this.directionsDisplay.setMap(_this.map);
-            _this.directionsDisplay.setPanel(_this.directionElement.nativeElement);
-            _this.dismissLoadingCustom();
-            var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-            var marker = new google.maps.Marker({
-                map: _this.map,
-                icon: iconBase + 'ranger_station.png',
-                title: 'Order location',
-                position: _this.map.getCenter()
-            });
-            if (_this.trackLatLng['latitude'] !== 0 && _this.trackLatLng['longitude'] !== 0) {
-                _this.addMarker();
-                _this.setDirection();
-            }
+        //Geolocation.getCurrentPosition().then((position) => { 
+        var position = { 'coords': { 'latitude': 0, 'longitude': 0 } };
+        position.coords = { 'latitude': 10.768849, 'longitude': 106.632194 };
+        var latLng = new google.maps.LatLng(10.768849, 106.632194);
+        this.bounds.extend(latLng);
+        var mapOptions = {
+            center: latLng,
+            zoom: 15,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+        this.directionsDisplay.setMap(this.map);
+        this.directionsDisplay.setPanel(this.directionElement.nativeElement);
+        //this.dismissLoadingCustom();
+        var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+        var marker = new google.maps.Marker({
+            map: this.map,
+            icon: iconBase + 'ranger_station.png',
+            title: 'Order location',
+            position: this.map.getCenter()
         });
+        if (this.trackLatLng['latitude'] !== 0 && this.trackLatLng['longitude'] !== 0) {
+            this.addMarker();
+            this.setDirection();
+        }
+        //}
+        //);
     };
     ;
     __decorate([
@@ -205,7 +212,7 @@ var HomePage = (function () {
     return HomePage;
 }());
 exports.HomePage = HomePage;
-},{"@angular/core":150,"@angular/http":238,"ionic-angular":414,"ionic-native":441,"rxjs/Rx":508}],3:[function(require,module,exports){
+},{"@angular/core":150,"@angular/http":238,"ionic-angular":414,"rxjs/Rx":508}],3:[function(require,module,exports){
 "use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
