@@ -81,11 +81,26 @@ angular.module('app.controllers', [])
 
 })
       
-.controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService) {
+.controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
+    
+    var getCurrentUserInformation = function(){
+        $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function(response){
+            if(response.success){
+                $scope.currentUser = response.data;
+                $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + $scope.currentUser._id).success(function(response){
+                    if(response.success){
+                            $scope.orderCurrentUser = response.data;
+                    }
+                });
+            }
+        });
+    }
+
     $scope.logout = function(){
         AuthService.logout();
         $state.go('login');
     };
+    getCurrentUserInformation();
 })
    
 .controller('signupCtrl', function ($scope, $stateParams,$state,AuthService,$ionicPopup,$ionicLoading) {
