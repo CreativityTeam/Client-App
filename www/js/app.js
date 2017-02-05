@@ -5,11 +5,13 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services',])
+angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives','app.services','ngCordova','ngCordovaOauth'])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider){
   
-
+  $ionicConfigProvider.backButton.text('').previousTitleText(false);
+  $ionicConfigProvider.views.maxCache(0);
+  $ionicConfigProvider.tabs.position('bottom');
   $sceDelegateProvider.resourceUrlWhitelist([ 'self','*://www.youtube.com/**', '*://player.vimeo.com/video/**']);
 
 })
