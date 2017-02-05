@@ -1,0 +1,5 @@
+{
+  "name": "MainApp",
+  "gulpStartupTasks": ["sass", "watch"],
+  "app_id": ""
+}
