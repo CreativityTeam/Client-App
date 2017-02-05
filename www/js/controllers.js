@@ -85,7 +85,7 @@ angular.module('app.controllers', [])
 })
    
 .controller('sHIPPINGCtrl', function ($scope, $stateParams) {
-
+    console.log($stateParams.idorder);
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           zoom: 15

@@ -1,7 +1,7 @@
 <ion-view title="MY ORDER" id="page9">
   <ion-content padding="true" class="has-header">
     <ion-list id="mYORDER-list7">
-      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item47" ui-sref="tabsController.sHIPPING" ng-repeat="order in orderCurrentUser">
+      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item47" ui-sref="tabsController.sHIPPING({idorder : order._id})" ng-repeat="order in orderCurrentUser">
         <img src="img/KxegHHPOTYSq6XSp87kE_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
         <h2assertive>ORDER #{{$index}}
           <p style="white-space:normal;">Price : {{total_price}}
