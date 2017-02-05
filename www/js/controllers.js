@@ -30,9 +30,18 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('mYORDERCtrl', function ($scope, $stateParams) {
+.controller('mYORDERCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
 
+    var getOrderCurrentUser = function(){
+        $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + AuthService.userInforIdSave()).success(function(response){
+            if(response.success){
+                $scope.orderCurrentUser = response.data;
+                console.log(response.data)
+            }
+        });   
+    }
 
+    getOrderCurrentUser();
 })
    
 .controller('fAVORITEFOODCtrl', function ($scope, $stateParams) {
@@ -82,9 +91,8 @@ angular.module('app.controllers', [])
 })
       
 .controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
-    
     var getCurrentUserInformation = function(){
-        $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function(response){
+           $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function(response){
             if(response.success){
                 $scope.currentUser = response.data;
                 $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + $scope.currentUser._id).success(function(response){

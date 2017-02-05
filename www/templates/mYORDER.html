@@ -1,34 +1,12 @@
 <ion-view title="MY ORDER" id="page9">
   <ion-content padding="true" class="has-header">
     <ion-list id="mYORDER-list7">
-      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item47" ui-sref="tabsController.sHIPPING">
+      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item47" ui-sref="tabsController.sHIPPING" ng-repeat="order in orderCurrentUser">
         <img src="img/KxegHHPOTYSq6XSp87kE_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
-        <h2assertive>ORDER #1
-          <p style="white-space:normal;">Price : 200.000
-            <br> Status : Shipping</p>
-        </h2assertive>
-      </ion-item>
-      <ion-item class="item-thumbnail-left item-icon-right assertive" id="mYORDER-list-item48">
-        <img src="img/ThUOrhHGRsK0vIViHPb1_ENUV5W3dRISLGoE6t0Gl_Big-data-Exhaustive-review-pulls-together-evidence-on-food-groups-and-diet-related-disease.jpg">
-        <h2assertive>ORDER #2
-          <p style="white-space:normal;">Price : 50.000
-            <br> Status : Shipped</p>
-          <i class="icon ion-android-delete"></i>
-        </h2assertive>
-      </ion-item>
-      <ion-item class="item-thumbnail-left item-icon-right assertive" id="mYORDER-list-item49" href="mailto:">
-        <img src="img/My8lnxn8QWGW8rIMZnDR_8rymvOEKSEmqP0zrbAtc_temp2.jpg">
-        <h2assertive>ORDER #3
-          <p>Price : 200.000
-            <br> Status : Shipped</p>
-          <i class="icon ion-android-delete"></i>
-        </h2assertive>
-      </ion-item>
-      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item50" ui-sref="tabsController.sHIPPING">
-        <img src="img/gV5kryVrQLutxObdyHJB_QL2tDUoaTBisQk1cdYqi_ALS-Food-Hero.jpg">
-        <h2assertive>ORDER #4
-          <p>Price : 30.000
-            <br> Status : Shipping</p>
+        <h2assertive>ORDER #{{$index}}
+          <p style="white-space:normal;">Price : {{total_price}}
+            <br> Fee Shipping : {{order.feeshipping}}
+            <br> Status : {{order.shippingstatus}} </p>
         </h2assertive>
       </ion-item>
     </ion-list>
