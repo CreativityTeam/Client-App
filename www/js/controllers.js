@@ -21,18 +21,36 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('bARKTVCtrl', function ($scope, $stateParams) {
+.controller('bARKTVCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
 
+     var getListBarKtv = function(){
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $scope.listBarKtv = [];
+         $http.get(API_ENDPOINT.url + '/api/services/findcategory/588328b0703173267024daf9' ).success(function(response){
+            $ionicLoading.hide();
+            for(var item in response.data){
+                if(!response.data[item].hasOwnProperty("photo1")){
+                    response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                    $scope.listBarKtv.push(response.data[item]);
+                }
+            }
+        });
+    };
+
+    getListBarKtv()
 
 })
    
 .controller('loisirListeCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
     var getListServiceBelongLoisir = function(){
-         $scope.listLoisir = [];
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
          $http.get(API_ENDPOINT.url + '/api/services/findcategory/' + $stateParams.idLoisir).success(function(response){
-            for(var item in response.data){
-                    $scope.listLoisir.push(response.data[item]);
-            }
+            $ionicLoading.hide();
+            $scope.listLoisir = response.data
         });
     };
 
@@ -40,9 +58,25 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('sALONDETHPATISSERUECtrl', function ($scope, $stateParams) {
+.controller('sALONDETHPATISSERUECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
 
+    var getListSaLonDeth = function(){
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $scope.listSalon = [];
+         $http.get(API_ENDPOINT.url + '/api/services/findcategory/5883289f703173267024daf6' ).success(function(response){
+            $ionicLoading.hide();
+            for(var item in response.data){
+                if(!response.data[item].hasOwnProperty("photo1")){
+                    response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                    $scope.listSalon.push(response.data[item]);
+                }
+            }
+        });
+    };
 
+    getListSaLonDeth()
 })
    
 .controller('mYCARTCtrl', function ($scope, $stateParams) {
@@ -283,9 +317,32 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('DTailCtrl', function ($scope, $stateParams) {
+.controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
 
+    var getSubjectDetail = function(){
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
+            $ionicLoading.hide();
+            $scope.currentSubject = response.data
+            if(!$scope.currentSubject.hasOwnProperty("photo1")){
+                $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+            }
+        });
+    };
 
+    getSubjectDetail()
+})
+
+.controller('DTailCtrl_tab1', function ($scope, $stateParams) {
+
+console.log("tab 1")
+})
+
+.controller('DTailCtrl_tab5', function ($scope, $stateParams) {
+
+console.log("tab 5")
 })
    
 .controller('restaurantLocationCtrl', function ($scope, $stateParams) {

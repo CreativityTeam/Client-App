@@ -173,19 +173,19 @@ angular.module('app.routes', ['ionicUIRouter'])
       /page1/tab5/locadetail
   */
   .state('tabsController.DTail', {
-    url: '/locadetail',
+    url: '/locadetail/:idSubject',
     views: {
       'tab6': {
-        templateUrl: 'templates/DTail.html',
-        controller: 'DTailCtrl'
+        templateUrl: 'templates/DTail_tab6.html',
+        controller: 'DTailCtrl_tab6'
       },
       'tab1': {
-        templateUrl: 'templates/DTail.html',
-        controller: 'DTailCtrl'
+        templateUrl: 'templates/DTail_loisir.html',
+        controller: 'DTailCtrl_tab1'
       },
       'tab5': {
-        templateUrl: 'templates/DTail.html',
-        controller: 'DTailCtrl'
+        templateUrl: 'templates/DTail_bar.html',
+        controller: 'DTailCtrl_tab5'
       }
     }
   })
