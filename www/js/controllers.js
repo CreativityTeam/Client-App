@@ -323,22 +323,29 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
+.controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
     $scope.comment = {
         content : ""
     };
     $scope.commentButton = function(idService){
-        $scope.commentSave = {
-            user_id : AuthService.userInforIdSave(),
-            content : $scope.comment.content
-        } 
-        $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
-            if(response.success == true){
-                 $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
-                    getSubjectDetail();
-                 })    
-            }
-        });
+        if($scope.comment.content == ""){
+            var alertPopup = $ionicPopup.alert({
+                    title: 'System Exception',
+                    template: "Please type something in comment box!!!"
+            });
+        }else{
+            $scope.commentSave = {
+                user_id : AuthService.userInforIdSave(),
+                content : $scope.comment.content
+            } 
+            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                if(response.success == true){
+                    $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
+                        getSubjectDetail();
+                    })    
+                }
+            });
+        }
     }
 
     var getSubjectDetail = function(){
@@ -357,23 +364,30 @@ angular.module('app.controllers', ['ngMap'])
     getSubjectDetail()
 })
 
-.controller('DTailCtrl_tab1', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
-    
+.controller('DTailCtrl_tab1', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+
     $scope.comment = {
         content : ""
     };
     $scope.commentButton = function(idService){
-        $scope.commentSave = {
-            user_id : AuthService.userInforIdSave(),
-            content : $scope.comment.content
-        } 
-        $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
-            if(response.success == true){
-                 $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
-                    getSubjectDetail();
-                 })    
-            }
-        });
+        if($scope.comment.content == ""){
+            var alertPopup = $ionicPopup.alert({
+                    title: 'System Exception',
+                    template: "Please type something in comment box!!!"
+            });
+        }else{
+            $scope.commentSave = {
+                user_id : AuthService.userInforIdSave(),
+                content : $scope.comment.content
+            } 
+            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                if(response.success == true){
+                    $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
+                        getSubjectDetail();
+                    })    
+                }
+            });
+        }
     }
 
     var getSubjectDetail = function(){
