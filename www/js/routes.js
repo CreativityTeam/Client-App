@@ -180,7 +180,7 @@ angular.module('app.routes', ['ionicUIRouter'])
         controller: 'DTailCtrl_tab6'
       },
       'tab1': {
-        templateUrl: 'templates/DTail_loisir.html',
+        templateUrl: 'templates/DTail_tab1.html',
         controller: 'DTailCtrl_tab1'
       },
       'tab5': {

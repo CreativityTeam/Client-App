@@ -43,14 +43,20 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('loisirListeCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
+.controller('loisirListeCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
     var getListServiceBelongLoisir = function(){
          $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
          });
+         $scope.listLoisir = [];
          $http.get(API_ENDPOINT.url + '/api/services/findcategory/' + $stateParams.idLoisir).success(function(response){
             $ionicLoading.hide();
-            $scope.listLoisir = response.data
+            for(var item in response.data){
+                if(!response.data[item].hasOwnProperty("photo1")){
+                    response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                    $scope.listLoisir.push(response.data[item]);
+                }
+            }
         });
     };
 
@@ -318,6 +324,22 @@ angular.module('app.controllers', ['ngMap'])
 })
    
 .controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
+    $scope.comment = {
+        content : ""
+    };
+    $scope.commentButton = function(idService){
+        $scope.commentSave = {
+            user_id : AuthService.userInforIdSave(),
+            content : $scope.comment.content
+        } 
+        $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+            if(response.success == true){
+                 $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
+                    getSubjectDetail();
+                 })    
+            }
+        });
+    }
 
     var getSubjectDetail = function(){
          $ionicLoading.show({
@@ -329,15 +351,45 @@ angular.module('app.controllers', ['ngMap'])
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
             }
-        });
+         });
     };
 
     getSubjectDetail()
 })
 
-.controller('DTailCtrl_tab1', function ($scope, $stateParams) {
+.controller('DTailCtrl_tab1', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
+    
+    $scope.comment = {
+        content : ""
+    };
+    $scope.commentButton = function(idService){
+        $scope.commentSave = {
+            user_id : AuthService.userInforIdSave(),
+            content : $scope.comment.content
+        } 
+        $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+            if(response.success == true){
+                 $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
+                    getSubjectDetail();
+                 })    
+            }
+        });
+    }
 
-console.log("tab 1")
+    var getSubjectDetail = function(){
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
+            $ionicLoading.hide();
+            $scope.currentSubject = response.data
+            if(!$scope.currentSubject.hasOwnProperty("photo1")){
+                $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+            }
+         });
+    };
+
+    getSubjectDetail()
 })
 
 .controller('DTailCtrl_tab5', function ($scope, $stateParams) {
