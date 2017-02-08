@@ -1,5 +1,7 @@
-<ion-view title="SHIPPING" id="page10">
-   <ion-content>
-        <div id="map" data-tap-disabled="true"></div>
-  </ion-content>
+<ion-view title="Map">
+    <ion-content>        
+        <ng-map center="{{anchor.lat}},{{anchor.lng}}">   
+            <marker position="{{anchor.lat}},{{anchor.lng}}" animation="DROP"></marker>
+        </ng-map>
+    </ion-content>
 </ion-view>

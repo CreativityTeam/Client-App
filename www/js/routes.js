@@ -111,7 +111,7 @@ angular.module('app.routes', ['ionicUIRouter'])
   })
 
   .state('tabsController.sHIPPING', {
-    url: '/shipping/:idorder',
+    url: '/shipping/:orderid?lat?lng',
     views: {
       'tab5': {
         templateUrl: 'templates/sHIPPING.html',

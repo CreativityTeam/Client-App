@@ -1,4 +1,4 @@
-angular.module('app.controllers', [])
+angular.module('app.controllers', ['ngMap'])
   
 .controller('lOISIRCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
 
@@ -54,7 +54,7 @@ angular.module('app.controllers', [])
 
     var getOrderCurrentUser = function(){
         $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + AuthService.userInforIdSave()).success(function(response){
-            if(response.success){
+            if(response.success){                                
                 $scope.orderCurrentUser = response.data;
             }
         });   
@@ -104,35 +104,73 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('sHIPPINGCtrl', function ($scope, $stateParams) {
-    console.log($stateParams.idorder);
-    function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15
-        });
-        var infoWindow = new google.maps.InfoWindow({map: map});
+// .controller('sHIPPINGCtrl', function ($scope, $stateParams) {    
+//     function initMap() {
+//         var map = new google.maps.Map(document.getElementById('map'), {
+//           zoom: 15
+//         });
+//         var infoWindow = new google.maps.InfoWindow({map: map});
 
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
+//         // Try HTML5 geolocation.
+//         if (navigator.geolocation) {
+//           navigator.geolocation.getCurrentPosition(function(position) {
+//             var pos = {
+//               lat: position.coords.latitude,
+//               lng: position.coords.longitude
+//             };
 
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
-            map.setCenter(pos);
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-      }
+//             infoWindow.setPosition(pos);
+//             infoWindow.setContent('Location found.');
+//             map.setCenter(pos);
+//           }, function() {
+//             handleLocationError(true, infoWindow, map.getCenter());
+//           });
+//         } else {
+//           // Browser doesn't support Geolocation
+//           handleLocationError(false, infoWindow, map.getCenter());
+//         }
+//       }
+//     initMap();
+
+// })
+
+.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService){                    
+    // console.log("Order ID: " + $stateParams.orderid);
+    // console.log("Order Lat: " + $stateParams.lat);
+    // console.log("Order Lng: " + $stateParams.lng);
+    $scope.anchor = {'lat':parseFloat($stateParams.lat), 'lng':parseFloat($stateParams.lng)};
+    $scope.marker = new google.maps.Marker();
+    $scope.directionsDisplay = new google.maps.DirectionsRenderer();        
+    var initMap = function(){
+        NgMap.getMap().then(function(map){
+            $scope.map = map;                                                
+        })
+    }
     initMap();
 
+    var ioConnect = function(){
+        var ioLocation = io.connect(API_ENDPOINT.root);
+        ioLocation.on('location',function(location){
+            console.log('Location from server: order #' + location['id'] + ' ' + location['latitude'] + ' ' + location['longitude']);
+            $scope.trackLocation = {'lat': location['latitude'], 'lng': location['longitude']};                        
+            if ($scope.map && $stateParams.orderid == location['id']){                
+                // MapService.eraseAllMarkers($scope.markers);
+                MapService.addMarker($scope.map, $scope.trackLocation, $scope.marker, $scope.anchor);
+                // MapService.eraseAllDirectionsDisplays($scope.directionsDisplay);
+                MapService.getDirection($scope.map, $scope.trackLocation, $scope.anchor, $scope.directionsDisplay);
+            }            
+        })
+        ioLocation.on('status',function(status){
+            // console.log('Status from server: order #' + status['order_id'] + ' ' + status['status']);                                    
+            if ($scope.map && $stateParams.orderid == status['order_id']){                
+                if (status['status'] == 'shipped'){
+                    console.log('Order shipped');
+                }
+            }            
+        })
+    }
+
+    ioConnect();
 })
       
 .controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
