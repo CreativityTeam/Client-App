@@ -1,8 +1,19 @@
 angular.module('app.controllers', [])
   
-.controller('lOISIRCtrl', function ($scope, $stateParams) {
+.controller('lOISIRCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
 
+    var getListLoisirCategory = function(){
+         $scope.listLoisirCategory = [];
+         $http.get(API_ENDPOINT.url + '/api/categories/getList').success(function(response){
+            for(var item in response.data){
+                if(response.data[item].mainCategory == "Loisir"){
+                    $scope.listLoisirCategory.push(response.data[item]);
+                }
+            }
+        });
+    };
 
+    getListLoisirCategory()
 })
    
 .controller('rESTAURANTCtrl',function ($scope, $stateParams) {
@@ -15,8 +26,17 @@ angular.module('app.controllers', [])
 
 })
    
-.controller('loisirListeCtrl', function ($scope, $stateParams) {
+.controller('loisirListeCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
+    var getListServiceBelongLoisir = function(){
+         $scope.listLoisir = [];
+         $http.get(API_ENDPOINT.url + '/api/services/findcategory/' + $stateParams.idLoisir).success(function(response){
+            for(var item in response.data){
+                    $scope.listLoisir.push(response.data[item]);
+            }
+        });
+    };
 
+    getListServiceBelongLoisir()
 
 })
    

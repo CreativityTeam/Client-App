@@ -41,7 +41,7 @@ angular.module('app.routes', ['ionicUIRouter'])
   })
 
   .state('tabsController.loisirListe', {
-    url: '/loisirliste',
+    url: '/loisirliste/:idLoisir',
     views: {
       'tab1': {
         templateUrl: 'templates/loisirListe.html',
