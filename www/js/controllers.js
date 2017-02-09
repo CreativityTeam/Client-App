@@ -331,7 +331,28 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+.controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {    
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',    //Optional
+        iconOff: 'ion-ios-star-outline',   //Optional
+        iconOnColor: 'rgb(200, 200, 100)',  //Optional
+        iconOffColor:  'rgb(200, 100, 100)',    //Optional
+        rating:  0, //Optional
+        minRating:0,    //Optional
+        readOnly: true, //Optional
+        callback: function(rating, index) {    //Mandatory
+          $scope.ratingsCallback(rating, index);
+        }
+      };
+
+    $scope.ratingsCallback = function(rating, index) {
+        console.log('Selected rating is : ', rating, ' and the index is : ', index);        
+        var ratingReq = {'score': rating, 'userId': AuthService.userInforIdSave()};
+        $http.put(API_ENDPOINT.url + '/api/services/updaterating/' + $stateParams.idSubject, ratingReq).success(function(response){
+            console.log('Update rating successfully');
+        })           
+    };
+
     $scope.comment = {
         content : ""
     };
@@ -361,8 +382,15 @@ angular.module('app.controllers', ['ngMap'])
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
          });
          $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
-            $ionicLoading.hide();
-            $scope.currentSubject = response.data
+            $ionicLoading.hide();            
+            $scope.currentSubject = response.data    
+            for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
+                if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
+                    $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
+                    break;
+                }
+            }        
+            $scope.averageRating = Math.round((($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10);
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
             }
@@ -373,6 +401,26 @@ angular.module('app.controllers', ['ngMap'])
 })
 
 .controller('DTailCtrl_tab1', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+    $scope.ratingsObject = {
+        iconOn: 'ion-ios-star',    //Optional
+        iconOff: 'ion-ios-star-outline',   //Optional
+        iconOnColor: 'rgb(200, 200, 100)',  //Optional
+        iconOffColor:  'rgb(200, 100, 100)',    //Optional
+        rating:  0, //Optional
+        minRating:0,    //Optional
+        readOnly: true, //Optional
+        callback: function(rating, index) {    //Mandatory
+          $scope.ratingsCallback(rating, index);
+        }
+      };
+
+    $scope.ratingsCallback = function(rating, index) {
+        console.log('Selected rating is : ', rating, ' and the index is : ', index);        
+        var ratingReq = {'score': rating, 'userId': AuthService.userInforIdSave()};        
+        $http.put(API_ENDPOINT.url + '/api/services/updaterating/' + $stateParams.idSubject, ratingReq).success(function(response){
+            console.log('Update rating successfully');
+        });                     
+    };
 
     $scope.comment = {
         content : ""
@@ -405,6 +453,13 @@ angular.module('app.controllers', ['ngMap'])
          $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
             $ionicLoading.hide();
             $scope.currentSubject = response.data
+            for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
+                if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
+                    $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
+                    break;
+                }
+            }
+            $scope.averageRating = Math.round((($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10);
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
             }
