@@ -174,12 +174,14 @@ angular.module('app.controllers', ['ngMap'])
 
 // })
 
-.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService){                    
+.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup){                    
     // console.log("Order ID: " + $stateParams.orderid);
     // console.log("Order Lat: " + $stateParams.lat);
     // console.log("Order Lng: " + $stateParams.lng);
-    $scope.anchor = {'lat':parseFloat($stateParams.lat), 'lng':parseFloat($stateParams.lng)};
+    $scope.anchor = {'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng)};
     $scope.marker = new google.maps.Marker();
+    $scope.markers = [];
+    $scope.directionsDisplays = [];    
     $scope.directionsDisplay = new google.maps.DirectionsRenderer();        
     var initMap = function(){
         NgMap.getMap().then(function(map){
@@ -194,17 +196,23 @@ angular.module('app.controllers', ['ngMap'])
             console.log('Location from server: order #' + location['id'] + ' ' + location['latitude'] + ' ' + location['longitude']);
             $scope.trackLocation = {'lat': location['latitude'], 'lng': location['longitude']};                        
             if ($scope.map && $stateParams.orderid == location['id']){                
-                // MapService.eraseAllMarkers($scope.markers);
-                MapService.addMarker($scope.map, $scope.trackLocation, $scope.marker, $scope.anchor);
-                // MapService.eraseAllDirectionsDisplays($scope.directionsDisplay);
-                MapService.getDirection($scope.map, $scope.trackLocation, $scope.anchor, $scope.directionsDisplay);
+                MapService.eraseAllMarkers($scope.markers);
+                MapService.addMarker($scope.map, $scope.trackLocation, $scope.markers, $scope.anchor);
+                MapService.eraseAllDirectionsDisplays($scope.directionsDisplays);
+                MapService.getDirection($scope.map, $scope.trackLocation, $scope.anchor, $scope.directionsDisplays);
             }            
         })
         ioLocation.on('status',function(status){
             // console.log('Status from server: order #' + status['order_id'] + ' ' + status['status']);                                    
             if ($scope.map && $stateParams.orderid == status['order_id']){                
                 if (status['status'] == 'shipped'){
-                    console.log('Order shipped');
+                    if ($scope.markers[0]){
+                        $scope.markers[0].setAnimation(null);
+                    }
+                    $ionicPopup.alert({
+                        title: 'Order shipped',
+                        template: 'Order shipped. Tracking stop!'
+                    });
                 }
             }            
         })

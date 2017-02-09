@@ -111,42 +111,38 @@ angular.module('app.services', [])
         });
     };
 
-    this.addMarker = function(map, location, marker, anchorPoint){        
-        var latLng = new google.maps.LatLng(location['lat'], location['lng']);        
-        var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
-        if (marker){            
-            marker.setMap(null); 
-            marker = null;                       
-        }
-        marker = new google.maps.Marker({
+    this.addMarker = function(map, location, markers, anchorPoint){        
+        var latLng = new google.maps.LatLng(location['lat'], location['lng']);                        
+                     
+        var marker = new google.maps.Marker({
             map: map,
             title: 'Shipper\'s location',
             animation: google.maps.Animation.BOUNCE,
-            position: latLng
+            position: latLng,
+            icon: 'https://maps.google.com/mapfiles/kml/shapes/motorcycling.png'            
         });    
-        // markers.push(marker);
+        markers.push(marker);
         var bounds = new google.maps.LatLngBounds();        
         bounds.extend(anchorPoint);
         bounds.extend(marker.position);        
         map.fitBounds(bounds);
 
-        addCircle(map,latLng);        
+        // addCircle(map,latLng);        
     };
 
-    // this.eraseAllMarkers=function(markers){
-    //     console.log('Markers length ' + markers.length);
-    //     for (var i = 0; i < markers.length; i++) {
-    //         markers[i].setMap(null);
-    //         markers[i] = null;
-    //     }
-    // };
-
-    this.getDirection = function(map, origin, destination, directionsDisplay){
-        var directionsService = new google.maps.DirectionsService();
-        if (directionsDisplay){
-            directionsDisplay.setMap(null);
+    this.eraseAllMarkers = function(markers){        
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+            markers[i] = null;
         }
-        directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});         
+        markers.length = 0;
+    };
+
+    this.getDirection = function(map, origin, destination, directionsDisplays){
+        var directionsService = new google.maps.DirectionsService();    
+        var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
+        directionsDisplay.setPanel(document.getElementById('directions-panel'));         
+        directionsDisplays.push(directionsDisplay);
         var request = {
             origin: origin,
             destination: destination,
@@ -156,20 +152,20 @@ angular.module('app.services', [])
             if (status == 'OK') {          
                 console.log('Get direction done');      
                 directionsDisplay.setMap(map);
-                directionsDisplay.setDirections(response);
-                // directionsDisplays.push(directionsDisplay);                
+                directionsDisplay.setDirections(response);                               
             }
             else {  
                 console.log('Error ' + status);                              
-                console.log('Something wrong. Maybe the shipper\'s position is unknown    now!');                                                                                       
+                console.log('Something wrong. Maybe the shipper\'s position is unknown now!');                                                                                       
             }        
         });
     };     
 
-    // this.eraseAllDirectionsDisplays=function(directionsDisplays){
-    //     for (var i = 0; i < directionsDisplays.length; i++) {
-    //         directionsDisplays[i].setMap(null);
-    //         directionsDisplays[i] = null;
-    //     }
-    // };
+    this.eraseAllDirectionsDisplays = function(directionsDisplays){
+        for (var i = 0; i < directionsDisplays.length; i++) {
+            directionsDisplays[i].setMap(null);
+            directionsDisplays[i] = null;
+        }
+        directionsDisplays.length = 0;
+    };
 })
