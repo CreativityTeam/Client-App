@@ -30,6 +30,36 @@ angular.module('app.routes', ['ionicUIRouter'])
     }
   })
 
+   .state('tabsController.listRestaurant', {
+    url: '/listRestaurant/:idCategory',
+    views: {
+      'tab6': {
+        templateUrl: 'templates/listRestaurant.html',
+        controller: 'listRestaurantCtrl'
+      }
+    }
+  })
+
+  .state('tabsController.listFoodBelongMenu', {
+    url: '/listFood/:idMenu',
+    views: {
+      'tab6': {
+        templateUrl: 'templates/listFoodBelongMenu.html',
+        controller: 'listFoodBelongMenuCtrl'
+      }
+    }
+  })
+
+  .state('tabsController.restaurantDetail', {
+    url: '/restaurantDetail/:idRestaurant',
+    views: {
+      'tab6': {
+        templateUrl: 'templates/DTailres.html',
+        controller: 'restaurantDetailCtrl'
+      }
+    }
+  })
+
   .state('tabsController.bARKTV', {
     url: '/bar',
     views: {
@@ -149,8 +179,12 @@ angular.module('app.routes', ['ionicUIRouter'])
   })
 
   .state('tabsController.fOODDETAIL', {
-    url: '/fooddetail',
+    url: '/fooddetail/:idFood',
     views: {
+      'tab6': {
+        templateUrl: 'templates/fOODDETAIL.html',
+        controller: 'fOODDETAILCtrl'
+      },
       'tab5': {
         templateUrl: 'templates/fOODDETAIL.html',
         controller: 'fOODDETAILCtrl'

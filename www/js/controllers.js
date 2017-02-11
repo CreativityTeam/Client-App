@@ -16,11 +16,50 @@ angular.module('app.controllers', ['ngMap'])
     getListLoisirCategory()
 })
    
-.controller('rESTAURANTCtrl',function ($scope, $stateParams) {
+.controller('rESTAURANTCtrl',function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
 
+    var getListRestaurantCategory = function(){
+        $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $scope.listCategoryRestaurant = [];
+         $http.get(API_ENDPOINT.url + '/api/categories/getList').success(function(response){
+            $ionicLoading.hide();
+            for(var item in response.data){
+                if(response.data[item].mainCategory == "Restaurant"){
+                    $scope.listCategoryRestaurant.push(response.data[item]);
+                }
+            }
+        });
+    };
+
+    getListRestaurantCategory()
 
 })
-   
+
+.controller('listRestaurantCtrl',function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
+
+    var getListRestaurant = function(){
+        $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $scope.listRestaurant = [];
+         $http.get(API_ENDPOINT.url + '/api/restaurants/findresbytype/' + $stateParams.idCategory).success(function(response){
+            $ionicLoading.hide();
+            for(var item in response.data){
+                if(!response.data[item].hasOwnProperty("photo1")){
+                    response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                    $scope.listRestaurant.push(response.data[item]);
+                }else{
+                    $scope.listRestaurant.push(response.data[item]);
+                }
+            }
+        });
+    };
+
+    getListRestaurant()
+})
+  
 .controller('bARKTVCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
 
      var getListBarKtv = function(){
@@ -326,9 +365,47 @@ angular.module('app.controllers', ['ngMap'])
     };
 })
    
-.controller('fOODDETAILCtrl', function ($scope, $stateParams) {
+.controller('fOODDETAILCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+    console.log($stateParams.idFood)
+    $scope.comment = {
+        content : ""
+    };
+    var getFoodDetail = function(){
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $http.get(API_ENDPOINT.url + '/api/foods/findinfo/' + $stateParams.idFood ).success(function(response){
+            $ionicLoading.hide();
+            $scope.currentSubject = response.data
+            if(!$scope.currentSubject.hasOwnProperty("photo1")){
+                $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+            }
+            console.log($scope.currentSubject)
+         });
+    };
 
+    $scope.commentButton = function(idFood){
+        if($scope.comment.content == ""){
+            var alertPopup = $ionicPopup.alert({
+                    title: 'System Exception',
+                    template: "Please type something in comment box!!!"
+            });
+        }else{
+            $scope.commentSave = {
+                user_id : AuthService.userInforIdSave(),
+                content : $scope.comment.content
+            } 
+            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                if(response.success == true){
+                    $http.put(API_ENDPOINT.url + '/api/foods/addcomment/' + idFood + "/" + response.data._id).success(function(response){
+                        getFoodDetail();
+                    })    
+                }
+            });
+        }
+    }
 
+    getFoodDetail()
 })
    
 .controller('DTailCtrl_tab6', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {    
@@ -382,18 +459,18 @@ angular.module('app.controllers', ['ngMap'])
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
          });
          $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
-            $ionicLoading.hide();            
-            $scope.currentSubject = response.data    
-            for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
-                if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
-                    $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
-                    break;
-                }
-            }        
-            $scope.averageRating = Math.round((($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10);
-            if(!$scope.currentSubject.hasOwnProperty("photo1")){
-                $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-            }
+                $ionicLoading.hide();            
+                $scope.currentSubject = response.data    
+                for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
+                    if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
+                        $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
+                        break;
+                    }
+                }        
+                $scope.averageRating = Math.round((($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10);
+                if(!$scope.currentSubject.hasOwnProperty("photo1")){
+                    $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                }    
          });
     };
 
@@ -488,4 +565,56 @@ console.log("tab 5")
 
 
 })
- 
+
+.controller('restaurantDetailCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+    $scope.comment = {
+        content : ""
+    };
+    var getRestaurantDetail = function(){
+         $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });
+         $http.get(API_ENDPOINT.url + '/api/restaurants/findinfo/' + $stateParams.idRestaurant ).success(function(response){
+            $ionicLoading.hide();
+            $scope.currentSubject = response.data
+            if(!$scope.currentSubject.hasOwnProperty("photo1")){
+                $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+            }
+            console.log($scope.currentSubject)
+         });
+    };
+
+    $scope.commentButton = function(idRes){
+        if($scope.comment.content == ""){
+            var alertPopup = $ionicPopup.alert({
+                    title: 'System Exception',
+                    template: "Please type something in comment box!!!"
+            });
+        }else{
+            $scope.commentSave = {
+                user_id : AuthService.userInforIdSave(),
+                content : $scope.comment.content
+            } 
+            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                if(response.success == true){
+                    $http.put(API_ENDPOINT.url + '/api/restaurants/updatecomment/' + idRes + "/" + response.data._id).success(function(response){
+                        getRestaurantDetail();
+                    })    
+                }
+            });
+        }
+    }
+
+    getRestaurantDetail()
+})
+
+.controller('listFoodBelongMenuCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+    
+    var getFoodByMenu = function(){
+        $http.get(API_ENDPOINT.url + '/api/foods/findfoodbymenu/' + $stateParams.idMenu).success(function(data){
+                $scope.listMenuFood = data.data;
+        });   
+    }
+
+    getFoodByMenu();
+}) 

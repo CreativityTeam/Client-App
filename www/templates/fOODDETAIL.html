@@ -1,14 +1,11 @@
 <ion-view title="FOOD DETAIL" id="page11">
-  <ion-nav-buttons side="right" class="has-header">
-    <button class="button button-icon icon ion-ios-cart"></button>
-  </ion-nav-buttons>
   <ion-content padding="true" class=" manual-remove-top-padding has-header">
     <div class="list card" id="fOODDETAIL-card21">
       <ion-item class="item-thumbnail-left item-icon-right assertive" id="fOODDETAIL-list-item56">
         <img src="img/9eYHjHROKY3ak49YtYgU_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
-        <h2assertive>Com Chien Ca Man
-          <p style="white-space:normal;">Price : 20.000
-            <br>Restaurant : Hoang Yen Res</p>
+        <h2assertive>{{currentSubject.food_name}}
+          <p style="white-space:normal;">Price : {{currentSubject.price}}
+            <br>Restaurant : {{currentSubject.res_belong.res_name}}</p>
           <i class="icon ion-ios-heart"></i>
         </h2assertive>
       </ion-item>
@@ -19,20 +16,15 @@
         <ion-slide-page id="fOODDETAIL-slide212" style="background:url(&quot;img/SNcPt2WCSv6sBbB1Rv0x_Hu00f9khT2qTUeiIzghZ_Big-data-Exhaustive-review-pulls-together-evidence-on-food-groups-and-diet-related-disease.jpg&quot;) no-repeat center;background-size:cover;"
          ></ion-slide-page>
       </ion-slides>
-      <form id="fOODDETAIL-form13" class="list">
+      <form class="list" ng-submit="commentButton(currentSubject._id)">
         <label class="item item-input item-stacked-label" id="fOODDETAIL-input13">
           <span class="input-label">Your Comment</span>
-          <input type="text" placeholder="">
+          <input type="text" placeholder="" ng-model="comment.content">
         </label>
       </form>
-      <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58">
-        <h2assertive>Mon an ngon</h2assertive>
-      </ion-item>
-      <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item59">
-        <h2assertive>Phuc vu chu dao</h2assertive>
-      </ion-item>
-      <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item60">
-        <h2assertive>Mon an hop khau vi</h2assertive>
+      <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in currentSubject.comments">
+        <img src="img/avatar.jpg">
+        <h2assertive>{{comment.content}}</h2assertive>
       </ion-item>
     </div>
   </ion-content>

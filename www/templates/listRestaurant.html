@@ -1,0 +1,18 @@
+<ion-view title="List RESTAURANT" id="page17">
+  <ion-content padding="true" class="has-header">
+    <form id="ListrESTAURANT-form8" class="list">
+      <label class="item item-input" id="ListrESTAURANT-search2">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="search" placeholder="" ng-model="searchRestaurant">
+      </label>
+      <ion-item class="item-thumbnail-left assertive" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : searchRestaurant">
+        <img ng-src="{{restaurant.photo1}}">
+        <h2assertive>{{restaurant.res_name}}
+          <p>Description : {{restaurant.description}}</p>
+          <p>Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}</p>
+        </h2assertive>
+      </ion-item>
+    </form>
+    <rating max="5"></rating>
+  </ion-content>
+</ion-view>
