@@ -18,7 +18,7 @@
           <p style="white-space:normal;">Price : {{food.foodDetail.price}}</p>
           <p style="white-space:normal;">Quantity : {{food.quantity}}</p>
           <p style="white-space:normal;">Total : {{totalPriceFood}}</p>
-          <i class="icon ion-android-delete"></i>
+          <i class="icon ion-android-delete" ng-click="deleteItemInListOrder(food.foodDetail._id)"></i>
         </h2assertive>
       </ion-item>
       <ion-item class="item-icon-left" id="mYCART-list-item21">

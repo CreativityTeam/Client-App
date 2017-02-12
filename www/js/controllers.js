@@ -204,6 +204,17 @@ angular.module('app.controllers', ['ngMap'])
         $scope.totalPriceOrder = totalPrice;
     });
 
+    $scope.deleteItemInListOrder = function(id){
+        for(var i in $scope.listFood){
+            if($scope.listFood[i].foodDetail._id == id){
+                $scope.listFood.splice(i,1);
+            }
+        }
+
+        calculatePrice.then(function(totalPrice){
+            $scope.totalPriceOrder = totalPrice;
+        });
+    }
 })
    
 .controller('mYORDERCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
@@ -727,11 +738,21 @@ console.log("tab 5")
                 }
                 ]
             });
+
             quantityPopup.then(function(res) {
-                $rootScope.listFoodForOrder.push({
-                    foodDetail : foodObject,
-                    quantity : parseInt(res)
-                }) 
+                for(var item in $rootScope.listFoodForOrder){
+                    if($rootScope.listFoodForOrder[item].foodDetail._id == foodObject._id){
+                        $rootScope.listFoodForOrder[item].quantity = $rootScope.listFoodForOrder[item].quantity + parseInt(res);
+                        foodObject = " ";
+                        res = 0;
+                    }
+                }
+                if(foodObject != " " && parseInt(res) != 0){
+                    $rootScope.listFoodForOrder.push({
+                        foodDetail : foodObject,
+                        quantity : parseInt(res)
+                    }) 
+                }                                       
             });
 
             $timeout(function() {
