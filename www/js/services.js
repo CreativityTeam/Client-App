@@ -169,3 +169,24 @@ angular.module('app.services', [])
         directionsDisplays.length = 0;
     };
 })
+
+.service('RatingService', function(API_ENDPOINT, $http, AuthService){        
+    this.getRatingsObject = function(childUrl){                   
+        return {
+            iconOn: 'ion-ios-star',    //Optional
+            iconOff: 'ion-ios-star-outline',   //Optional
+            iconOnColor: 'rgb(200, 200, 100)',  //Optional
+            iconOffColor:  'rgb(200, 100, 100)',    //Optional
+            rating:  0, //Optional
+            minRating:0,    //Optional
+            readOnly: true, //Optional
+            callback: function(rating, index) {    //Mandatory
+                console.log('Selected rating is : ', rating, ' and the index is : ', index);        
+                var ratingReq = {'score': rating, 'userId': AuthService.userInforIdSave()};                
+                $http.put(API_ENDPOINT.url + childUrl, ratingReq).success(function(response){
+                    console.log('Update rating successfully');
+                });               
+            }
+        };
+      };
+})
