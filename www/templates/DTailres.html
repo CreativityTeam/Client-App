@@ -1,7 +1,10 @@
 <ion-view title=" Détail" id="page13">
   <ion-content padding="true" class=" manual-remove-top-padding has-header">
     <div class="list card" id="DTail-card22">
-      <ion-item class="item-thumbnail-left assertive" id="DTail-list-item61" ui-sref="tabsController.restaurantLocation">
+      <ion-item class="item-thumbnail-left assertive" id="DTail-list-item61" ui-sref="tabsController.restaurantLocation({
+        lat : currentSubject.location.point.latitude,
+        lng : currentSubject.location.point.longitude,
+        name : currentSubject.location.housenumber + ', ' + currentSubject.location.street + ', ' + currentSubject.location.district + ', ' + currentSubject.location.city})">
         <img ng-src="{{currentSubject.photo1}}">
         <h2assertive>{{currentSubject.res_name}}
           <p style="white-space:normal;">Address : {{currentSubject.location.housenumber}}, {{currentSubject.location.street}}, {{currentSubject.location.district}}, {{currentSubject.location.city}}</p>

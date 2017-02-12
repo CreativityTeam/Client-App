@@ -552,7 +552,39 @@ console.log("tab 5")
 })
    
 .controller('restaurantLocationCtrl', function ($scope, $stateParams) {
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15
+        });
+        var infoWindow = new google.maps.InfoWindow({map: map});
+        var pos = {
+              lat: parseFloat($stateParams.lat),
+              lng: parseFloat($stateParams.lng)
+        };
+        console.log(pos);
+        infoWindow.setPosition(pos);
+        infoWindow.setContent($stateParams.name);
+        map.setCenter(pos);
+        // Try HTML5 geolocation.
+        /*if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
 
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }*/
+      }
+    initMap();
 
 })
    

@@ -239,7 +239,7 @@ angular.module('app.routes', ['ionicUIRouter'])
       /page1/tab5/reslocation
   */
   .state('tabsController.restaurantLocation', {
-    url: '/reslocation',
+    url: '/reslocation/:lat/:lng/:name',
     views: {
       'tab6': {
         templateUrl: 'templates/restaurantLocation.html',
