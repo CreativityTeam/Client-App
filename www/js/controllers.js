@@ -124,8 +124,8 @@ angular.module('app.controllers', ['ngMap'])
     getListSaLonDeth()
 })
    
-.controller('mYCARTCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$rootScope) {
-
+.controller('mYCARTCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$rootScope,$ionicPopup) {
+    $scope.totalPriceOrder = 0;
     $scope.orderSaveDB = {
         address : " ",
         point : {
@@ -177,11 +177,33 @@ angular.module('app.controllers', ['ngMap'])
     initMap();
 
     $scope.order = function(){
-        $scope.orderSaveDB.food = $rootScope.listFoodForOrder;
-        $scope.orderSaveDB.point.lon = $scope.mapPosition.lng;
-        $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
-        console.log($scope.orderSaveDB);   
+        if($scope.totalPriceOrder == 0){
+            var alertPopup = $ionicPopup.alert({
+                    title: 'Order Exception',
+                    template: "Your cart is empty, Please order something!!!"
+            });
+        }else{
+            $scope.orderSaveDB.food = $rootScope.listFoodForOrder;
+            $scope.orderSaveDB.point.lon = $scope.mapPosition.lng;
+            $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
+            console.log($scope.orderSaveDB);   
+        }
     }
+
+    var calculatePrice = new Promise(function(resolve,reject){
+        var totalPrice = 0;
+        if($scope.listFood != []){
+            for(var item in $scope.listFood){
+                totalPrice = totalPrice + $scope.listFood[item].foodDetail.price * $scope.listFood[item].quantity
+            }
+        }
+        resolve(totalPrice);
+    });
+
+    calculatePrice.then(function(totalPrice){
+        $scope.totalPriceOrder = totalPrice;
+    });
+
 })
    
 .controller('mYORDERCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
