@@ -8,7 +8,7 @@
           <p style="white-space:normal;">Price : {{food.price}}</p>
           <p></p>
           <p><button class="button button-small button-assertive" ui-sref="tabsController.fOODDETAIL({idFood : food._id})">Détail</button></p>
-          <i class="icon ion-android-cart"></i>
+          <i class="icon ion-android-cart" ng-click="orderFood(food)"></i>
         </h2assertive>
       </ion-item>
     </ion-list>

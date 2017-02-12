@@ -124,9 +124,64 @@ angular.module('app.controllers', ['ngMap'])
     getListSaLonDeth()
 })
    
-.controller('mYCARTCtrl', function ($scope, $stateParams) {
+.controller('mYCARTCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$rootScope) {
 
+    $scope.orderSaveDB = {
+        address : " ",
+        point : {
+            lon : " ",
+            lat : " "    
+        },
+        comment : " ",
+        price : " "
+    };
+    $scope.listFood = $rootScope.listFoodForOrder;
+     function initMap() {
+        var map = new google.maps.Map(document.getElementById('mapInOrder'), {
+          zoom: 15
+        });
 
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            map.setCenter(pos);
+            var marker = new google.maps.Marker({
+                position: pos,
+                animation: google.maps.Animation.DROP,
+                draggable:true,
+                map: map
+            });
+            $scope.mapPosition = {
+                lat : pos.lat,
+                lng : pos.lng  
+            }
+            marker.addListener('dragend', function() {
+            $scope.mapPosition = {
+                    lat : parseFloat(marker.getPosition().lat().toFixed(3)),
+                    lng : parseFloat(marker.getPosition().lng().toFixed(3))
+                }
+            });
+          }, function() {
+            handleLocationError(true, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, map.getCenter());
+        }
+      }
+
+    initMap();
+
+    $scope.order = function(){
+        $scope.orderSaveDB.food = $rootScope.listFoodForOrder;
+        $scope.orderSaveDB.point.lon = $scope.mapPosition.lng;
+        $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
+        console.log($scope.orderSaveDB);   
+    }
 })
    
 .controller('mYORDERCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
@@ -620,13 +675,46 @@ console.log("tab 5")
     getRestaurantDetail()
 })
 
-.controller('listFoodBelongMenuCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+.controller('listFoodBelongMenuCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,$rootScope,$timeout) {
     
     var getFoodByMenu = function(){
         $http.get(API_ENDPOINT.url + '/api/foods/findfoodbymenu/' + $stateParams.idMenu).success(function(data){
                 $scope.listMenuFood = data.data;
         });   
     }
+    
+    $scope.orderFood = function(foodObject){
+            $scope.foodForOrder = {};
+            var quantityPopup = $ionicPopup.show({
+            template: '<input type="text" ng-model="foodForOrder.quantity">',
+            title: 'Enter Your quantity',
+            scope: $scope,
+            buttons: [
+                { text: 'Cancel' },
+                {
+                    text: '<b>Save</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if (!$scope.foodForOrder.quantity) {
+                            //don't allow the user to close unless he enters wifi password
+                            e.preventDefault();
+                        } else {
+                        return $scope.foodForOrder.quantity;
+                        }
+                    }
+                }
+                ]
+            });
+            quantityPopup.then(function(res) {
+                $rootScope.listFoodForOrder.push({
+                    foodDetail : foodObject,
+                    quantity : parseInt(res)
+                }) 
+            });
 
+            $timeout(function() {
+                quantityPopup.close(); //close the popup after 3 seconds for some reason
+            }, 5000);
+    }
     getFoodByMenu();
 }) 

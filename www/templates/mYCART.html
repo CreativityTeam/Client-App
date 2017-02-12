@@ -1,17 +1,30 @@
 <ion-view title="MY CART" id="page3">
   <ion-content padding="true" class="has-header">
     <ion-list id="mYCART-list2">
-      <ion-item class="item-thumbnail-left item-icon-right assertive" id="mYCART-list-item12">
+      <label class="item item-input">
+        <i class="icon ion-map placeholder-icon"></i>
+        <input type="text" placeholder="Address" ng-model="orderSaveDB.address">
+      </label>
+      <ion-item id="mYCART-list-item21">
+          <div class="parkmap" id="mapInOrder" data-tap-disabled="true"></div> 
+      </ion-item>
+      <label class="item item-input">
+        <i class="icon ion-document-text placeholder-icon"></i>
+        <input type="text" placeholder="Note" ng-model="orderSaveDB.comment">
+      </label>
+      <ion-item class="item-thumbnail-left item-icon-right assertive" id="mYCART-list-item12" ng-repeat="food in listFood" ng-init = "totalPriceFood = food.foodDetail.price * food.quantity">
         <img src="img/KxegHHPOTYSq6XSp87kE_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
-        <h2assertive>My Xao Thap Cam
-          <p style="white-space:normal;">Price : 20.000</p>
+        <h2assertive>{{food.foodDetail.food_name}}
+          <p style="white-space:normal;">Price : {{food.foodDetail.price}}</p>
+          <p style="white-space:normal;">Quantity : {{food.quantity}}</p>
+          <p style="white-space:normal;">Total : {{totalPriceFood}}</p>
           <i class="icon ion-android-delete"></i>
         </h2assertive>
       </ion-item>
       <ion-item class="item-icon-left" id="mYCART-list-item21">
-        <i class="icon ion-android-cart"></i>Total : 200.000.000</ion-item>
+        <i class="icon ion-android-cart"></i>Total : {{totalPriceFood}}</ion-item>
     </ion-list>
-    <button id="mYCART-button1" style="border-radius:4px 4px 4px 4px;" class="button button-assertive  button-block">CHECK OUT</button>
+    <button id="mYCART-button1" style="border-radius:4px 4px 4px 4px;" class="button button-assertive  button-block" ng-click="order()">CHECK OUT</button>
     <rating max="5"></rating>
   </ion-content>
 </ion-view>

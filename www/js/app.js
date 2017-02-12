@@ -31,6 +31,11 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
   });
 })
 
+/**Create RootScope For Order */
+.run(function($rootScope){
+  $rootScope.listFoodForOrder = [];
+})
+
 /*
   This directive is used to disable the "drag to open" functionality of the Side-Menu
   when you are dragging a Slider component.
