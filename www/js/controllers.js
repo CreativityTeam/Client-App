@@ -135,12 +135,13 @@ angular.module('app.controllers', ['ngMap'])
         comment : " ",
         price : " "
     };
-    $scope.listFood = $rootScope.listFoodForOrder;
+    $scope.listFood = $rootScope.listFoodForOrder;    
      function initMap() {
         var map = new google.maps.Map(document.getElementById('mapInOrder'), {
           zoom: 15
         });
 
+        var infoWindow = new google.maps.InfoWindow({map: map});
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(function(position) {
@@ -166,13 +167,20 @@ angular.module('app.controllers', ['ngMap'])
                 }
             });
           }, function() {
-            handleLocationError(true, map.getCenter());
+            handleLocationError(true, infoWindow, map.getCenter());
           });
         } else {
           // Browser doesn't support Geolocation
-          handleLocationError(false, map.getCenter());
+          handleLocationError(false, infoWindow, map.getCenter());
         }
       }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                            'Error: The Geolocation service failed.' :
+                            'Error: Your browser doesn\'t support geolocation.');
+    }
 
     initMap();
 
@@ -188,32 +196,28 @@ angular.module('app.controllers', ['ngMap'])
             $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
             console.log($scope.orderSaveDB);   
         }
-    }
+    }    
 
-    var calculatePrice = new Promise(function(resolve,reject){
+    var calculatePrice = function(){
         var totalPrice = 0;
         if($scope.listFood != []){
             for(var item in $scope.listFood){
                 totalPrice = totalPrice + $scope.listFood[item].foodDetail.price * $scope.listFood[item].quantity
             }
         }
-        resolve(totalPrice);
-    });
+        return totalPrice;
+    };    
 
-    calculatePrice.then(function(totalPrice){
-        $scope.totalPriceOrder = totalPrice;
-    });
+    $scope.totalPriceOrder = calculatePrice();
 
-    $scope.deleteItemInListOrder = function(id){
+    $scope.deleteItemInListOrder = function(id){        
         for(var i in $scope.listFood){
             if($scope.listFood[i].foodDetail._id == id){
                 $scope.listFood.splice(i,1);
             }
-        }
+        }        
 
-        calculatePrice.then(function(totalPrice){
-            $scope.totalPriceOrder = totalPrice;
-        });
+        $scope.totalPriceOrder = calculatePrice();                
     }
 })
    
@@ -267,44 +271,18 @@ angular.module('app.controllers', ['ngMap'])
           handleLocationError(false, infoWindow, map.getCenter());
         }
       }
+
+    function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                            'Error: The Geolocation service failed.' :
+                            'Error: Your browser doesn\'t support geolocation.');
+    }
     initMap();
 
 })
-   
-// .controller('sHIPPINGCtrl', function ($scope, $stateParams) {    
-//     function initMap() {
-//         var map = new google.maps.Map(document.getElementById('map'), {
-//           zoom: 15
-//         });
-//         var infoWindow = new google.maps.InfoWindow({map: map});
 
-//         // Try HTML5 geolocation.
-//         if (navigator.geolocation) {
-//           navigator.geolocation.getCurrentPosition(function(position) {
-//             var pos = {
-//               lat: position.coords.latitude,
-//               lng: position.coords.longitude
-//             };
-
-//             infoWindow.setPosition(pos);
-//             infoWindow.setContent('Location found.');
-//             map.setCenter(pos);
-//           }, function() {
-//             handleLocationError(true, infoWindow, map.getCenter());
-//           });
-//         } else {
-//           // Browser doesn't support Geolocation
-//           handleLocationError(false, infoWindow, map.getCenter());
-//         }
-//       }
-//     initMap();
-
-// })
-
-.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup){                    
-    // console.log("Order ID: " + $stateParams.orderid);
-    // console.log("Order Lat: " + $stateParams.lat);
-    // console.log("Order Lng: " + $stateParams.lng);
+.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup){                      
     $scope.anchor = {'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng)};
     $scope.marker = new google.maps.Marker();
     $scope.markers = [];
@@ -554,7 +532,7 @@ angular.module('app.controllers', ['ngMap'])
     getSubjectDetail()
 })
 
-.controller('DTailCtrl_tab1', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup) {
+.controller('DTailCtrl_tab1', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup, RatingService) {
     var childUrl = '/api/services/updaterating/' + $stateParams.idSubject;
     $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
 
@@ -659,7 +637,7 @@ console.log("tab 5")
 
 .controller('restaurantDetailCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,RatingService) {
     var childUrl = '/api/restaurants/updaterating/' + $stateParams.idRestaurant;
-    $scope.ratingsObject = RatingService.getRatingsObject(childUrl);    
+    $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
     $scope.comment = {
         content : ""
     };
@@ -745,7 +723,7 @@ console.log("tab 5")
                         $rootScope.listFoodForOrder[item].quantity = $rootScope.listFoodForOrder[item].quantity + parseInt(res);
                         foodObject = " ";
                         res = 0;
-                    }
+                    }``
                 }
                 if(foodObject != " " && parseInt(res) != 0){
                     $rootScope.listFoodForOrder.push({
