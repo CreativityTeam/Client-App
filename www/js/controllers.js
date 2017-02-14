@@ -135,10 +135,11 @@ angular.module('app.controllers', ['ngMap'])
         comment : " ",
         price : " "
     };
-    $scope.listFood = $rootScope.listFoodForOrder;    
+    $scope.listFood = $rootScope.listFoodForOrder;     
      function initMap() {
         var map = new google.maps.Map(document.getElementById('mapInOrder'), {
-          zoom: 15
+          zoom: 15,
+          center: new google.maps.LatLng(51.508742,-0.120850)
         });
 
         var infoWindow = new google.maps.InfoWindow({map: map});
@@ -184,20 +185,6 @@ angular.module('app.controllers', ['ngMap'])
 
     initMap();
 
-    $scope.order = function(){
-        if($scope.totalPriceOrder == 0){
-            var alertPopup = $ionicPopup.alert({
-                    title: 'Order Exception',
-                    template: "Your cart is empty, Please order something!!!"
-            });
-        }else{
-            $scope.orderSaveDB.food = $rootScope.listFoodForOrder;
-            $scope.orderSaveDB.point.lon = $scope.mapPosition.lng;
-            $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
-            console.log($scope.orderSaveDB);   
-        }
-    }    
-
     var calculatePrice = function(){
         var totalPrice = 0;
         if($scope.listFood != []){
@@ -205,10 +192,37 @@ angular.module('app.controllers', ['ngMap'])
                 totalPrice = totalPrice + $scope.listFood[item].foodDetail.price * $scope.listFood[item].quantity
             }
         }
-        return totalPrice;
-    };    
+        $scope.totalPriceOrder = totalPrice;
+    };  
 
-    $scope.totalPriceOrder = calculatePrice();
+    $scope.order = function(){
+        if($scope.totalPriceOrder == 0){
+            var alertPopup = $ionicPopup.alert({
+                    title: 'Order Exception',
+                    template: "Your cart is empty, Please order something!!!"
+            });
+        }else{
+            $scope.orderSaveDB.foods = $rootScope.listFoodForOrder;            
+            $scope.orderSaveDB.user_order_id = AuthService.userInforIdSave();            
+            if ($scope.mapPosition){
+                $scope.orderSaveDB.point.lon = $scope.mapPosition.lng;
+                $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
+            }                        
+            $http.post(API_ENDPOINT.url + '/api/orders/create',  $scope.orderSaveDB).success(function(response){
+                if(response.success){                      
+                    $rootScope.listFoodForOrder = [];
+                    $scope.listFood = [];                    
+                    calculatePrice();
+                    var alertPopup = $ionicPopup.alert({
+                        title: 'Checkout successfully',
+                        template: "You 've just checked out successfully!"
+                     });                                         
+                }
+            });      
+        }
+    }              
+
+    calculatePrice();
 
     $scope.deleteItemInListOrder = function(id){        
         for(var i in $scope.listFood){
@@ -217,11 +231,11 @@ angular.module('app.controllers', ['ngMap'])
             }
         }        
 
-        $scope.totalPriceOrder = calculatePrice();                
+        calculatePrice();                
     }
 })
    
-.controller('mYORDERCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
+.controller('mYORDERCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http) {
 
     var getOrderCurrentUser = function(){
         $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + AuthService.userInforIdSave()).success(function(response){
@@ -248,9 +262,10 @@ angular.module('app.controllers', ['ngMap'])
     
    function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15
+          zoom: 15,
+          center: new google.maps.LatLng(51.508742,-0.120850)
         });
-        var infoWindow = new google.maps.InfoWindow({map: map});
+        var infoWindow = new google.maps.InfoWindow({map: map});        
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -263,7 +278,8 @@ angular.module('app.controllers', ['ngMap'])
             infoWindow.setPosition(pos);
             infoWindow.setContent('Location found.');
             map.setCenter(pos);
-          }, function() {
+          }, function(error) {
+              console.log(error);
             handleLocationError(true, infoWindow, map.getCenter());
           });
         } else {
@@ -450,7 +466,7 @@ angular.module('app.controllers', ['ngMap'])
                         break;
                     }
                 }                        
-                $scope.averageRating = (($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
+                $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) /10;
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
             }
@@ -522,7 +538,7 @@ angular.module('app.controllers', ['ngMap'])
                         break;
                     }
                 }        
-                $scope.averageRating = (($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
+                $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) /10;
                 if(!$scope.currentSubject.hasOwnProperty("photo1")){
                     $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
                 }    
@@ -573,7 +589,7 @@ angular.module('app.controllers', ['ngMap'])
                     break;
                 }
             }
-            $scope.averageRating = (($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
+            $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) /10;
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
             }
@@ -591,7 +607,8 @@ console.log("tab 5")
 .controller('restaurantLocationCtrl', function ($scope, $stateParams) {
     function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 15
+          zoom: 15,
+          center: new google.maps.LatLng(51.508742,-0.120850)
         });
         var infoWindow = new google.maps.InfoWindow({map: map});
         var pos = {
@@ -654,7 +671,7 @@ console.log("tab 5")
                     break;
                 }
             }
-            $scope.averageRating = (($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
+            $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) /10;
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
             }
@@ -687,14 +704,31 @@ console.log("tab 5")
 })
 
 .controller('listFoodBelongMenuCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,$rootScope,$timeout) {
-    
+    //Check if foods in the cart belong to over 1 restaurant
+    var checkCart = function(food){                        
+        if ($rootScope.listFoodForOrder.length == 0){
+            return true;
+        }        
+        if (food.res_belong != $rootScope.listFoodForOrder[0].foodDetail.res_belong){
+            return false;
+        } 
+        return true;
+    }
+
     var getFoodByMenu = function(){
         $http.get(API_ENDPOINT.url + '/api/foods/findfoodbymenu/' + $stateParams.idMenu).success(function(data){
-                $scope.listMenuFood = data.data;
+            $scope.listMenuFood = data.data;               
         });   
     }
     
     $scope.orderFood = function(foodObject){
+            if (checkCart(foodObject) == false){
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Order Exception',
+                    template: "You could only order foods from only 1 restaurant at a time. Please check out in your Cart first!"
+                });
+                return;
+            }
             $scope.foodForOrder = {};
             var quantityPopup = $ionicPopup.show({
             template: '<input type="text" ng-model="foodForOrder.quantity">',
