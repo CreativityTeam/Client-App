@@ -1,13 +1,18 @@
-<ion-view title="FAVORITE RESTAURANT" id="page7">
+<ion-view title="List RESTAURANT">
   <ion-content padding="true" class="has-header">
-    <ion-list id="fAVORITERESTAURANT-list5">
-      <ion-item class="item-thumbnail-left item-icon-right assertive" id="fAVORITERESTAURANT-list-item39" ui-sref="tabsController.DTail">
-        <img src="img/wRRhm04SxONQXF9Imqu7_ENUV5W3dRISLGoE6t0Gl_Big-data-Exhaustive-review-pulls-together-evidence-on-food-groups-and-diet-related-disease.jpg">
-        <h2assertive>Mon Bac Res
-          <p style="white-space:normal;">Adds : Hung Vuong, Quan 5</p>
-          <i class="icon ion-android-delete"></i>
+    <form class="list">
+      <label class="item item-input" id="ListrESTAURANT-search2">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="search" placeholder="" ng-model="searchRestaurant">
+      </label>
+      <ion-item class="item-thumbnail-left assertive" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : searchRestaurant">
+        <img ng-src="{{restaurant.photo1}}">
+        <h2assertive>{{restaurant.res_name}}
+          <p>Description : {{restaurant.description}}</p>
+          <p>Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}</p>
         </h2assertive>
       </ion-item>
-    </ion-list>
+    </form>
+    <rating max="5"></rating>
   </ion-content>
 </ion-view>

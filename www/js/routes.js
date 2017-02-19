@@ -56,6 +56,10 @@ angular.module('app.routes', ['ionicUIRouter'])
       'tab6': {
         templateUrl: 'templates/DTailres.html',
         controller: 'restaurantDetailCtrl'
+      },
+      'tab5': {
+        templateUrl: 'templates/DTailres.html',
+        controller: 'restaurantDetailCtrl'
       }
     }
   })

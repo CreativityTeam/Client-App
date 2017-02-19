@@ -1,8 +1,8 @@
 angular.module('app.services', [])
 
 .constant('API_ENDPOINT',{         
-    root: 'http://localhost:3000/',
-    url: 'http://localhost:3000/server'
+    root:'http://test3721.herokuapp.com/',
+    url: 'http://test3721.herokuapp.com/server'
 })
 
 .service('AuthService',function($q, $http,API_ENDPOINT){

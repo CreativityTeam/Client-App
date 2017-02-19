@@ -248,17 +248,90 @@ angular.module('app.controllers', ['ngMap'])
     getOrderCurrentUser();
 })
    
-.controller('fAVORITEFOODCtrl', function ($scope, $stateParams) {
+.controller('fAVORITEFOODCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http,$rootScope,$ionicPopup,$timeout) {
 
+    var checkCart = function(food){                        
+        if ($rootScope.listFoodForOrder.length == 0){
+            return true;
+        }        
+        if (food.res_belong != $rootScope.listFoodForOrder[0].foodDetail.res_belong){
+            return false;
+        } 
+        return true;
+    }
 
+    var getListFood = function(){
+        $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){
+            $scope.listMenuFood = response.data.foods_favorite;
+        });
+    }
+
+    $scope.orderFood = function(foodObject){
+            if (checkCart(foodObject) == false){
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Order Exception',
+                    template: "You could only order foods from only 1 restaurant at a time. Please check out in your Cart first!"
+                });
+                return;
+            }
+            $scope.foodForOrder = {};
+            var quantityPopup = $ionicPopup.show({
+            template: '<input type="text" ng-model="foodForOrder.quantity">',
+            title: 'Enter Your quantity',
+            scope: $scope,
+            buttons: [
+                { text: 'Cancel' },
+                {
+                    text: '<b>Save</b>',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        if (!$scope.foodForOrder.quantity) {
+                            //don't allow the user to close unless he enters wifi password
+                            e.preventDefault();
+                        } else {
+                        return $scope.foodForOrder.quantity;
+                        }
+                    }
+                }
+                ]
+            });
+
+            quantityPopup.then(function(res) {
+                for(var item in $rootScope.listFoodForOrder){
+                    if($rootScope.listFoodForOrder[item].foodDetail._id == foodObject._id){
+                        $rootScope.listFoodForOrder[item].quantity = $rootScope.listFoodForOrder[item].quantity + parseInt(res);
+                        foodObject = " ";
+                        res = 0;
+                    }``
+                }
+                if(foodObject != " " && parseInt(res) != 0){
+                    $rootScope.listFoodForOrder.push({
+                        foodDetail : foodObject,
+                        quantity : parseInt(res)
+                    }) 
+                }                                       
+            });
+
+            $timeout(function() {
+                quantityPopup.close(); //close the popup after 3 seconds for some reason
+            }, 5000);
+    }
+
+    getListFood()
 })
    
-.controller('fAVORITERESTAURANTCtrl', function ($scope, $stateParams) {
+.controller('fAVORITERESTAURANTCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http) {
 
+    var getListRes = function(){
+        $http.get(API_ENDPOINT.url + '/api/users/findresfav/' + AuthService.tokensave()).success(function(response){
+            $scope.listRestaurant = response.data.res_favorite;
+        });
+    }
 
+    getListRes()
 })
    
-.controller('aroundCtrl', function ($scope, $stateParams) {
+.controller('aroundCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http) {
     
    function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -276,7 +349,7 @@ angular.module('app.controllers', ['ngMap'])
             };
 
             infoWindow.setPosition(pos);
-            infoWindow.setContent('Location found.');
+            infoWindow.setContent('Your Current Location');
             map.setCenter(pos);
           }, function(error) {
               console.log(error);
@@ -286,14 +359,51 @@ angular.module('app.controllers', ['ngMap'])
           // Browser doesn't support Geolocation
           handleLocationError(false, infoWindow, map.getCenter());
         }
+        findLocation(map)
       }
 
+      function findLocation(map){
+        $http.get(API_ENDPOINT.url + '/api/restaurants/findres').success(function(response){
+            for(var item in response.data){
+                var content = "<p><b>" + response.data[item].res_name + "</b></p><p>" 
+                + response.data[item].location.housenumber + "," + response.data[item].location.street + "," + response.data[item].location.district + "," 
+                + response.data[item].location.city; + "</p>";
+                var infowindow = new google.maps.InfoWindow({
+                        content:content  
+                });
+                var position = {
+                        lat : response.data[item].location.point.latitude,
+                        lng : response.data[item].location.point.longitude
+                };
+                var marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    title: response.data[item].res_name
+                });
+                infowindow.open(map,marker);
+                google.maps.event.addListener(marker,'click',(function(marker){
+                    return function(){
+                        map.setZoom(15);
+                        map.setCenter(marker.getPosition());
+                   }; 
+                })(marker));
+                /*marker.addListener('click',function(){
+                   return function(){
+                        map.setZoom(20);
+                        map.setCenter(marker.getPosition());
+                   }
+                });*/
+            }
+        });
+      }
     function handleLocationError(browserHasGeolocation, infoWindow, pos) {
         infoWindow.setPosition(pos);
         infoWindow.setContent(browserHasGeolocation ?
                             'Error: The Geolocation service failed.' :
                             'Error: Your browser doesn\'t support geolocation.');
     }
+
+    
     initMap();
 
 })
@@ -447,7 +557,7 @@ angular.module('app.controllers', ['ngMap'])
     };
 })
    
-.controller('fOODDETAILCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,RatingService) {
+.controller('fOODDETAILCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,RatingService,$cordovaToast) {
     var childUrl = '/api/foods/updaterating/' + $stateParams.idFood;
     $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
     $scope.comment = {
@@ -493,6 +603,37 @@ angular.module('app.controllers', ['ngMap'])
                 }
             });
         }
+    }
+
+    $scope.addFoodFav = function(food){
+        var checkExistFoodId = new Promise(function(resolve,reject){
+                $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){
+                if(response.success == false){
+                    reject(false)
+                }else{
+                    for(var item in response.data.res_favorite){
+                        if(response.data.foods_favorite[item]._id == food._id){
+                            $http.delete(API_ENDPOINT.url + '/api/users/deleteFoodFav/' + AuthService.tokensave() + '/' + food._id).success(function(response){
+                            resolve(true);
+                            })   
+                        }
+                    }
+                }
+            });    
+        })
+        checkExistFoodId.then(function(isDelete){
+            if(isDelete == true){
+                $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(),food).success(function(response){
+                     $cordovaToast.showShortCenter(response.msg).then(function(success) {})
+                })   
+            }
+        }).catch(function(isDelete){
+            if(isDelete == false){
+                $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(),food).success(function(response){
+                    $cordovaToast.showShortCenter(response.msg).then(function(success) {})
+                })   
+            }
+        })
     }
 
     getFoodDetail()
@@ -700,7 +841,34 @@ console.log("tab 5")
         }
     }
 
+    $scope.addResFav = function(res){
+        var checkExistResId = new Promise(function(resolve,reject){
+                $http.get(API_ENDPOINT.url + '/api/users/findresfav/' + AuthService.tokensave()).success(function(response){
+                if(response.success == false){
+                    reject(false)
+                }else{
+                    for(var item in response.data.res_favorite){
+                        if(response.data.res_favorite[item]._id == res._id){
+                            $http.delete(API_ENDPOINT.url + '/api/users/deleteResFav/' + AuthService.tokensave() + '/' + res._id).success(function(response){
+                            resolve(true);
+                            })   
+                        }
+                    }
+                }
+            });    
+        })
+        checkExistResId.then(function(isDelete){
+            if(isDelete == true){
+                $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(),res).success(function(response){})   
+            }
+        }).catch(function(isDelete){
+            if(isDelete == false){
+                $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(),res).success(function(response){})   
+            }
+        })
+    }
     getRestaurantDetail()
+
 })
 
 .controller('listFoodBelongMenuCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,$rootScope,$timeout) {

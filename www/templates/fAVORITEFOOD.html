@@ -1,13 +1,17 @@
-<ion-view title="FAVORITE FOOD" id="page8">
+<ion-view title="FAVORITE">
   <ion-content padding="true" class="has-header">
-    <ion-list id="fAVORITEFOOD-list6">
-      <ion-item class="item-thumbnail-left item-icon-right assertive" id="fAVORITEFOOD-list-item45" ui-sref="tabsController.fOODDETAIL">
-        <img src="img/wRRhm04SxONQXF9Imqu7_ENUV5W3dRISLGoE6t0Gl_Big-data-Exhaustive-review-pulls-together-evidence-on-food-groups-and-diet-related-disease.jpg">
-        <h2assertive>Thit Chien Trung
-          <p>Price:30.000</p>
-          <i class="icon ion-android-delete"></i>
+    <ion-list>
+      <ion-item class="item-thumbnail-left item-icon-right assertive" ng-repeat="food in listMenuFood">
+        <img src="img/KxegHHPOTYSq6XSp87kE_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
+        <h2assertive>{{food.food_name}}
+          <p style="white-space:normal;">Description : {{food.description}}</p>
+          <p style="white-space:normal;">Price : {{food.price}}</p>
+          <p></p>
+          <p><button class="button button-small button-assertive" ui-sref="tabsController.fOODDETAIL({idFood : food._id})">Détail</button></p>
+          <i class="icon ion-android-cart" ng-click="orderFood(food)"></i>
         </h2assertive>
       </ion-item>
     </ion-list>
+    <rating max="5"></rating>
   </ion-content>
 </ion-view>

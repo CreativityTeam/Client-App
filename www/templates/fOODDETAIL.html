@@ -6,7 +6,7 @@
         <h2assertive>{{currentSubject.food_name}}
           <p style="white-space:normal;">Price : {{currentSubject.price}}
             <br>Restaurant : {{currentSubject.res_belong.res_name}}</p>
-          <i class="icon ion-ios-heart"></i>
+          <i class="icon ion-ios-heart" ng-click="addFoodFav(currentSubject)"></i>
         </h2assertive>
       </ion-item>
       <h2assertive>
