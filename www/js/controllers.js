@@ -457,6 +457,9 @@ angular.module('app.controllers', ['ngMap'])
            $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function(response){
             if(response.success){
                 $scope.currentUser = response.data;
+                if(!$scope.currentUser.hasOwnProperty("avatar")){
+                    $scope.currentUser.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841" 
+                }
                 $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + $scope.currentUser._id).success(function(response){
                     if(response.success){
                             $scope.orderCurrentUser = response.data;
