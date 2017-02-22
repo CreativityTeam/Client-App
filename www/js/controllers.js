@@ -203,11 +203,12 @@ angular.module('app.controllers', ['ngMap'])
             });
         }else{
             $scope.orderSaveDB.foods = $rootScope.listFoodForOrder;            
-            $scope.orderSaveDB.user_order_id = AuthService.userInforIdSave();            
+            $scope.orderSaveDB.user_order_id = AuthService.userInforIdSave();
+            $scope.orderSaveDB.price = $scope.totalPriceOrder;            
             if ($scope.mapPosition){
                 $scope.orderSaveDB.point.lon = $scope.mapPosition.lng;
                 $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
-            }                        
+            }                      
             $http.post(API_ENDPOINT.url + '/api/orders/create',  $scope.orderSaveDB).success(function(response){
                 if(response.success){                      
                     $rootScope.listFoodForOrder = [];
