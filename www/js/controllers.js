@@ -163,9 +163,9 @@ angular.module('app.controllers', ['ngMap'])
             }
             marker.addListener('dragend', function() {
             $scope.mapPosition = {
-                    lat : parseFloat(marker.getPosition().lat().toFixed(3)),
-                    lng : parseFloat(marker.getPosition().lng().toFixed(3))
-                }
+                lat : marker.getPosition().lat(),
+                lng : marker.getPosition().lng()
+            }
             });
           }, function() {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -236,9 +236,9 @@ angular.module('app.controllers', ['ngMap'])
     }
 })
    
-.controller('mYORDERCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http) {
+.controller('mYORDERCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $interval) {
 
-    var getOrderCurrentUser = function(){
+    var getOrderCurrentUser = function(){        
         $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + AuthService.userInforIdSave()).success(function(response){
             if(response.success){                                
                 $scope.orderCurrentUser = response.data;
@@ -246,7 +246,15 @@ angular.module('app.controllers', ['ngMap'])
         });   
     }
 
-    getOrderCurrentUser();
+    var stop = $interval(getOrderCurrentUser,500);
+
+    $scope.$on('$destroy', function(){ 
+        console.log("DESTROYED");       
+        if (angular.isDefined(stop)) {
+            $interval.cancel(stop);
+            stop = undefined;            
+        }
+    });           
 })
    
 .controller('fAVORITEFOODCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http,$rootScope,$ionicPopup,$timeout) {
@@ -411,7 +419,9 @@ angular.module('app.controllers', ['ngMap'])
 
 .controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup, $http){      
     $scope.ioLocation = {};    
-    $scope.anchor = {'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng)};                    
+    $scope.anchor = {'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng)};
+    console.log("Anchor");
+    console.log($scope.anchor);                    
     $scope.marker = new google.maps.Marker();
     $scope.markers = [];
     $scope.directionsDisplays = [];    
@@ -489,26 +499,17 @@ angular.module('app.controllers', ['ngMap'])
 
     ioConnect();
 
-    // $scope.$on('$ionicView.leave', function(){
-    //     console.log("LEAVE");        
-    // }); 
-
-    // $scope.$on('$ionicView.loaded', function(){
-    //     console.log("Loaded");        
-    // });
-
-    $scope.$on('$ionicView.unloaded', function(){
-        if ($scope.ioLocation){
-            $scope.ioLocation.disconnect();
-        }
-        console.log("Unloaded");        
-    });
-
     $scope.$on("$ionicView.enter", function(event, data){
         // handle event
         initMap();
         console.log("Enter");        
     });    
+
+    $scope.$on('$destroy',function(){        
+        if ($scope.ioLocation){
+            $scope.ioLocation.disconnect();
+        }
+    })
 })
       
 .controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {

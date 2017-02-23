@@ -122,10 +122,10 @@ angular.module('app.services', [])
             icon: 'https://maps.google.com/mapfiles/kml/shapes/motorcycling.png'            
         });    
         markers.push(marker);
-        var bounds = new google.maps.LatLngBounds();        
-        bounds.extend(anchorPoint);
-        bounds.extend(marker.position);        
-        map.fitBounds(bounds);
+        // var bounds = new google.maps.LatLngBounds();        
+        // bounds.extend(anchorPoint);
+        // bounds.extend(marker.position);        
+        // map.fitBounds(bounds);
 
         // addCircle(map,latLng);        
     };
