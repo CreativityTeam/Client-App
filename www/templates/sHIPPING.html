@@ -1,9 +1,7 @@
 <ion-view title="Map">
     <ion-content>
         <div style="width: 68%; float:left; height: 100%">        
-            <ng-map style="height: 100%" center="{{anchor.lat}},{{anchor.lng}}">   
-                <marker position="{{anchor.lat}},{{anchor.lng}}" animation="DROP" icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"></marker>                
-            </ng-map>
+            <div id="map" data-tap-disabled="true"></div>            
         </div>
         <div id="directions-panel" style="width: 28%; float:right; height: 100%; overflow: auto; padding: 0px 5px">
     </ion-content>

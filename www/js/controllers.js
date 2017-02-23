@@ -209,7 +209,7 @@ angular.module('app.controllers', ['ngMap'])
                 $scope.orderSaveDB.point.lat = $scope.mapPosition.lat;
             }                        
             $http.post(API_ENDPOINT.url + '/api/orders/create',  $scope.orderSaveDB).success(function(response){
-                if(response.success){                      
+                if(response.success){                                                              
                     $rootScope.listFoodForOrder = [];
                     $scope.listFood = [];                    
                     calculatePrice();
@@ -408,34 +408,71 @@ angular.module('app.controllers', ['ngMap'])
 
 })
 
-.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup){                      
-    $scope.anchor = {'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng)};
+.controller('sHIPPINGCtrl',function($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup, $http){      
+    $scope.ioLocation = {};    
+    $scope.anchor = {'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng)};                    
     $scope.marker = new google.maps.Marker();
     $scope.markers = [];
     $scope.directionsDisplays = [];    
     $scope.directionsDisplay = new google.maps.DirectionsRenderer();        
-    var initMap = function(){
-        NgMap.getMap().then(function(map){
-            $scope.map = map;                                                
-        })
-    }
-    initMap();
 
-    var ioConnect = function(){
-        var ioLocation = io.connect(API_ENDPOINT.root);
-        ioLocation.on('location',function(location){
-            console.log('Location from server: order #' + location['id'] + ' ' + location['latitude'] + ' ' + location['longitude']);
+    var checkLocationOrdered = function(){
+        if (!$stateParams.lat || !$stateParams.lng){            
+            return false;   
+        }        
+        return true;
+    }
+
+    var initMap = function(){        
+        if (checkLocationOrdered() === false){
+            $ionicPopup.alert({
+                title: 'Order missing info',
+                template: 'No specified location for this order!'
+            });
+        }
+        else{
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: new google.maps.LatLng($scope.anchor['lat'],  $scope.anchor['lng'])
+            });         
+            $scope.map = map;
+            var marker = new google.maps.Marker({
+                map: $scope.map,
+                title: 'Order\'s location',
+                animation: google.maps.Animation.DROP,
+                position: new google.maps.LatLng($scope.anchor['lat'],  $scope.anchor['lng']),
+                icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'            
+            });    
+            $http.get(API_ENDPOINT.url + '/api/orders/getLatestLocation/' + $stateParams.orderid).success(function(response){
+                if(response.success){
+                    if (response.data){
+                        var latestLocation = {"lat": response.data.latitude, "lng": response.data.longitude};
+                        MapService.addMarker($scope.map, latestLocation, $scope.markers, $scope.anchor);
+                        MapService.getDirection($scope.map, latestLocation, $scope.anchor, $scope.directionsDisplays);
+                    }                                        
+                }
+            });   
+        }        
+    }        
+
+    var ioConnect = function(){   
+        if (checkLocationOrdered() === false){
+            return;
+        }     
+        $scope.ioLocation = io.connect(API_ENDPOINT.root);
+        $scope.ioLocation.on('location',function(location){
+            // console.log('Location from server: order #' + location['id'] + ' ' + location['latitude'] + ' ' + location['longitude']);
             $scope.trackLocation = {'lat': location['latitude'], 'lng': location['longitude']};                        
-            if ($scope.map && $stateParams.orderid == location['id']){                
+            if ($scope.map && $stateParams.orderid == location['id']){
                 MapService.eraseAllMarkers($scope.markers);
                 MapService.addMarker($scope.map, $scope.trackLocation, $scope.markers, $scope.anchor);
                 MapService.eraseAllDirectionsDisplays($scope.directionsDisplays);
                 MapService.getDirection($scope.map, $scope.trackLocation, $scope.anchor, $scope.directionsDisplays);
             }            
         })
-        ioLocation.on('status',function(status){
-            // console.log('Status from server: order #' + status['order_id'] + ' ' + status['status']);                                    
-            if ($scope.map && $stateParams.orderid == status['order_id']){                
+        $scope.ioLocation.on('status',function(status){
+            console.log('Status from server: order #' + status['order_id'] + ' ' + status['status']);                                    
+            if ($scope.map && $stateParams.orderid == status['order_id']){                 
                 if (status['status'] == 'shipped'){
                     if ($scope.markers[0]){
                         $scope.markers[0].setAnimation(null);
@@ -450,6 +487,27 @@ angular.module('app.controllers', ['ngMap'])
     }
 
     ioConnect();
+
+    // $scope.$on('$ionicView.leave', function(){
+    //     console.log("LEAVE");        
+    // }); 
+
+    // $scope.$on('$ionicView.loaded', function(){
+    //     console.log("Loaded");        
+    // });
+
+    $scope.$on('$ionicView.unloaded', function(){
+        if ($scope.ioLocation){
+            $scope.ioLocation.disconnect();
+        }
+        console.log("Unloaded");        
+    });
+
+    $scope.$on("$ionicView.enter", function(event, data){
+        // handle event
+        initMap();
+        console.log("Enter");        
+    });    
 })
       
 .controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {

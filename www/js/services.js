@@ -139,6 +139,7 @@ angular.module('app.services', [])
     };
 
     this.getDirection = function(map, origin, destination, directionsDisplays){
+        document.getElementById('directions-panel').innerHTML = "";
         var directionsService = new google.maps.DirectionsService();    
         var directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
         directionsDisplay.setPanel(document.getElementById('directions-panel'));         
