@@ -45,6 +45,11 @@ angular.module('app.services', [])
             $http.post(API_ENDPOINT.url + '/api/users/register' , user).then(function(response){
                 if(response.data.success){
                     storeToken(response.data.token);
+                    $http.get(API_ENDPOINT.url + '/api/users/findone/' + response.data.token).success(function(response){
+                        if(response.success){
+                            storeID(response.data._id);
+                        }
+                    });
                     resolve(response.data.msg);
                 }else{
                     reject(response.data.msg);
