@@ -102,7 +102,7 @@ angular.module('app.services', [])
   };
 })
 
-.service('MapService',function(){
+.service('MapService',function($ionicPopup){
     var addCircle = function(map, center, radius){
         var circle = new google.maps.Circle({
             strokeColor: '#FF0000',
@@ -162,7 +162,11 @@ angular.module('app.services', [])
             }
             else {  
                 console.log('Error ' + status);                              
-                console.log('Something wrong. Maybe the shipper\'s position is unknown now!');                                                                                       
+                console.log('Something wrong. Maybe the shipper\'s position is unknown now!');     
+                $ionicPopup.alert({
+                    title: 'Order missing info',
+                    template: 'Something wrong. Maybe the shipper\'s position is unknown now!'
+                });                                                                                  
             }        
         });
     };     

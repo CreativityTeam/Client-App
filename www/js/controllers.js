@@ -457,7 +457,7 @@ angular.module('app.controllers', ['ngMap'])
             $http.get(API_ENDPOINT.url + '/api/orders/getLatestLocation/' + $stateParams.orderid).success(function(response){
                 if(response.success){
                     if (response.data){
-                        var latestLocation = {"lat": response.data.latitude, "lng": response.data.longitude};
+                        var latestLocation = {"lat": parseFloat(response.data.latitude), "lng": parseFloat(response.data.longitude)};                        
                         MapService.addMarker($scope.map, latestLocation, $scope.markers, $scope.anchor);
                         MapService.getDirection($scope.map, latestLocation, $scope.anchor, $scope.directionsDisplays);
                     }                                        
@@ -473,7 +473,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.ioLocation = io.connect(API_ENDPOINT.root);
         $scope.ioLocation.on('location',function(location){
             // console.log('Location from server: order #' + location['id'] + ' ' + location['latitude'] + ' ' + location['longitude']);
-            $scope.trackLocation = {'lat': location['latitude'], 'lng': location['longitude']};                        
+            $scope.trackLocation = {'lat': parseFloat(location['latitude']), 'lng': parseFloat(location['longitude'])};                        
             if ($scope.map && $stateParams.orderid == location['id']){
                 MapService.eraseAllMarkers($scope.markers);
                 MapService.addMarker($scope.map, $scope.trackLocation, $scope.markers, $scope.anchor);
