@@ -347,7 +347,9 @@ angular.module('app.controllers', ['ngMap'])
           zoom: 15,
           center: new google.maps.LatLng(51.508742,-0.120850)
         });
-        var infoWindow = new google.maps.InfoWindow({map: map});        
+        var infowindow = new google.maps.InfoWindow({
+                content:"Your Current Location"  
+        });        
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -356,9 +358,12 @@ angular.module('app.controllers', ['ngMap'])
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-
-            infoWindow.setPosition(pos);
-            infoWindow.setContent('Your Current Location');
+            var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    title: "Your Current Location"
+            });
+            infowindow.open(map,marker);
             map.setCenter(pos);
           }, function(error) {
               console.log(error);
