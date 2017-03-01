@@ -332,8 +332,8 @@ angular.module('app.controllers', ['ngMap'])
 .controller('fAVORITERESTAURANTCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http) {
 
     var getListRes = function(){
-        $http.get(API_ENDPOINT.url + '/api/users/findresfav/' + AuthService.tokensave()).success(function(response){
-            $scope.listRestaurant = response.data.res_favorite;
+        $http.get(API_ENDPOINT.url + '/api/users/findresfav/' + AuthService.tokensave()).success(function(response){            
+            $scope.listRestaurant = response.data;
         });
     }
 
@@ -630,14 +630,19 @@ angular.module('app.controllers', ['ngMap'])
     $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
     $scope.comment = {
         content : ""
-    };
+    };    
     var getFoodDetail = function(){
          $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
          });
          $http.get(API_ENDPOINT.url + '/api/foods/findinfo/' + $stateParams.idFood ).success(function(response){
             $ionicLoading.hide();
-            $scope.currentSubject = response.data
+            $scope.currentSubject = response.data            
+            if ($scope.currentSubject.comments){
+                $scope.currentSubject.comments.sort(function(food1, food2){
+                    return food1.date_created < food2.date_created;
+                });
+            }            
             for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
                         $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
@@ -679,8 +684,8 @@ angular.module('app.controllers', ['ngMap'])
                 if(response.success == false){
                     reject(false)
                 }else{
-                    for(var item in response.data.res_favorite){
-                        if(response.data.foods_favorite[item]._id == food._id){
+                    for(var item in response.data){
+                        if(response.data[item]._id == food._id){
                             $http.delete(API_ENDPOINT.url + '/api/users/deleteFoodFav/' + AuthService.tokensave() + '/' + food._id).success(function(response){
                             resolve(true);
                             })   
@@ -861,19 +866,55 @@ console.log("tab 5")
 
 })
 
-.controller('restaurantDetailCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,RatingService) {
+.controller('restaurantDetailCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,RatingService,PhoneCallService) {
     var childUrl = '/api/restaurants/updaterating/' + $stateParams.idRestaurant;
     $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
     $scope.comment = {
         content : ""
     };
+    $scope.liked = false;  
+    var checkExistResId = function(res){
+        return new Promise(function(resolve,reject){
+            $http.get(API_ENDPOINT.url + '/api/users/findresfav/' + AuthService.tokensave()).success(function(response){                
+                if(response.success == false){                    
+                    reject(false);
+                }else{                                      
+                    for(var item in response.data){
+                        if(response.data[item]._id == res._id){                            
+                            resolve(true);                            
+                        }
+                    }
+                    resolve(false);
+                }
+            });    
+        });
+    }   
     var getRestaurantDetail = function(){
          $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-         });
+         });            
+
+        checkExistResId($stateParams.idRestaurant).then(function(isExisted){
+            console.log("Existed");
+            $scope.liked = true;
+        }, function(isExisted){
+            console.log("Not Existed");
+            $scope.liked = false;
+        });
+
+        $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){
+            if (response.data){
+                $scope.listMenuFood = response.data;
+            }               
+        });
          $http.get(API_ENDPOINT.url + '/api/restaurants/findinfo/' + $stateParams.idRestaurant ).success(function(response){
             $ionicLoading.hide();
             $scope.currentSubject = response.data
+            if ($scope.currentSubject.comments){
+                $scope.currentSubject.comments.sort(function(food1, food2){
+                    return food1.date_created < food2.date_created;
+                });
+            } 
             for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
                 if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
                     $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
@@ -909,33 +950,32 @@ console.log("tab 5")
         }
     }
 
-    $scope.addResFav = function(res){
-        var checkExistResId = new Promise(function(resolve,reject){
-                $http.get(API_ENDPOINT.url + '/api/users/findresfav/' + AuthService.tokensave()).success(function(response){
-                if(response.success == false){
-                    reject(false)
-                }else{
-                    for(var item in response.data.res_favorite){
-                        if(response.data.res_favorite[item]._id == res._id){
-                            $http.delete(API_ENDPOINT.url + '/api/users/deleteResFav/' + AuthService.tokensave() + '/' + res._id).success(function(response){
-                            resolve(true);
-                            })   
-                        }
-                    }
-                }
-            });    
-        })
-        checkExistResId.then(function(isDelete){
-            if(isDelete == true){
-                $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(),res).success(function(response){})   
+    $scope.handleResFav = function(res){ 
+        checkExistResId(res).then(function(isExisted){
+            if(isExisted == true){
+                console.log("Res Fav Existed");                
+                $http.delete(API_ENDPOINT.url + '/api/users/deleteResFav/' + AuthService.tokensave() + "/" + res._id).success(function(response){})   
+                $scope.liked = false;
             }
-        }).catch(function(isDelete){
-            if(isDelete == false){
-                $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(),res).success(function(response){})   
+            else if(isExisted == false){
+                console.log("Res Fav Not Existed");                
+                $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(),res).success(function(response){});   
+                $scope.liked = true;
+            }
+        }).catch(function(isExisted){
+            if(isExisted == false){                
+                console.log("No Res Fav Now")                
+                $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(),res).success(function(response){});   
+                $scope.liked = true;
             }
         })
     }
-    getRestaurantDetail()
+
+    $scope.call = function(phoneNumber){
+        PhoneCallService.call(phoneNumber);
+    };
+
+    getRestaurantDetail();
 
 })
 

@@ -7,10 +7,14 @@
         lng : currentSubject.location.point.longitude,
         name : currentSubject.location.housenumber + ', ' + currentSubject.location.street + ', ' + currentSubject.location.district + ', ' + currentSubject.location.city})">
         <h2assertive>{{currentSubject.res_name}}
-          <p style="white-space:normal;">Address : {{currentSubject.location.housenumber}}, {{currentSubject.location.street}}, {{currentSubject.location.district}}, {{currentSubject.location.city}}</p>
-          <i class="icon ion-ios-heart" ng-click="addResFav(currentSubject)"></i>
-        </h2assertive>
+          <p style="white-space:normal;">Address : {{currentSubject.location.housenumber}}, {{currentSubject.location.street}}, {{currentSubject.location.district}}, {{currentSubject.location.city}}</p>          
+          <!--<i class="icon ion-ios-heart" ng-click="addResFav(currentSubject)"></i>-->
+          <i ng-class="{'icon ion-ios-heart': liked, 'icon ion-ios-heart-outline': !liked}" ng-click="handleResFav(currentSubject)"></i>
+        </h2assertive>        
       </ion-item>
+      <h2assertive>
+        <p size="30" class="icon ion-android-call" align="center" ng-click="call(currentSubject.phone_number)">{{currentSubject.phone_number}}</p>
+      </h2assertive>
       <h2assertive>
         <p align="center">{{averageRating}} / {{currentSubject.ratings.length}} users</p>
       </h2assertive>
@@ -33,7 +37,8 @@
         </label>
       </form>
       <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in currentSubject.comments">
-        <img src="img/avatar.jpg">
+        <img ng-src="{{comment.user_id.avatar}}">
+        <h2assertive>{{comment.user_id.local.name}} :</h2assertive>
         <h2assertive>{{comment.content}}</h2assertive>
       </ion-item>
     </div>    

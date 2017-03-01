@@ -200,3 +200,17 @@ angular.module('app.services', [])
         };
       };
 })
+
+.service('PhoneCallService', function(){    
+    function onSuccess(result){
+        console.log("Success:"+result);
+    }
+
+    function onError(result) {
+        console.log("Error:"+result);
+    }
+
+    this.call = function(){
+        window.plugins.CallNumber.callNumber(onSuccess, onError, phoneNumber, false);
+    }
+})
