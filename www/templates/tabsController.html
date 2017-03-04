@@ -1,6 +1,6 @@
 <ion-view id="page1" style="background-color:#FFFFFF;">
-  <ion-tabs class="tabs-assertive tabs-icon-top" id="tabsController-tabs1">
-    <ion-tab title="Food" icon="ion-android-restaurant" href="#/page1/food" id="tabsController-tab6">
+  <ion-tabs class="tabs-assertive tabs-icon-top" id="tabsController-tabs1" ng-controller="tabsController">
+    <ion-tab title="Food" icon="ion-android-restaurant" ng-click="goTo('tabsController.food')" id="tabsController-tab6">
       <ion-nav-view name="tab6"></ion-nav-view>
     </ion-tab>
     <ion-tab title="Loisir" icon="ion-android-film" href="#/page1/loisir" id="tabsController-tab1">

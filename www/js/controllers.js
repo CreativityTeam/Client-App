@@ -37,8 +37,33 @@ angular.module('app.controllers', ['ngMap'])
 
 })
 
-.controller('listRestaurantCtrl',function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {
-
+.controller('listRestaurantCtrl',function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading) {    
+    $scope.hasDelivery = "all";
+    $scope.options = [
+        {value: "all", label: 'All'},
+        {value: "no", label: 'No'},
+        {value: "yes", label: 'Yes'},
+    ];    
+    $scope.setSelected = function(delivery){
+        $scope.hasDelivery = delivery.value;
+    };
+    $scope.setSearch = function(search){
+        $scope.search = search;
+    };
+    $scope.isActive = function(item){                   
+        if (item.codesiret == $scope.search || !$scope.search){            
+            if ($scope.hasDelivery == "all"){
+                return true;
+            }
+            if ($scope.hasDelivery == "yes" && item.delivery == true){
+                return true;
+            }
+            if ($scope.hasDelivery == "no" && item.delivery == false){
+                return true;
+            }
+        }
+        return false;
+    }
     var getListRestaurant = function(){
         $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -856,8 +881,18 @@ console.log("tab 5")
 
 })
    
-.controller('foodCtrl', function ($scope, $stateParams) {
+.controller('foodCtrl', function ($scope, $stateParams, $state) {    
 
+})
+
+.controller('tabsController', function ($scope, $stateParams, $state) {
+    $scope.goTo = function(args) {
+        $state.go(args, {}, {
+            reload: true,
+            inherit: false,
+            notify: true
+        });
+    };
 
 })
    
@@ -1019,6 +1054,7 @@ console.log("tab 5")
 
     var getFoodByMenu = function(){
         $http.get(API_ENDPOINT.url + '/api/foods/findfoodbymenu/' + $stateParams.idMenu).success(function(data){
+            console.log(data.data);
             $scope.listMenuFood = data.data;               
         });   
     }
