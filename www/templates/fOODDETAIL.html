@@ -27,7 +27,8 @@
         </label>
       </form>
       <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in currentSubject.comments">
-        <img src="img/avatar.jpg">
+        <img ng-src="{{comment.user_id.avatar}}">
+        <h2assertive>{{comment.user_id.local.name}} :</h2assertive>
         <h2assertive>{{comment.content}}</h2assertive>
       </ion-item>
     </div>

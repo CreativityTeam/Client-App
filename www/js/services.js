@@ -1,8 +1,8 @@
 angular.module('app.services', [])
 
 .constant('API_ENDPOINT',{         
-    root:'http://test3721.herokuapp.com/',
-    url: 'http://test3721.herokuapp.com/server'
+    root:'http://192.168.0.103:3000/',
+    url: 'http://192.168.0.103:3000/server'
 })
 
 .service('AuthService',function($q, $http,API_ENDPOINT){
@@ -199,4 +199,18 @@ angular.module('app.services', [])
             }
         };
       };
+})
+
+.service('PhoneCallService', function(){    
+    function onSuccess(result){
+        console.log("Success:"+result);
+    }
+
+    function onError(result) {
+        console.log("Error:"+result);
+    }
+
+    this.call = function(){
+        window.plugins.CallNumber.callNumber(onSuccess, onError, phoneNumber, false);
+    }
 })
