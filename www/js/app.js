@@ -30,29 +30,26 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     }
     if(window.Connection) {
         if(navigator.connection.type == Connection.NONE) {
-            $ionicPopup.confirm({
-                title: "Internet Disconnected",
-                content: "The internet is disconnected on your device."
+            $ionicPopup.alert({
+                title: "System Exception",
+                content: "The internet is required in this application."
             })
             .then(function(result) {
-                if(!result) {
-                      ionic.Platform.exitApp();
-                  }
+                  ionic.Platform.exitApp();
             });
         }else{
-          if (cordova.plugins.diagnostic){
             cordova.plugins.diagnostic.isLocationAvailable(function(available){
               if(!available){
                 var confirmPopup = $ionicPopup.alert({
                     title: 'System Exception',
-                    template: 'LocationServices is required in this application'
+                    template: 'LocationServices is required in this application.'
                 });
-                  confirmPopup.then(function(res) {
+                confirmPopup.then(function(res) {
                       cordova.plugins.diagnostic.switchToLocationSettings();
                   });
               }
             }, function(error){
-            });
+          });
 
           }
                 
