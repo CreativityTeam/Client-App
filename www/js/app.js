@@ -54,8 +54,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
           }
                 
         }
-    }
-  });
+    });
 })
 
 /**Create RootScope For Order */
