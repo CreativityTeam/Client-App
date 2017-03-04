@@ -1,8 +1,8 @@
 angular.module('app.services', [])
 
 .constant('API_ENDPOINT',{         
-    root:'http://192.168.0.103:3000/',
-    url: 'http://192.168.0.103:3000/server'
+    root:'http://192.168.1.7:3000/',
+    url: 'http://192.168.1.7:3000/server'
 })
 
 .service('AuthService',function($q, $http,API_ENDPOINT){
@@ -203,14 +203,19 @@ angular.module('app.services', [])
 
 .service('PhoneCallService', function(){    
     function onSuccess(result){
-        console.log("Success:"+result);
+        console.log("Success:" + result);
     }
 
     function onError(result) {
-        console.log("Error:"+result);
+        console.log("Error:" + result);
     }
 
-    this.call = function(){
-        window.plugins.CallNumber.callNumber(onSuccess, onError, phoneNumber, false);
+    this.call = function(phoneNumber){
+        if (!window.plugins){
+            alert("Only use this function in device");
+        }
+        else{
+            window.plugins.CallNumber.callNumber(onSuccess, onError, phoneNumber, false);
+        }           
     }
 })

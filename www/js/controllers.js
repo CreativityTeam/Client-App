@@ -336,7 +336,7 @@ angular.module('app.controllers', ['ngMap'])
                         $rootScope.listFoodForOrder[item].quantity = $rootScope.listFoodForOrder[item].quantity + parseInt(res);
                         foodObject = " ";
                         res = 0;
-                    }``
+                    }
                 }
                 if(foodObject != " " && parseInt(res) != 0){
                     $rootScope.listFoodForOrder.push({
@@ -1095,7 +1095,7 @@ console.log("tab 5")
                         $rootScope.listFoodForOrder[item].quantity = $rootScope.listFoodForOrder[item].quantity + parseInt(res);
                         foodObject = " ";
                         res = 0;
-                    }``
+                    }
                 }
                 if(foodObject != " " && parseInt(res) != 0){
                     $rootScope.listFoodForOrder.push({

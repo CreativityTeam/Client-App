@@ -40,7 +40,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
                   }
             });
         }else{
-                cordova.plugins.diagnostic.isLocationAvailable(function(available){
+          if (cordova.plugins.diagnostic){
+            cordova.plugins.diagnostic.isLocationAvailable(function(available){
               if(!available){
                 var confirmPopup = $ionicPopup.alert({
                     title: 'System Exception',
@@ -52,6 +53,9 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
               }
             }, function(error){
             });
+
+          }
+                
         }
     }
   });

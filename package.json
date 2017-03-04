@@ -27,7 +27,11 @@
     "cordova-plugins-diagnostic",
     "cordova-plugin-network-information",
     "cordova-plugin-request-location-accuracy",
-    "cordova-plugin-compat"
+    "cordova-plugin-compat",
+    {
+      "locator": "https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
+      "id": "call-number"
+    }
   ],
   "cordovaPlatforms": []
 }
