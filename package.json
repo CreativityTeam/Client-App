@@ -24,7 +24,7 @@
     "cordova-plugin-inappbrowser",
     "cordova-plugin-mauron85-background-geolocation",
     "cordova-plugin-geolocation",
-    "cordova-plugins-diagnostic",
+    "cordova.plugins.diagnostic",
     "cordova-plugin-network-information",
     "cordova-plugin-request-location-accuracy",
     "cordova-plugin-compat",
