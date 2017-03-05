@@ -594,7 +594,7 @@ angular.module('app.controllers', ['ngMap'])
 
 })
    
-.controller('loginCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$ionicPopup,$ionicLoading,$cordovaOauth,$http) {
+.controller('loginCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$ionicPopup,$ionicLoading,$cordovaOauth,$http,$cordovaToast) {
     $scope.loginFace = function(){
         $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -648,6 +648,15 @@ angular.module('app.controllers', ['ngMap'])
             });
         }
     };
+    $scope.resetPassword = function(){
+        $http.post(API_ENDPOINT.url + '/api/users/resetpassword',$scope.user).success(function(res){
+            if(res.success){
+                $cordovaToast.showShortCenter(res.msg).then(function(success) {})   
+            }else{
+                $cordovaToast.showShortCenter(res.msg).then(function(success) {})
+            }
+        })
+    }
 })
    
 .controller('fOODDETAILCtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http,$ionicLoading,$ionicPopup,RatingService,$cordovaToast) {

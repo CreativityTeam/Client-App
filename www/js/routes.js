@@ -182,6 +182,12 @@ angular.module('app.routes', ['ionicUIRouter'])
     controller: 'loginCtrl'
   })
 
+  .state('forgotpass', {
+    url: '/forgotpass',
+    templateUrl: 'templates/forgotpass.html',
+    controller: 'loginCtrl'
+  })
+
   .state('tabsController.fOODDETAIL', {
     url: '/fooddetail/:idFood',
     views: {
