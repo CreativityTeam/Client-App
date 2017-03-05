@@ -1,8 +1,8 @@
 angular.module('app.services', [])
 
 .constant('API_ENDPOINT',{         
-    root:'http://test3721.herokuapp.com/',
-    url: 'http://test3721.herokuapp.com/server'
+    root:'https://test3721.herokuapp.com/',
+    url: 'https://test3721.herokuapp.com/server'
 })
 
 .service('AuthService',function($q, $http,API_ENDPOINT){
@@ -45,11 +45,7 @@ angular.module('app.services', [])
             $http.post(API_ENDPOINT.url + '/api/users/register' , user).then(function(response){
                 if(response.data.success){
                     storeToken(response.data.token);
-                    $http.get(API_ENDPOINT.url + '/api/users/findone/' + response.data.token).success(function(response){
-                        if(response.success){
-                            storeID(response.data._id);
-                        }
-                    });
+                    storeID(response.data.data._id);
                     resolve(response.data.msg);
                 }else{
                     reject(response.data.msg);
@@ -63,11 +59,7 @@ angular.module('app.services', [])
             $http.post(API_ENDPOINT.url + '/api/users/login' , user).then(function(response){
                 if(response.data.success){
                     storeToken(response.data.token);
-                    $http.get(API_ENDPOINT.url + '/api/users/findone/' + response.data.token).success(function(response){
-                        if(response.success){
-                            storeID(response.data._id);
-                        }
-                    });
+                    storeID(response.data.data._id);
                     resolve(response.data.msg);
                 }else{
                     reject(response.data.msg);
