@@ -286,6 +286,26 @@ angular.module('app.routes', ['ionicUIRouter'])
     }
   })
 
+  .state('tabsController.cONDITIONS', {
+    url: '/conditions',
+    views: {
+      'tab5': {
+        templateUrl: 'templates/cONDITIONS.html',
+        controller: 'cONDITIONSCtrl'
+      }
+    }
+  })
+
+   .state('tabsController.eDITPROFILE', {
+    url: '/editProfile',
+    views: {
+      'tab5': {
+        templateUrl: 'templates/eDITPROFILE.html',
+        controller: 'eDITPROFILECtrl'
+      }
+    }
+  })
+
 $urlRouterProvider.otherwise('/page1/food')
 
   

@@ -21,8 +21,11 @@
         <i class="icon ion-ios-cart"></i>My Order : {{orderCurrentUser.length}}</ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item80" ui-sref="tabsController.cONTACT">
         <i class="icon ion-android-contact"></i>Contact</ion-item>
-    </ion-list>
-    <button id="pROFILE-button2" class="button button-assertive  button-block icon-left ion-upload">Upgrade Account!!</button>
+      <ion-item class="item-icon-left" id="pROFILE-list-item99" ui-sref="tabsController.eDITPROFILE">
+        <i class="icon ion-information-circled"></i>Edit Profile</ion-item>
+      <ion-item class="item-icon-left" id="pROFILE-list-item100" ui-sref="tabsController.cONDITIONS">
+        <i class="icon ion-alert-circled"></i>Conditions générales</ion-item>
+    </ion-list>    
     <a ng-click="logout()" id="pROFILE-button11" class="button button-royal  button-block icon-left ion-log-out">Sign Out</a>
   </ion-content>
 </ion-view>

@@ -543,10 +543,18 @@ angular.module('app.controllers', ['ngMap'])
 })
       
 .controller('pROFILECtrl', function ($scope, $stateParams,$state,API_ENDPOINT, AuthService,$http) {
+    function parseDateToDisplay(date) {        
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var year = date.getFullYear();
+        return day + "/" + month + "/" + year;
+    }
     var getCurrentUserInformation = function(){
            $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function(response){
             if(response.success){
                 $scope.currentUser = response.data;
+                $scope.currentUser.gender = $scope.currentUser.gender == "M"?"Male":"Female";
+                $scope.currentUser.birthday = parseDateToDisplay(new Date($scope.currentUser.birthday));
                 if(!$scope.currentUser.hasOwnProperty("avatar")){
                     $scope.currentUser.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841" 
                 }
@@ -1120,3 +1128,39 @@ console.log("tab 5")
     }
     getFoodByMenu();
 }) 
+
+.controller('cONDITIONSCtrl', function(){
+
+})
+
+.controller('eDITPROFILECtrl', function($scope, $http, $ionicLoading, $ionicPopup, API_ENDPOINT, AuthService){        
+    var getUserInfo = function(){
+        $http.get(API_ENDPOINT.url + '/api/users/findUserID/' + AuthService.userInforIdSave()).success(function(response){            
+            $scope.currentUser = response.data;
+            $scope.currentUser.birthday = new Date(response.data.birthday)
+        });
+    }
+    
+    getUserInfo();
+
+    $scope.update = function(){      
+        $ionicLoading.show({
+            template: '<p>Updating...</p><ion-spinner></ion-spinner>',
+        });  
+        $http.put(API_ENDPOINT.url + '/api/users/update/' + AuthService.userInforIdSave(), $scope.currentUser).success(function(response){            
+            if (response.success){
+                $ionicPopup.alert({
+                    title: 'Update done',
+                    template: "Update your info done"
+                });
+                $ionicLoading.hide();
+            }
+            else{                
+                $ionicPopup.alert({
+                    title: 'Update failed',
+                    template: "Update your info failed " + response.message
+                });
+            }
+        });
+    }
+})
