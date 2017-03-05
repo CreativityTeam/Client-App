@@ -1008,7 +1008,19 @@ console.log("tab 5")
 
 })
    
-.controller('foodCtrl', function ($scope, $stateParams, $state) {    
+.controller('foodCtrl', function ($scope, $stateParams, $state,$ionicLoading,$http,API_ENDPOINT) { 
+
+    var getPubLicities = function(){
+        $ionicLoading.show({
+            template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+         });        
+        $http.get(API_ENDPOINT.url + '/api/publicities/findAllPublicity').success(function(responseGet){
+            $ionicLoading.hide();
+            $scope.publicities = responseGet.data
+        })
+    }
+
+    getPubLicities()
 
 })
 
