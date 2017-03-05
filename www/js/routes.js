@@ -295,7 +295,7 @@ $urlRouterProvider.otherwise('/page1/food')
 .run(function($rootScope,$state,AuthService,$window){
     $rootScope.$on('$stateChangeStart',function(event,next,nextParams,fromState){
         if(!AuthService.isAuthenticated()){
-            if(next.name != 'login' && next.name != 'signup'){
+            if(next.name != 'login' && next.name != 'signup' && next.name != 'forgotpass'){
                 event.preventDefault();
                 $state.go('login');
             };
