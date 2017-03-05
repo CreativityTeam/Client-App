@@ -678,7 +678,7 @@ angular.module('app.controllers', ['ngMap'])
         };
         
         $cordovaFileTransfer.upload(url, targetPath, options).then(function(result) {
-            $rootScope.urlImage = API_ENDPOINT.root + result.data.data.url
+            $rootScope.urlImage = API_ENDPOINT.root + angular.fromJson(result.response).data.url
             $scope.showAlert('Success', 'Image upload finished.');
         });
     }
