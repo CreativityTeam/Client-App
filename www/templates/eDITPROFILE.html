@@ -30,9 +30,8 @@
       </label>                  
     </form>
         
-    <button class="button icon-left ion-upload" ng-click="imagePick()">Upload</button>
-    <img ng-src="{{imageChosenURI}}" style="width: 50%; height: 50%;">    
-    {{imageChosenURI}}
+    <button ui-sref="tabsController.uploadPhoto" class="button icon-left ion-upload">Upload Avatar</button>
+
     <button id="cONTACT-button21" class="button button-assertive  button-block" ng-click="update()">UPDATE</button>
   </ion-content>
 </ion-view>

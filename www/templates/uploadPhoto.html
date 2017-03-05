@@ -1,0 +1,11 @@
+<ion-view title="Upload Photo" id="page21">
+  <ion-content padding="true" class="has-header">
+      <img ng-src="{{pathForImage(image)}}" style="width: 100%; height: 100%;">
+  </ion-content>
+  <ion-footer-bar class="bar bar-positive">
+      <div class="button-bar">
+        <button class="button icon-left ion-camera" ng-click="loadImage()">Take Photo</button>
+        <button class="button icon-left ion-upload" ng-click="uploadImage()" ng-disabled="image === null">Upload</button>
+      </div>
+  </ion-footer-bar>
+</ion-view>

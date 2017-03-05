@@ -306,6 +306,17 @@ angular.module('app.routes', ['ionicUIRouter'])
     }
   })
 
+   .state('tabsController.uploadPhoto', {
+    url: '/uploadPhoto',
+    views: {
+      'tab5': {
+        templateUrl: 'templates/uploadPhoto.html',
+        controller: 'pROFILECtrl'
+      }
+    }
+  })
+
+
 $urlRouterProvider.otherwise('/page1/food')
 
   
@@ -313,6 +324,7 @@ $urlRouterProvider.otherwise('/page1/food')
 })
 
 .run(function($rootScope,$state,AuthService,$window){
+    $rootScope.urlImage = '';
     $rootScope.$on('$stateChangeStart',function(event,next,nextParams,fromState){
         if(!AuthService.isAuthenticated()){
             if(next.name != 'login' && next.name != 'signup' && next.name != 'forgotpass'){

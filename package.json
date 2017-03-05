@@ -28,6 +28,12 @@
     "cordova-plugin-network-information",
     "cordova-plugin-request-location-accuracy",
     "cordova-plugin-compat",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-filepath",
+    "cordova-plugin-camera",
+    "cordova-plugin-actionsheet",
+    "cordova-plugin-image-picker",
     {
       "locator": "https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
       "id": "call-number"
