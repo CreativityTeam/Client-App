@@ -1,0 +1,38 @@
+<ion-view title="EDIT PROFILE" id="page21">
+  <ion-content padding="true" class="has-header">
+    <form id="cONTACT-form11" class="list">
+      <label class="item item-input" id="cONTACT-input9">
+        <span class="input-label">Nom</span>
+        <input type="text" placeholder="" ng-model="currentUser.local.name">
+      </label>      
+      <label class="item item-input" id="cONTACT-input14">
+        <span class="input-label">Phone</span>
+        <input type="text" placeholder="" ng-model="currentUser.phone">
+      </label>
+      <label class="item item-input" id="cONTACT-textarea2">
+        <span class="input-label">Gender</span>        
+         <select ng-model="currentUser.gender">            
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+        </select>
+      </label>      
+      <label class="item item-input" id="cONTACT-textarea3">
+        <span class="input-label">Adresse</span>
+        <textarea placeholder="" ng-model="currentUser.address"></textarea>
+      </label>
+      <label class="item item-input" id="cONTACT-textarea3">
+        <span class="input-label">About</span>
+        <textarea placeholder="" ng-model="currentUser.about"></textarea>
+      </label>                  
+      <label class="item item-input" id="cONTACT-textarea3">
+        <span class="input-label" ng-model="currentUser.birthday">Birthday</span>
+        <input type="date" ng-model="currentUser.birthday"></input>
+      </label>                  
+    </form>
+        
+    <button class="button icon-left ion-upload" ng-click="imagePick()">Upload</button>
+    <img ng-src="{{imageChosenURI}}" style="width: 50%; height: 50%;">    
+    {{imageChosenURI}}
+    <button id="cONTACT-button21" class="button button-assertive  button-block" ng-click="update()">UPDATE</button>
+  </ion-content>
+</ion-view>

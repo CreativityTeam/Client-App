@@ -1133,7 +1133,7 @@ console.log("tab 5")
 
 })
 
-.controller('eDITPROFILECtrl', function($scope, $http, $ionicLoading, $ionicPopup, API_ENDPOINT, AuthService){        
+.controller('eDITPROFILECtrl', function($scope, $http,$cordovaFile,$cordovaFileTransfer, $cordovaImagePicker, $ionicLoading, $ionicPopup, API_ENDPOINT, AuthService){        
     var getUserInfo = function(){
         $http.get(API_ENDPOINT.url + '/api/users/findUserID/' + AuthService.userInforIdSave()).success(function(response){            
             $scope.currentUser = response.data;
@@ -1163,4 +1163,67 @@ console.log("tab 5")
             }
         });
     }
+
+$scope.imageChosenURI = null;
+
+$scope.imagePick = function(){ 
+    if (!window.plugins){
+        alert('Only use this function on device');
+        return;
+    }  
+    $ionicLoading.show({
+        template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+    });  
+   imagePicker.getPictures(
+        function(result) {      
+            console.log(result[0]);                  
+            // $scope.imageChosenURI = "data:image/jpeg;base64," + result[0];              
+            $scope.imageChosenURI = result[0];              
+            $scope.uploadImage();
+            $ionicLoading.hide();          
+        },
+        function(errmsg) { console.log("ohoh.. " + errmsg);},
+        { // options object, all optional
+            maximumImagesCount: 1, // Android only since plugin version 2.1.1, default no limit
+            quality: 90, // 0-100, default 100 which is highest quality
+            width: 400,  // proportionally rescale image to this width, default no rescale
+            height: 400, // same for height
+            outputType: imagePicker.OutputType.FILE_URI // default .FILE_URI
+        }
+        );        
+}
+
+$scope.uploadImage = function() {
+  // Destination URL
+  var url = API_ENDPOINT.url + "/api/photos/addphoto";
+ 
+  // File for Upload
+  var targetPath = $scope.imageChosenURI;
+ 
+  // File name only
+  var filename = "upload";
+ 
+  var options = {
+    fileKey: "file",
+    fileName: filename,
+    chunkedMode: false,
+    mimeType: "multipart/form-data",
+    params : {'fileName': filename}
+  };
+ 
+ document.addEventListener('deviceready', function () {
+
+    $cordovaFileTransfer.upload(server, filePath, options)
+      .then(function(result) {
+          console.log(result);
+        // Success!
+      }, function(err) {
+        // Error
+      }, function (progress) {
+        // constant progress updates
+      });
+
+  }, false);
+}
+  
 })
