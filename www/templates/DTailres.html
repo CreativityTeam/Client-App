@@ -13,7 +13,7 @@
         </h2assertive>        
       </ion-item>     
       <div class="phonecall">
-        <p class="icon ion-android-call" align="center" ng-click="call(currentSubject.phone_number)">{{currentSubject.phone_number}}</p>
+        <p class="icon ion-android-call" align="center" ng-click="call(currentSubject.phone_number)">{{getPhoneNumber()}}</p>
       </div>
       <h2assertive>
         <p align="center">{{averageRating}} / {{currentSubject.ratings.length}} users</p>

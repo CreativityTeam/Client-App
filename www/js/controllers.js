@@ -295,8 +295,8 @@ angular.module('app.controllers', ['ngMap'])
     }
 
     var getListFood = function(){
-        $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){
-            $scope.listMenuFood = response.data.foods_favorite;
+        $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){            
+            $scope.listMenuFood = response.data;
         });
     }
 
@@ -783,10 +783,35 @@ angular.module('app.controllers', ['ngMap'])
     $scope.comment = {
         content : ""
     };    
+    $scope.liked = false; 
+    $scope.commentTodayOnThis = false; 
+    var checkExistResId = function(food){
+        return new Promise(function(resolve,reject){
+            $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){                
+                if(response.success == false){                    
+                    reject(false);
+                }else{                                      
+                    for(var item in response.data){
+                        if(response.data[item]._id == food._id){                            
+                            resolve(true);                            
+                        }
+                    }
+                    resolve(false);
+                }
+            });    
+        });
+    }   
     var getFoodDetail = function(){
          $ionicLoading.show({
             template: '<p>Loading...</p><ion-spinner></ion-spinner>',
          });
+         checkExistResId($stateParams.idFood).then(function(isExisted){
+            console.log("Existed");
+            $scope.liked = true;
+        }, function(isExisted){
+            console.log("Not Existed");
+            $scope.liked = false;
+        });
          $http.get(API_ENDPOINT.url + '/api/foods/findinfo/' + $stateParams.idFood ).success(function(response){
             $ionicLoading.hide();
             $scope.currentSubject = response.data            
@@ -795,6 +820,21 @@ angular.module('app.controllers', ['ngMap'])
                     return food1.date_created < food2.date_created;
                 });
             }            
+
+            //Check if user already comment on this today
+            for (var i in $scope.currentSubject.comments){                
+                if ($scope.currentSubject.comments[i].user_id._id == AuthService.userInforIdSave()){                                        
+                    var date_created = new Date($scope.currentSubject.comments[i].date_created);
+                    date_created = new Date(date_created.getTime() + (date_created.getTimezoneOffset()*60000));                    
+                    var today = new Date();
+                    if ((date_created.getDate() == today.getDate()) && (date_created.getMonth() == today.getMonth()) && (date_created.getYear() == today.getYear())){
+                        console.log("Already comment on this today");
+                        $scope.commentTodayOnThis = true;
+                    }                    
+                    break;
+                }
+            }
+
             for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
                         $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
@@ -810,53 +850,51 @@ angular.module('app.controllers', ['ngMap'])
     };
 
     $scope.commentButton = function(idFood){
-        if($scope.comment.content == ""){
+        if ($scope.commentTodayOnThis == true){
+            $ionicPopup.alert({
+                    title: 'System Exception',
+                    template: "Only 1 comment on this today!!!"
+            });
+        }
+        else{
+            if($scope.comment.content == ""){
             var alertPopup = $ionicPopup.alert({
                     title: 'System Exception',
                     template: "Please type something in comment box!!!"
             });
-        }else{
-            $scope.commentSave = {
-                user_id : AuthService.userInforIdSave(),
-                content : $scope.comment.content
-            } 
-            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
-                if(response.success == true){
-                    $http.put(API_ENDPOINT.url + '/api/foods/addcomment/' + idFood + "/" + response.data._id).success(function(response){
-                        getFoodDetail();
-                    })    
-                }
-            });
-        }
+            }else{
+                $scope.commentSave = {
+                    user_id : AuthService.userInforIdSave(),
+                    content : $scope.comment.content
+                } 
+                $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                    if(response.success == true){
+                        $http.put(API_ENDPOINT.url + '/api/foods/addcomment/' + idFood + "/" + response.data._id).success(function(response){
+                            getFoodDetail();
+                        })    
+                    }
+                });
+            }
+        }        
     }
 
-    $scope.addFoodFav = function(food){
-        var checkExistFoodId = new Promise(function(resolve,reject){
-                $http.get(API_ENDPOINT.url + '/api/users/findfoodfav/' + AuthService.tokensave()).success(function(response){
-                if(response.success == false){
-                    reject(false)
-                }else{
-                    for(var item in response.data){
-                        if(response.data[item]._id == food._id){
-                            $http.delete(API_ENDPOINT.url + '/api/users/deleteFoodFav/' + AuthService.tokensave() + '/' + food._id).success(function(response){
-                            resolve(true);
-                            })   
-                        }
-                    }
-                }
-            });    
-        })
-        checkExistFoodId.then(function(isDelete){
-            if(isDelete == true){
-                $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(),food).success(function(response){
-                     $cordovaToast.showShortCenter(response.msg).then(function(success) {})
-                })   
+    $scope.handleFoodFav = function(food){ 
+        checkExistResId(food).then(function(isExisted){
+            if(isExisted == true){
+                console.log("Food Fav Existed");                
+                $http.delete(API_ENDPOINT.url + '/api/users/deleteFoodFav/' + AuthService.tokensave() + "/" + food._id).success(function(response){})   
+                $scope.liked = false;
             }
-        }).catch(function(isDelete){
-            if(isDelete == false){
-                $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(),food).success(function(response){
-                    $cordovaToast.showShortCenter(response.msg).then(function(success) {})
-                })   
+            else if(isExisted == false){
+                console.log("Food Fav Not Existed");                
+                $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(),food).success(function(response){});   
+                $scope.liked = true;
+            }
+        }).catch(function(isExisted){
+            if(isExisted == false){                
+                console.log("No Food Fav Now")                
+                $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(),food).success(function(response){});   
+                $scope.liked = true;
             }
         })
     }
@@ -870,24 +908,33 @@ angular.module('app.controllers', ['ngMap'])
     $scope.comment = {
         content : ""
     };
+    $scope.commentTodayOnThis = false;
     $scope.commentButton = function(idService){
-        if($scope.comment.content == ""){
-            var alertPopup = $ionicPopup.alert({
+        if ($scope.commentTodayOnThis == true){
+            $ionicPopup.alert({
                     title: 'System Exception',
-                    template: "Please type something in comment box!!!"
+                    template: "Only 1 comment on this today!!!"
             });
-        }else{
-            $scope.commentSave = {
-                user_id : AuthService.userInforIdSave(),
-                content : $scope.comment.content
-            } 
-            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
-                if(response.success == true){
-                    $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
-                        getSubjectDetail();
-                    })    
-                }
-            });
+        }
+        else{
+            if($scope.comment.content == ""){
+                var alertPopup = $ionicPopup.alert({
+                        title: 'System Exception',
+                        template: "Please type something in comment box!!!"
+                });
+            }else{
+                $scope.commentSave = {
+                    user_id : AuthService.userInforIdSave(),
+                    content : $scope.comment.content
+                } 
+                $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                    if(response.success == true){
+                        $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
+                            getSubjectDetail();
+                        })    
+                    }
+                });
+            }
         }
     }
 
@@ -897,7 +944,28 @@ angular.module('app.controllers', ['ngMap'])
          });
          $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
                 $ionicLoading.hide();            
-                $scope.currentSubject = response.data    
+                $scope.currentSubject = response.data  
+
+                if ($scope.currentSubject.comments){
+                    $scope.currentSubject.comments.sort(function(food1, food2){
+                        return food1.date_created < food2.date_created;
+                    });
+                }
+
+                //Check if user already comment on this today
+                for (var i in $scope.currentSubject.comments){                
+                    if ($scope.currentSubject.comments[i].user_id._id == AuthService.userInforIdSave()){                                        
+                        var date_created = new Date($scope.currentSubject.comments[i].date_created);
+                        date_created = new Date(date_created.getTime() + (date_created.getTimezoneOffset()*60000));                    
+                        var today = new Date();
+                        if ((date_created.getDate() == today.getDate()) && (date_created.getMonth() == today.getMonth()) && (date_created.getYear() == today.getYear())){
+                            console.log("Already comment on this today");
+                            $scope.commentTodayOnThis = true;
+                        }                    
+                        break;
+                    }
+                }
+
                 for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
                         $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
@@ -918,28 +986,40 @@ angular.module('app.controllers', ['ngMap'])
     var childUrl = '/api/services/updaterating/' + $stateParams.idSubject;
     $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
 
+    $scope.commentTodayOnThis = false;
+
     $scope.comment = {
         content : ""
     };
     $scope.commentButton = function(idService){
-        if($scope.comment.content == ""){
-            var alertPopup = $ionicPopup.alert({
+        console.log($scope.commentTodayOnThis)
+        if ($scope.commentTodayOnThis == true){
+            $ionicPopup.alert({
                     title: 'System Exception',
-                    template: "Please type something in comment box!!!"
-            });
-        }else{
-            $scope.commentSave = {
-                user_id : AuthService.userInforIdSave(),
-                content : $scope.comment.content
-            } 
-            $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
-                if(response.success == true){
-                    $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
-                        getSubjectDetail();
-                    })    
-                }
+                    template: "Only 1 comment on this today!!!"
             });
         }
+        else{
+            if($scope.comment.content == ""){
+                var alertPopup = $ionicPopup.alert({
+                        title: 'System Exception',
+                        template: "Please type something in comment box!!!"
+                });
+            }else{
+                $scope.commentSave = {
+                    user_id : AuthService.userInforIdSave(),
+                    content : $scope.comment.content
+                } 
+                $http.post(API_ENDPOINT.url + '/api/comments/create/',$scope.commentSave).success(function(response){
+                    if(response.success == true){
+                        $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function(response){
+                            getSubjectDetail();
+                        })    
+                    }
+                });
+            }
+        }
+        
     }
 
     var getSubjectDetail = function(){
@@ -949,12 +1029,36 @@ angular.module('app.controllers', ['ngMap'])
          $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
             $ionicLoading.hide();
             $scope.currentSubject = response.data
+
+            if ($scope.currentSubject.comments){
+                $scope.currentSubject.comments.sort(function(food1, food2){
+                    return food1.date_created < food2.date_created;
+                });
+            }
+console.log($scope.currentSubject.comments);
+            //Check if user already comment on this today
+            for (var i in $scope.currentSubject.comments){
+                console.log($scope.currentSubject.comments[i].user_id._id + "  " + AuthService.userInforIdSave())                
+                if ($scope.currentSubject.comments[i].user_id._id == AuthService.userInforIdSave()){                                        
+                    console.log("DEBUG");
+                    var date_created = new Date($scope.currentSubject.comments[i].date_created);
+                    date_created = new Date(date_created.getTime() + (date_created.getTimezoneOffset()*60000));                    
+                    var today = new Date();
+                    if ((date_created.getDate() == today.getDate()) && (date_created.getMonth() == today.getMonth()) && (date_created.getYear() == today.getYear())){
+                        console.log("Already comment on this today");
+                        $scope.commentTodayOnThis = true;
+                    }                    
+                    break;
+                }
+            }
+
             for (var i = 0; i < $scope.currentSubject.ratings.length; ++i){                
                 if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()){                    
                     $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
                     break;
                 }
             }
+            
             $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) /10;
             if(!$scope.currentSubject.hasOwnProperty("photo1")){
                 $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
@@ -1172,8 +1276,17 @@ console.log("tab 5")
     }
 
     $scope.call = function(phoneNumber){
-        PhoneCallService.call(phoneNumber);
+        if (phoneNumber){
+            PhoneCallService.call(phoneNumber);
+        }        
     };
+
+    $scope.getPhoneNumber = function(){
+        if ($scope.phoneNumber){
+            return $scope.phoneNumber;
+        }
+        return "No phone number now"
+    }
 
     getRestaurantDetail();
 
