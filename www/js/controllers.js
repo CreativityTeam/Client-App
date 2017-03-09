@@ -783,6 +783,9 @@ angular.module('app.controllers', ['ngMap'])
             content: ""
         };
         $scope.liked = false;
+        $scope.parseCommentDate = function(date){
+            return SubjectDetailService.parseCommentDate(new Date(date));
+        }  
 
         var getFoodDetail = function () {
             $ionicLoading.show({
@@ -882,6 +885,9 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
+        $scope.parseCommentDate = function(date){
+            return SubjectDetailService.parseCommentDate(new Date(date));
+        } 
         $scope.commentButton = function (idService) {
             if ($scope.commentTodayOnThis == true) {
                 $ionicPopup.alert({
@@ -945,6 +951,9 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
+        $scope.parseCommentDate = function(date){
+            return SubjectDetailService.parseCommentDate(new Date(date));
+        } 
         $scope.commentButton = function (idService) {
             console.log($scope.commentTodayOnThis)
             if ($scope.commentTodayOnThis == true) {
@@ -1086,6 +1095,9 @@ angular.module('app.controllers', ['ngMap'])
             content: ""
         };
         $scope.liked = false;
+        $scope.parseCommentDate = function(date){
+            return SubjectDetailService.parseCommentDate(new Date(date));
+        }                
 
         var getRestaurantDetail = function () {
             $ionicLoading.show({
