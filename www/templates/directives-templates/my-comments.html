@@ -1,0 +1,6 @@
+<ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in subject.comments | orderBy: '-date_created'">
+    <img ng-src="{{comment.user_id.avatar}}">
+    <h2assertive>{{comment.user_id.local.name}} :</h2assertive>
+    <h2assertive>{{comment.content}}</h2assertive>
+    <h2assertive style="float: right">{{parseCommentDate(comment.date_created)}}</h2assertive>
+</ion-item>

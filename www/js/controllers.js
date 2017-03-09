@@ -782,16 +782,12 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-        $scope.liked = false;
-        $scope.parseCommentDate = function(date){
-            return SubjectDetailService.parseCommentDate(new Date(date));
-        }  
+        $scope.liked = false;        
 
         var getFoodDetail = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-            });
-            console.log("DEBUG " + $stateParams.idFood);
+            });            
             SubjectDetailService.checkIfSubjectLiked($stateParams.idFood, 'food').then(function (isExisted) {
                 if (isExisted) {
                     console.log("Res Liked");
@@ -885,9 +881,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-        $scope.parseCommentDate = function(date){
-            return SubjectDetailService.parseCommentDate(new Date(date));
-        } 
+         
         $scope.commentButton = function (idService) {
             if ($scope.commentTodayOnThis == true) {
                 $ionicPopup.alert({
@@ -951,9 +945,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-        $scope.parseCommentDate = function(date){
-            return SubjectDetailService.parseCommentDate(new Date(date));
-        } 
+         
         $scope.commentButton = function (idService) {
             console.log($scope.commentTodayOnThis)
             if ($scope.commentTodayOnThis == true) {
@@ -1094,10 +1086,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-        $scope.liked = false;
-        $scope.parseCommentDate = function(date){
-            return SubjectDetailService.parseCommentDate(new Date(date));
-        }                
+        $scope.liked = false;                      
 
         var getRestaurantDetail = function () {
             $ionicLoading.show({

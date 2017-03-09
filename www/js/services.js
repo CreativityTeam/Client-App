@@ -254,14 +254,5 @@ angular.module('app.services', [])
                     }
                 });
             });
-        }
-
-        this.parseCommentDate = function(date){
-            var month = date.getMonth() + 1;
-            var day = date.getDate();
-            var year = date.getFullYear();
-            var hour = date.getHours();
-            var minute = date.getMinutes();
-            return day + "/" + month + "/" + year + " " + hour + ":" + minute;
-        }
+        }        
     })

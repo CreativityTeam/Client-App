@@ -27,12 +27,7 @@
           <input type="text" placeholder="" ng-model="comment.content">
         </label>
       </form>      
-      <ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in currentSubject.comments | orderBy: '-date_created'">
-        <img ng-src="{{comment.user_id.avatar}}">
-        <h2assertive>{{comment.user_id.local.name}} :</h2assertive>
-        <h2assertive>{{comment.content}}</h2assertive>
-        <h2assertive style="float:right">{{parseCommentDate(comment.date_created)}}</h2assertive>
-      </ion-item>
+      <my-comments comments=currentSubject></my-comments>
     </div>        
   </ion-content>
 </ion-view>
