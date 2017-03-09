@@ -211,3 +211,48 @@ angular.module('app.services', [])
         }           
     }
 })
+
+.service('SubjectDetailService', function(API_ENDPOINT,AuthService,$http){
+    this.checkIfCommentOnThisToday = function(comments, userIdCheck){        
+        for (var i in comments){                
+            if (comments[i].user_id._id == userIdCheck){                                        
+                var date_created = new Date(comments[i].date_created);
+                date_created = new Date(date_created.getTime() + (date_created.getTimezoneOffset()*60000));                    
+                var today = new Date();
+                if ((date_created.getDate() == today.getDate()) && (date_created.getMonth() == today.getMonth()) && (date_created.getYear() == today.getYear())){
+                    console.log("Already comment on this today");
+                    return true;
+                }                    
+                break;
+            }
+        }
+        return false;
+    }
+
+    this.checkIfSubjectLiked = function(subjectId, subjectType){        
+        var tailUrl = '';
+        switch (subjectType){
+            case 'food': 
+                tailUrl = '/api/users/findfoodfav/';
+                break;
+            case 'restaurant':
+                tailUrl = '/api/users/findresfav/';
+                break;
+        }
+        
+        return new Promise(function(resolve,reject){            
+            $http.get(API_ENDPOINT.url + tailUrl + AuthService.tokensave()).success(function(response){                
+                if(response.success == false){                    
+                    reject(false);
+                }else{                                      
+                    for(var item in response.data){
+                        if(response.data[item]._id == subjectId){                            
+                            resolve(true);                            
+                        }
+                    }
+                    resolve(false);
+                }
+            });    
+        });
+    }    
+})
