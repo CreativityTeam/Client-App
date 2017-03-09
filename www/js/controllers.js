@@ -816,8 +816,8 @@ angular.module('app.controllers', ['ngMap'])
             $ionicLoading.hide();
             $scope.currentSubject = response.data            
             if ($scope.currentSubject.comments){
-                $scope.currentSubject.comments.sort(function(food1, food2){
-                    return food1.date_created < food2.date_created;
+                $scope.currentSubject.comments.sort(function(comment1, comment2){
+                    return comment1.date_created < comment2.date_created;
                 });
             }            
 
@@ -944,13 +944,13 @@ angular.module('app.controllers', ['ngMap'])
          });
          $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject ).success(function(response){
                 $ionicLoading.hide();            
-                $scope.currentSubject = response.data  
-
+                $scope.currentSubject = response.data                  
                 if ($scope.currentSubject.comments){
-                    $scope.currentSubject.comments.sort(function(food1, food2){
-                        return food1.date_created < food2.date_created;
+                    $scope.currentSubject.comments.sort(function(comment1, comment2){
+                        return comment1.date_created < comment2.date_created;
                     });
                 }
+                console.log($scope.currentSubject.comments);
 
                 //Check if user already comment on this today
                 for (var i in $scope.currentSubject.comments){                
@@ -1031,11 +1031,11 @@ angular.module('app.controllers', ['ngMap'])
             $scope.currentSubject = response.data
 
             if ($scope.currentSubject.comments){
-                $scope.currentSubject.comments.sort(function(food1, food2){
-                    return food1.date_created < food2.date_created;
+                $scope.currentSubject.comments.sort(function(comment1, comment2){
+                    return comment1.date_created < comment2.date_created;
                 });
             }
-console.log($scope.currentSubject.comments);
+            
             //Check if user already comment on this today
             for (var i in $scope.currentSubject.comments){
                 console.log($scope.currentSubject.comments[i].user_id._id + "  " + AuthService.userInforIdSave())                
@@ -1191,8 +1191,8 @@ console.log("tab 5")
             $scope.currentSubject = response.data
             //Sort comments ascending
             if ($scope.currentSubject.comments){
-                $scope.currentSubject.comments.sort(function(food1, food2){
-                    return food1.date_created < food2.date_created;
+                $scope.currentSubject.comments.sort(function(comment1, comment2){
+                    return comment1.date_created < comment2.date_created;
                 });
             } 
 
