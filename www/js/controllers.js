@@ -554,7 +554,7 @@ angular.module('app.controllers', ['ngMap'])
                 if (response.success) {
                     $scope.currentUser = response.data;
                     $scope.currentUser.gender = $scope.currentUser.gender == "M" ? "Male" : "Female";
-                    $scope.currentUser.birthday = parseDateToDisplay(new Date($scope.currentUser.birthday));
+                    $scope.currentUser.birthday = $scope.currentUser.birthday? parseDateToDisplay(new Date($scope.currentUser.birthday)):"";
                     if (!$scope.currentUser.hasOwnProperty("avatar")) {
                         $scope.currentUser.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
                     }
@@ -782,12 +782,12 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-        $scope.liked = false;        
+        $scope.liked = false;
 
         var getFoodDetail = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-            });            
+            });
             SubjectDetailService.checkIfSubjectLiked($stateParams.idFood, 'food').then(function (isExisted) {
                 if (isExisted) {
                     console.log("Res Liked");
@@ -881,7 +881,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-         
+
         $scope.commentButton = function (idService) {
             if ($scope.commentTodayOnThis == true) {
                 $ionicPopup.alert({
@@ -945,7 +945,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-         
+
         $scope.commentButton = function (idService) {
             console.log($scope.commentTodayOnThis)
             if ($scope.commentTodayOnThis == true) {
@@ -1086,7 +1086,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.comment = {
             content: ""
         };
-        $scope.liked = false;                      
+        $scope.liked = false;
 
         var getRestaurantDetail = function () {
             $ionicLoading.show({
