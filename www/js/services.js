@@ -195,7 +195,8 @@ angular.module('app.services', [])
 
     .service('SubjectDetailService', function (API_ENDPOINT, AuthService, $http) {
         this.checkIfCommentOnThisToday = function (comments, userIdCheck) {
-            for (var i in comments) {
+            //comments is an array with 'date_created' ascending sorted
+            for (var i=comments.length-1; i>=0; i--) {
                 if (comments[i].user_id._id == userIdCheck) {
                     var date_created = new Date(comments[i].date_created);
                     date_created = new Date(date_created.getTime() + (date_created.getTimezoneOffset() * 60000));
