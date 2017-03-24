@@ -222,7 +222,7 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.order = function () {
             if ($scope.totalPriceOrder == 0) {
-                var alertPopup = $ionicPopup.alert({
+                $ionicPopup.alert({
                     title: 'Order Exception',
                     template: "Your cart is empty, Please order something!!!"
                 });
@@ -239,7 +239,7 @@ angular.module('app.controllers', ['ngMap'])
                         $rootScope.listFoodForOrder = [];
                         $scope.listFood = [];
                         calculatePrice();
-                        var alertPopup = $ionicPopup.alert({
+                        $ionicPopup.alert({
                             title: 'Checkout successfully',
                             template: "You 've just checked out successfully!"
                         });
@@ -274,7 +274,7 @@ angular.module('app.controllers', ['ngMap'])
         var stop = $interval(getOrderCurrentUser, 500);
 
         $scope.$on('$destroy', function () {
-            console.log("DESTROYED");
+
             if (angular.isDefined(stop)) {
                 $interval.cancel(stop);
                 stop = undefined;
@@ -302,7 +302,7 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.orderFood = function (foodObject) {
             if (checkCart(foodObject) == false) {
-                var alertPopup = $ionicPopup.alert({
+                $ionicPopup.alert({
                     title: 'Order Exception',
                     template: "You could only order foods from only 1 restaurant at a time. Please check out in your Cart first!"
                 });
@@ -391,7 +391,7 @@ angular.module('app.controllers', ['ngMap'])
                     infowindow.open(map, marker);
                     map.setCenter(pos);
                 }, function (error) {
-                    console.log(error);
+
                     handleLocationError(true, infoWindow, map.getCenter());
                 });
             } else {
@@ -450,8 +450,8 @@ angular.module('app.controllers', ['ngMap'])
     .controller('sHIPPINGCtrl', function ($scope, $stateParams, NgMap, API_ENDPOINT, MapService, $ionicPopup, $http) {
         $scope.ioLocation = {};
         $scope.anchor = { 'lat': parseFloat($stateParams.lat), 'lng': parseFloat($stateParams.lng) };
-        console.log("Anchor");
-        console.log($scope.anchor);
+
+
         $scope.marker = new google.maps.Marker();
         $scope.markers = [];
         $scope.directionsDisplays = [];
@@ -502,7 +502,7 @@ angular.module('app.controllers', ['ngMap'])
             }
             $scope.ioLocation = io.connect(API_ENDPOINT.root);
             $scope.ioLocation.on('location', function (location) {
-                // console.log('Location from server: order #' + location['id'] + ' ' + location['latitude'] + ' ' + location['longitude']);
+                // 
                 $scope.trackLocation = { 'lat': parseFloat(location['latitude']), 'lng': parseFloat(location['longitude']) };
                 if ($scope.map && $stateParams.orderid == location['id']) {
                     MapService.eraseAllMarkers($scope.markers);
@@ -512,7 +512,7 @@ angular.module('app.controllers', ['ngMap'])
                 }
             })
             $scope.ioLocation.on('status', function (status) {
-                console.log('Status from server: order #' + status['order_id'] + ' ' + status['status']);
+
                 if ($scope.map && $stateParams.orderid == status['order_id']) {
                     if (status['status'] == 'shipped') {
                         if ($scope.markers[0]) {
@@ -532,7 +532,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.$on("$ionicView.enter", function (event, data) {
             // handle event
             initMap();
-            console.log("Enter");
+
         });
 
         $scope.$on('$destroy', function () {
@@ -542,7 +542,7 @@ angular.module('app.controllers', ['ngMap'])
         })
     })
 
-    .controller('pROFILECtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $ionicPopup, $cordovaActionSheet,$ionicLoading) {
+    .controller('pROFILECtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $ionicPopup, $cordovaActionSheet, $ionicLoading) {
         function parseDateToDisplay(date) {
             var month = date.getMonth() + 1;
             var day = date.getDate();
@@ -554,7 +554,7 @@ angular.module('app.controllers', ['ngMap'])
                 if (response.success) {
                     $scope.currentUser = response.data;
                     $scope.currentUser.gender = $scope.currentUser.gender == "M" ? "Male" : "Female";
-                    $scope.currentUser.birthday = $scope.currentUser.birthday? parseDateToDisplay(new Date($scope.currentUser.birthday)):"";
+                    $scope.currentUser.birthday = $scope.currentUser.birthday ? parseDateToDisplay(new Date($scope.currentUser.birthday)) : "";
                     if (!$scope.currentUser.hasOwnProperty("avatar")) {
                         $scope.currentUser.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
                     }
@@ -571,7 +571,7 @@ angular.module('app.controllers', ['ngMap'])
             AuthService.logout();
             $state.go('login');
         };
-        getCurrentUserInformation();        
+        getCurrentUserInformation();
     })
 
     .controller('signupCtrl', function ($scope, $stateParams, $state, AuthService, $ionicPopup, $ionicLoading) {
@@ -593,7 +593,7 @@ angular.module('app.controllers', ['ngMap'])
                 $state.go("tabsController.food");
             }, function (errMsg) {
                 $ionicLoading.hide();
-                var alertPopup = $ionicPopup.alert({
+                $ionicPopup.alert({
                     title: 'Sign-Up Exception',
                     template: errMsg
                 });
@@ -635,7 +635,7 @@ angular.module('app.controllers', ['ngMap'])
         };
         $scope.login = function () {
             if ($scope.user.username == "" || $scope.user.password == "") {
-                var alertPopup = $ionicPopup.alert({
+                $ionicPopup.alert({
                     title: 'Login Exception',
                     template: "Username Or Password Are Missing"
                 });
@@ -647,7 +647,7 @@ angular.module('app.controllers', ['ngMap'])
                     $ionicLoading.hide();
                     $state.go("tabsController.food");
                 }, function (errMsg) {
-                    var alertPopup = $ionicPopup.alert({
+                    $ionicPopup.alert({
                         title: 'Login Exception',
                         template: errMsg
                     });
@@ -678,17 +678,15 @@ angular.module('app.controllers', ['ngMap'])
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             });
-            SubjectDetailService.checkIfSubjectLiked($stateParams.idFood, 'food').then(function (isExisted) {
-                if (isExisted) {
-                    console.log("Res Liked");
+            SubjectDetailService.checkIfSubjectLiked($stateParams.idFood, 'food').then(function (liked) {
+                if (liked) {
+
                     $scope.liked = true;
                 }
                 else {
-                    console.log("Res Not Liked");
                     $scope.liked = false;
                 }
-            }, function (isExisted) {
-                console.log("Food Not Liked");
+            }, function (liked) {
                 $scope.liked = false;
             });
             $http.get(API_ENDPOINT.url + '/api/foods/findinfo/' + $stateParams.idFood).success(function (response) {
@@ -708,54 +706,47 @@ angular.module('app.controllers', ['ngMap'])
                 if (!$scope.currentSubject.hasOwnProperty("photo1")) {
                     $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
                 }
-                console.log($scope.currentSubject)
             });
         };
 
-        $scope.commentButton = function (idFood) {
-            if ($scope.commentTodayOnThis == true) {
+        $scope.handleComment = function (idFood) {
+            if (SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave()) == true) {
                 $ionicPopup.alert({
                     title: 'System Exception',
                     template: "Only 1 comment on this today!!!"
                 });
             }
             else {
-                if ($scope.comment.content == "") {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'System Exception',
-                        template: "Please type something in comment box!!!"
-                    });
-                } else {
-                    $scope.commentSave = {
-                        user_id: AuthService.userInforIdSave(),
-                        content: $scope.comment.content
-                    }
-                    $http.post(API_ENDPOINT.url + '/api/comments/create/', $scope.commentSave).success(function (response) {
-                        if (response.success == true) {
-                            $http.put(API_ENDPOINT.url + '/api/foods/addcomment/' + idFood + "/" + response.data._id).success(function (response) {
-                                getFoodDetail();
-                            })
-                        }
-                    });
-                }
+                $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                });
+                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'food', idFood)
+                    .then(function (comment) {
+                        $scope.currentSubject.comments.push(comment);
+                        $ionicLoading.hide();
+                    })
+                    .catch(function () {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'System Exception',
+                            template: "Please type something in comment box!!!"
+                        });
+                    })
             }
         }
 
         $scope.handleFoodFav = function (food) {
-            SubjectDetailService.checkIfSubjectLiked(food._id, 'food').then(function (isExisted) {
-                if (isExisted == true) {
-                    console.log("Food Fav Existed");
+            SubjectDetailService.checkIfSubjectLiked(food._id, 'food').then(function (liked) {
+                if (liked == true) {
                     $http.delete(API_ENDPOINT.url + '/api/users/deleteFoodFav/' + AuthService.tokensave() + "/" + food._id).success(function (response) { })
                     $scope.liked = false;
                 }
-                else if (isExisted == false) {
-                    console.log("Food Fav Not Existed");
+                else if (liked == false) {
                     $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(), food).success(function (response) { });
                     $scope.liked = true;
                 }
-            }).catch(function (isExisted) {
-                if (isExisted == false) {
-                    console.log("No Food Fav Now")
+            }).catch(function (liked) {
+                if (liked == false) {
                     $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(), food).success(function (response) { });
                     $scope.liked = true;
                 }
@@ -772,32 +763,29 @@ angular.module('app.controllers', ['ngMap'])
             content: ""
         };
 
-        $scope.commentButton = function (idService) {
-            if ($scope.commentTodayOnThis == true) {
+        $scope.handleComment = function (idService) {
+            if (SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave()) == true) {
                 $ionicPopup.alert({
                     title: 'System Exception',
                     template: "Only 1 comment on this today!!!"
                 });
             }
             else {
-                if ($scope.comment.content == "") {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'System Exception',
-                        template: "Please type something in comment box!!!"
-                    });
-                } else {
-                    $scope.commentSave = {
-                        user_id: AuthService.userInforIdSave(),
-                        content: $scope.comment.content
-                    }
-                    $http.post(API_ENDPOINT.url + '/api/comments/create/', $scope.commentSave).success(function (response) {
-                        if (response.success == true) {
-                            $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function (response) {
-                                getSubjectDetail();
-                            })
-                        }
-                    });
-                }
+                $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                });
+                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'service', idService)
+                    .then(function (comment) {
+                        $scope.currentSubject.comments.push(comment);
+                        $ionicLoading.hide();
+                    })
+                    .catch(function () {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'System Exception',
+                            template: "Please type something in comment box!!!"
+                        });
+                    })
             }
         }
 
@@ -836,33 +824,29 @@ angular.module('app.controllers', ['ngMap'])
             content: ""
         };
 
-        $scope.commentButton = function (idService) {
-            console.log($scope.commentTodayOnThis)
-            if ($scope.commentTodayOnThis == true) {
+        $scope.handleComment = function (idService) {
+            if (SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave()) == true) {
                 $ionicPopup.alert({
                     title: 'System Exception',
                     template: "Only 1 comment on this today!!!"
                 });
             }
             else {
-                if ($scope.comment.content == "") {
-                    var alertPopup = $ionicPopup.alert({
-                        title: 'System Exception',
-                        template: "Please type something in comment box!!!"
-                    });
-                } else {
-                    $scope.commentSave = {
-                        user_id: AuthService.userInforIdSave(),
-                        content: $scope.comment.content
-                    }
-                    $http.post(API_ENDPOINT.url + '/api/comments/create/', $scope.commentSave).success(function (response) {
-                        if (response.success == true) {
-                            $http.put(API_ENDPOINT.url + '/api/services/updatecomment/' + idService + "/" + response.data._id).success(function (response) {
-                                getSubjectDetail();
-                            })
-                        }
-                    });
-                }
+                $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                });
+                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'service', idService)
+                    .then(function (comment) {
+                        $scope.currentSubject.comments.push(comment);
+                        $ionicLoading.hide();
+                    })
+                    .catch(function () {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'System Exception',
+                            template: "Please type something in comment box!!!"
+                        });
+                    })
             }
         }
 
@@ -895,7 +879,7 @@ angular.module('app.controllers', ['ngMap'])
     })
 
     .controller('DTailCtrl_tab5', function ($scope, $stateParams) {
-        
+
     })
 
     .controller('restaurantLocationCtrl', function ($scope, $stateParams) {
@@ -909,35 +893,15 @@ angular.module('app.controllers', ['ngMap'])
                 lat: parseFloat($stateParams.lat),
                 lng: parseFloat($stateParams.lng)
             };
-            console.log(pos);
+
             infoWindow.setPosition(pos);
             infoWindow.setContent($stateParams.name);
             map.setCenter(pos);
-            // Try HTML5 geolocation.
-            /*if (navigator.geolocation) {
-              navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = {
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude
-                };
-    
-                infoWindow.setPosition(pos);
-                infoWindow.setContent('Location found.');
-                map.setCenter(pos);
-              }, function() {
-                handleLocationError(true, infoWindow, map.getCenter());
-              });
-            } else {
-              // Browser doesn't support Geolocation
-              handleLocationError(false, infoWindow, map.getCenter());
-            }*/
         }
         initMap();
-
     })
 
     .controller('foodCtrl', function ($scope, $stateParams, $state, $ionicLoading, $http, API_ENDPOINT) {
-
         var getPubLicities = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -980,17 +944,14 @@ angular.module('app.controllers', ['ngMap'])
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             });
 
-            SubjectDetailService.checkIfSubjectLiked($stateParams.idRestaurant, 'restaurant').then(function (isExisted) {
-                if (isExisted) {
-                    console.log("Res Liked");
+            SubjectDetailService.checkIfSubjectLiked($stateParams.idRestaurant, 'restaurant').then(function (liked) {
+                if (liked) {
                     $scope.liked = true;
                 }
                 else {
-                    console.log("Res Not Liked");
                     $scope.liked = false;
                 }
-            }, function (isExisted) {
-                console.log("Res Not Liked");
+            }, function (liked) {
                 $scope.liked = false;
             });
 
@@ -999,12 +960,10 @@ angular.module('app.controllers', ['ngMap'])
                     $scope.listMenuFood = response.data;
                 }
             });
+
             $http.get(API_ENDPOINT.url + '/api/restaurants/findinfo/' + $stateParams.idRestaurant).success(function (response) {
                 $ionicLoading.hide();
                 $scope.currentSubject = response.data
-
-                //Check if user already comment on this today
-                $scope.commentTodayOnThis = SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave());
 
                 for (var i = 0; i < $scope.currentSubject.ratings.length; ++i) {
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()) {
@@ -1015,54 +974,48 @@ angular.module('app.controllers', ['ngMap'])
                 $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
                 if (!$scope.currentSubject.hasOwnProperty("photo1")) {
                     $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                }                
+                }
             });
         };
 
-        $scope.commentButton = function (idRes) {
-            if ($scope.commentTodayOnThis == true) {
+        $scope.handleComment = function (idRes) {
+            if (SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave()) == true) {
                 $ionicPopup.alert({
                     title: 'System Exception',
                     template: "Only 1 comment on this today!!!"
                 });
             }
             else {
-                if ($scope.comment.content == "") {
-                    $ionicPopup.alert({
-                        title: 'System Exception',
-                        template: "Please type something in comment box!!!"
-                    });
-                } else {
-                    $scope.commentSave = {
-                        user_id: AuthService.userInforIdSave(),
-                        content: $scope.comment.content
-                    }
-                    $http.post(API_ENDPOINT.url + '/api/comments/create/', $scope.commentSave).success(function (response) {
-                        if (response.success == true) {
-                            $http.put(API_ENDPOINT.url + '/api/restaurants/updatecomment/' + idRes + "/" + response.data._id).success(function (response) {
-                                getRestaurantDetail();
-                            })
-                        }
-                    });
-                }
+                $ionicLoading.show({
+                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                });
+                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'restaurant', idRes)
+                    .then(function (comment) {
+                        $scope.currentSubject.comments.push(comment);
+                        $ionicLoading.hide();
+                    })
+                    .catch(function () {
+                        $ionicLoading.hide();
+                        $ionicPopup.alert({
+                            title: 'System Exception',
+                            template: "Please type something in comment box!!!"
+                        });
+                    })
             }
         }
 
         $scope.handleResFav = function (res) {
-            SubjectDetailService.checkIfSubjectLiked(res._id, 'restaurant').then(function (isExisted) {
-                if (isExisted == true) {
-                    console.log("Res Fav Existed");
+            SubjectDetailService.checkIfSubjectLiked(res._id, 'restaurant').then(function (liked) {
+                if (liked == true) {
                     $http.delete(API_ENDPOINT.url + '/api/users/deleteResFav/' + AuthService.tokensave() + "/" + res._id).success(function (response) { })
                     $scope.liked = false;
                 }
-                else if (isExisted == false) {
-                    console.log("Res Fav Not Existed");
+                else if (liked == false) {
                     $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(), res).success(function (response) { });
                     $scope.liked = true;
                 }
-            }).catch(function (isExisted) {
-                if (isExisted == false) {
-                    console.log("No Res Fav Now")
+            }).catch(function (liked) {
+                if (liked == false) {
                     $http.put(API_ENDPOINT.url + '/api/users/addresfav/' + AuthService.tokensave(), res).success(function (response) { });
                     $scope.liked = true;
                 }
@@ -1106,7 +1059,7 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.orderFood = function (foodObject) {
             if (checkCart(foodObject) == false) {
-                var alertPopup = $ionicPopup.alert({
+                $ionicPopup.alert({
                     title: 'Order Exception',
                     template: "You could only order foods from only 1 restaurant at a time. Please check out in your Cart first!"
                 });
@@ -1165,16 +1118,16 @@ angular.module('app.controllers', ['ngMap'])
         var getUserInfo = function () {
             $http.get(API_ENDPOINT.url + '/api/users/findUserID/' + AuthService.userInforIdSave()).success(function (response) {
                 $scope.currentUser = response.data;
-                $scope.currentUser.birthday = new Date(response.data.birthday)                
-                if ($stateParams.avatar != ""){
-                    $scope.currentUser.avatar = $stateParams.avatar;                    
+                $scope.currentUser.birthday = new Date(response.data.birthday)
+                if ($stateParams.avatar != "") {
+                    $scope.currentUser.avatar = $stateParams.avatar;
                 }
             });
         }
 
-        getUserInfo();                
+        getUserInfo();
 
-        $scope.update = function () {            
+        $scope.update = function () {
             $ionicLoading.show({
                 template: '<p>Updating...</p><ion-spinner></ion-spinner>',
             });
@@ -1196,7 +1149,7 @@ angular.module('app.controllers', ['ngMap'])
         }
     })
 
-    .controller('uploadPhotoCtrl', function($scope, $rootScope, $state, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $cordovaActionSheet,$ionicLoading, $cordovaToast, FileUpload, AuthService){
+    .controller('uploadPhotoCtrl', function ($scope, $rootScope, $state, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $cordovaActionSheet, $ionicLoading, $cordovaToast, FileUpload, AuthService) {
         $scope.image = null;
 
         $scope.loadImage = function () {
@@ -1251,7 +1204,7 @@ angular.module('app.controllers', ['ngMap'])
                             $cordovaFile.copyFile(namePath, fileEntry.name, cordova.file.dataDirectory, newFileName).then(function (success) {
                                 $scope.image = newFileName;
                             }, function (error) {
-                               console.log('Error:  ', error);
+
                             });
                         };
                     }
@@ -1262,7 +1215,7 @@ angular.module('app.controllers', ['ngMap'])
                     $cordovaFile.moveFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(function (success) {
                         $scope.image = newFileName;
                     }, function (error) {
-                        console.log('Error:  ', error);
+
                     });
                 }
             },
@@ -1278,19 +1231,23 @@ angular.module('app.controllers', ['ngMap'])
             }
         };
         $scope.uploadImage = function () {
-            var targetPath = $scope.pathForImage($scope.image);                        
+            var targetPath = $scope.pathForImage($scope.image);
             $ionicLoading.show({
                 template: '<p>Uploading...</p><ion-spinner></ion-spinner>',
-            });            
+            });
             FileUpload.imageUpload(targetPath)
-                .then(function(imageUrl){
+                .then(function (imageUrl) {
                     $ionicLoading.hide();
                     $cordovaToast.showShortCenter('Upload avatar successfully').then(function (success) { });
-                    $state.go('tabsController.eDITPROFILE',{'avatar':imageUrl});
+                    $state.go('tabsController.eDITPROFILE', { 'avatar': imageUrl });
                 })
-                .catch(function(err){
+                .catch(function (err) {
                     $ionicLoading.hide();
-                    $cordovaToast.showShortCenter('Upload avatar failed' + err).then(function (success) { });
+                    console.log(err.body);
+                    for (var prop in err){
+                        console.log(prop);
+                    }                    
+                    $cordovaToast.showShortCenter('Upload avatar failed. Maybe something wrong with network connection!').then(function (success) { });
                     $state.go('tabsController.eDITPROFILE');
                 })
         }

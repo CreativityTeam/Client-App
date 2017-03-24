@@ -21,7 +21,7 @@
         <ion-slide-page style="background:url(&quot;{{currentSubject.photo4}}&quot;) no-repeat center;background-size:cover;"></ion-slide-page>
         <ion-slide-page style="background:url(&quot;{{currentSubject.photo5}}&quot;) no-repeat center;background-size:cover;"></ion-slide-page>
       </ion-slides>
-      <form id="fOODDETAIL-form13" class="list" ng-submit="commentButton(currentSubject._id)">
+      <form id="fOODDETAIL-form13" class="list" ng-submit="handleComment(currentSubject._id)">
         <label class="item item-input item-stacked-label" id="fOODDETAIL-input13">
           <span class="input-label">Your Comment</span>
           <input type="text" placeholder="" ng-model="comment.content">

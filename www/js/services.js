@@ -193,7 +193,7 @@ angular.module('app.services', [])
         }
     })
 
-    .service('SubjectDetailService', function (API_ENDPOINT, AuthService, $http) {
+    .service('SubjectDetailService', function (API_ENDPOINT, AuthService, $http, $q) {
         this.checkIfCommentOnThisToday = function (comments, userIdCheck) {
             //comments is an array with 'date_created' ascending sorted
             for (var i=comments.length-1; i>=0; i--) {
@@ -222,7 +222,7 @@ angular.module('app.services', [])
                     break;
             }
 
-            return new Promise(function (resolve, reject) {
+            return $q(function (resolve, reject) {
                 $http.get(API_ENDPOINT.url + tailUrl + AuthService.tokensave()).success(function (response) {
                     if (response.success == false) {
                         reject(false);
@@ -237,9 +237,50 @@ angular.module('app.services', [])
                 });
             });
         }        
+
+        this.saveComment = function(alreadyCommentOnThisToday, comment, subjectType, subjectId, callback){            
+            var tailUrl = '';
+            switch (subjectType) {
+                case 'food':
+                    tailUrl = '/api/foods/addcomment/';
+                    break;
+                case 'restaurant':
+                    tailUrl = '/api/restaurants/addcomment/';
+                    break;
+                case 'service':
+                    tailUrl = '/api/services/addcomment/';
+                    break;
+            }
+
+            var promise = $q(function(resolve, reject){                
+                if (alreadyCommentOnThisToday == true) {
+                    reject(alreadyCommentOnThisToday);
+                }
+                else {
+                    if (comment.content == "") {
+                        reject(alreadyCommentOnThisToday);
+                    } else {
+                        var commentSave = {
+                            user_id: AuthService.userInforIdSave(),
+                            content: comment.content
+                        }
+                        $http.post(API_ENDPOINT.url + '/api/comments/create/', commentSave).success(function(response) {
+                            if (response.success == true) {
+                                var commentId = response.data._id;
+                                $http.put(API_ENDPOINT.url + tailUrl + subjectId + "/" + commentId).success(function(response) {
+                                    resolve(response.data);
+                                })
+                            }
+                        });
+                    }
+                }
+            })     
+
+            return promise;       
+        }
     })
 
-    .service('FileUpload', function($cordovaFileTransfer){
+    .service('FileUpload', function($cordovaFileTransfer, $q){
         this.imageUpload = function(imagePath){
             // Destination URL            
             var url = 'https://api.cloudinary.com/v1_1/trongnghia94/image/upload';            
@@ -248,7 +289,7 @@ angular.module('app.services', [])
                 params: {'upload_preset': 'm0wsj7yq'}                
             };            
 
-            var promise = new Promise(function(resolve, reject){
+            var promise = $q(function(resolve, reject){
                 $cordovaFileTransfer.upload(url, imagePath, options).then(function (result) {                                                    
                     var response = JSON.parse(decodeURIComponent(result.response));
                     resolve(response.url);                    
