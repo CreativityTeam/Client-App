@@ -94,20 +94,7 @@ angular.module('app.services', [])
         };
     })
 
-    .service('MapService', function ($ionicPopup) {
-        var addCircle = function (map, center, radius) {
-            var circle = new google.maps.Circle({
-                strokeColor: '#FF0000',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#FF0000',
-                fillOpacity: 0.35,
-                map: map,
-                center: center,
-                radius: radius
-            });
-        };
-
+    .service('MapService', function ($ionicPopup) {        
         this.addMarker = function (map, location, markers, anchorPoint) {
             var latLng = new google.maps.LatLng(location['lat'], location['lng']);
 
@@ -119,12 +106,6 @@ angular.module('app.services', [])
                 icon: 'https://maps.google.com/mapfiles/kml/shapes/motorcycling.png'
             });
             markers.push(marker);
-            // var bounds = new google.maps.LatLngBounds();        
-            // bounds.extend(anchorPoint);
-            // bounds.extend(marker.position);        
-            // map.fitBounds(bounds);
-
-            // addCircle(map,latLng);        
         };
 
         this.eraseAllMarkers = function (markers) {
@@ -254,5 +235,27 @@ angular.module('app.services', [])
                     }
                 });
             });
+        }        
+    })
+
+    .service('FileUpload', function($cordovaFileTransfer){
+        this.imageUpload = function(imagePath){
+            // Destination URL            
+            var url = 'https://api.cloudinary.com/v1_1/trongnghia94/image/upload';            
+
+            var options = {                
+                params: {'upload_preset': 'm0wsj7yq'}                
+            };            
+
+            var promise = new Promise(function(resolve, reject){
+                $cordovaFileTransfer.upload(url, imagePath, options).then(function (result) {                                                    
+                    var response = JSON.parse(decodeURIComponent(result.response));
+                    resolve(response.url);                    
+                })
+                .catch(function(err){    
+                    reject(err);
+                });
+            })            
+            return promise;
         }        
     })

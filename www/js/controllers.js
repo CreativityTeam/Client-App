@@ -542,7 +542,7 @@ angular.module('app.controllers', ['ngMap'])
         })
     })
 
-    .controller('pROFILECtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $ionicPopup, $cordovaActionSheet) {
+    .controller('pROFILECtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $ionicPopup, $cordovaActionSheet,$ionicLoading) {
         function parseDateToDisplay(date) {
             var month = date.getMonth() + 1;
             var day = date.getDate();
@@ -571,117 +571,7 @@ angular.module('app.controllers', ['ngMap'])
             AuthService.logout();
             $state.go('login');
         };
-        getCurrentUserInformation();
-
-        $scope.image = null;
-
-        $scope.showAlert = function (title, msg) {
-            var alertPopup = $ionicPopup.alert({
-                title: title,
-                template: msg
-            });
-        };
-
-        $scope.loadImage = function () {
-            var options = {
-                title: 'Select Image Source',
-                buttonLabels: ['Load from Library', 'Use Camera'],
-                addCancelButtonWithLabel: 'Cancel',
-                androidEnableCancelButton: true,
-            };
-            $cordovaActionSheet.show(options).then(function (btnIndex) {
-                var type = null;
-                if (btnIndex === 1) {
-                    type = Camera.PictureSourceType.PHOTOLIBRARY;
-                } else if (btnIndex === 2) {
-                    type = Camera.PictureSourceType.CAMERA;
-                }
-                if (type !== null) {
-                    $scope.selectPicture(type);
-                }
-            });
-        };
-
-        $scope.selectPicture = function (sourceType) {
-            var options = {
-                quality: 100,
-                destinationType: Camera.DestinationType.FILE_URI,
-                sourceType: sourceType,
-                saveToPhotoAlbum: false
-            };
-
-            $cordovaCamera.getPicture(options).then(function (imagePath) {
-                // Grab the file name of the photo in the temporary directory
-                var currentName = imagePath.replace(/^.*[\\\/]/, '');
-
-                //Create a new name for the photo
-                var d = new Date(),
-                    n = d.getTime(),
-                    newFileName = n + ".jpg";
-
-                // If you are trying to load image from the gallery on Android we need special treatment!
-                if ($cordovaDevice.getPlatform() == 'Android' && sourceType === Camera.PictureSourceType.PHOTOLIBRARY) {
-                    window.FilePath.resolveNativePath(imagePath, function (entry) {
-                        window.resolveLocalFileSystemURL(entry, success, fail);
-                        function fail(e) {
-                            console.error('Error: ', e);
-                        }
-
-                        function success(fileEntry) {
-                            var namePath = fileEntry.nativeURL.substr(0, fileEntry.nativeURL.lastIndexOf('/') + 1);
-                            // Only copy because of access rights
-                            $cordovaFile.copyFile(namePath, fileEntry.name, cordova.file.dataDirectory, newFileName).then(function (success) {
-                                $scope.image = newFileName;
-                            }, function (error) {
-                                $scope.showAlert('Error', error.exception);
-                            });
-                        };
-                    }
-                    );
-                } else {
-                    var namePath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
-                    // Move the file to permanent storage
-                    $cordovaFile.moveFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(function (success) {
-                        $scope.image = newFileName;
-                    }, function (error) {
-                        $scope.showAlert('Error', error.exception);
-                    });
-                }
-            },
-                function (err) {
-                    // Not always an error, maybe cancel was pressed...
-                })
-        };
-        $scope.pathForImage = function (image) {
-            if (image === null) {
-                return '';
-            } else {
-                return cordova.file.dataDirectory + image;
-            }
-        };
-        $scope.uploadImage = function () {
-            // Destination URL
-            var url = API_ENDPOINT.url + "/api/photos/addphoto";
-
-            // File for Upload
-            var targetPath = $scope.pathForImage($scope.image);
-
-            // File name only
-            var filename = $scope.image;
-
-            var options = {
-                fileKey: "file",
-                fileName: filename,
-                chunkedMode: false,
-                mimeType: "multipart/form-data",
-                params: { 'fileName': filename }
-            };
-
-            $cordovaFileTransfer.upload(url, targetPath, options).then(function (result) {
-                $rootScope.urlImage = API_ENDPOINT.root + angular.fromJson(result.response).data.url;
-                $scope.showAlert('Success', 'Image upload finished.');
-            });
-        }
+        getCurrentUserInformation();        
     })
 
     .controller('signupCtrl', function ($scope, $stateParams, $state, AuthService, $ionicPopup, $ionicLoading) {
@@ -974,7 +864,6 @@ angular.module('app.controllers', ['ngMap'])
                     });
                 }
             }
-
         }
 
         var getSubjectDetail = function () {
@@ -1006,8 +895,7 @@ angular.module('app.controllers', ['ngMap'])
     })
 
     .controller('DTailCtrl_tab5', function ($scope, $stateParams) {
-
-        console.log("tab 5")
+        
     })
 
     .controller('restaurantLocationCtrl', function ($scope, $stateParams) {
@@ -1077,7 +965,6 @@ angular.module('app.controllers', ['ngMap'])
 
     .controller('cONTACTCtrl', function ($scope, $stateParams) {
 
-
     })
 
     .controller('restaurantDetailCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, PhoneCallService, SubjectDetailService) {
@@ -1128,8 +1015,7 @@ angular.module('app.controllers', ['ngMap'])
                 $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
                 if (!$scope.currentSubject.hasOwnProperty("photo1")) {
                     $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                }
-                console.log($scope.currentSubject)
+                }                
             });
         };
 
@@ -1160,8 +1046,6 @@ angular.module('app.controllers', ['ngMap'])
                     });
                 }
             }
-
-
         }
 
         $scope.handleResFav = function (res) {
@@ -1216,7 +1100,6 @@ angular.module('app.controllers', ['ngMap'])
 
         var getFoodByMenu = function () {
             $http.get(API_ENDPOINT.url + '/api/foods/findfoodbymenu/' + $stateParams.idMenu).success(function (data) {
-                console.log(data.data);
                 $scope.listMenuFood = data.data;
             });
         }
@@ -1278,18 +1161,20 @@ angular.module('app.controllers', ['ngMap'])
 
     })
 
-    .controller('eDITPROFILECtrl', function ($scope, $rootScope, $http, $cordovaFile, $cordovaFileTransfer, $cordovaImagePicker, $ionicLoading, $ionicPopup, API_ENDPOINT, AuthService) {
+    .controller('eDITPROFILECtrl', function ($scope, $rootScope, $stateParams, $http, $cordovaFile, $cordovaFileTransfer, $ionicLoading, $ionicPopup, API_ENDPOINT, AuthService) {
         var getUserInfo = function () {
             $http.get(API_ENDPOINT.url + '/api/users/findUserID/' + AuthService.userInforIdSave()).success(function (response) {
                 $scope.currentUser = response.data;
-                $scope.currentUser.birthday = new Date(response.data.birthday)
+                $scope.currentUser.birthday = new Date(response.data.birthday)                
+                if ($stateParams.avatar != ""){
+                    $scope.currentUser.avatar = $stateParams.avatar;                    
+                }
             });
         }
 
-        getUserInfo();
+        getUserInfo();                
 
-        $scope.update = function () {
-            $scope.currentUser.avatar = $rootScope.urlImage;
+        $scope.update = function () {            
             $ionicLoading.show({
                 template: '<p>Updating...</p><ion-spinner></ion-spinner>',
             });
@@ -1309,67 +1194,104 @@ angular.module('app.controllers', ['ngMap'])
                 }
             });
         }
+    })
 
-        $scope.imageChosenURI = null;
+    .controller('uploadPhotoCtrl', function($scope, $rootScope, $state, $http, $cordovaCamera, $cordovaFile, $cordovaFileTransfer, $cordovaDevice, $cordovaActionSheet,$ionicLoading, $cordovaToast, FileUpload, AuthService){
+        $scope.image = null;
 
-        $scope.imagePick = function () {
-            if (!window.plugins) {
-                alert('Only use this function on device');
-                return;
-            }
-            $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
-            });
-            imagePicker.getPictures(
-                function (result) {
-                    console.log(result[0]);
-                    // $scope.imageChosenURI = "data:image/jpeg;base64," + result[0];              
-                    $scope.imageChosenURI = result[0];
-                    $scope.uploadImage();
-                    $ionicLoading.hide();
-                },
-                function (errmsg) { console.log("ohoh.. " + errmsg); },
-                { // options object, all optional
-                    maximumImagesCount: 1, // Android only since plugin version 2.1.1, default no limit
-                    quality: 90, // 0-100, default 100 which is highest quality
-                    width: 400,  // proportionally rescale image to this width, default no rescale
-                    height: 400, // same for height
-                    outputType: imagePicker.OutputType.FILE_URI // default .FILE_URI
-                }
-            );
-        }
-
-        $scope.uploadImage = function () {
-            // Destination URL
-            var url = API_ENDPOINT.url + "/api/photos/addphoto";
-
-            // File for Upload
-            var targetPath = $scope.imageChosenURI;
-
-            // File name only
-            var filename = "upload";
-
+        $scope.loadImage = function () {
             var options = {
-                fileKey: "file",
-                fileName: filename,
-                chunkedMode: false,
-                mimeType: "multipart/form-data",
-                params: { 'fileName': filename }
+                title: 'Select Image Source',
+                buttonLabels: ['Load from Library', 'Use Camera'],
+                addCancelButtonWithLabel: 'Cancel',
+                androidEnableCancelButton: true,
+            };
+            $cordovaActionSheet.show(options).then(function (btnIndex) {
+                var type = null;
+                if (btnIndex === 1) {
+                    type = Camera.PictureSourceType.PHOTOLIBRARY;
+                } else if (btnIndex === 2) {
+                    type = Camera.PictureSourceType.CAMERA;
+                }
+                if (type !== null) {
+                    $scope.selectPicture(type);
+                }
+            });
+        };
+
+        $scope.selectPicture = function (sourceType) {
+            var options = {
+                quality: 100,
+                destinationType: Camera.DestinationType.FILE_URI,
+                sourceType: sourceType,
+                saveToPhotoAlbum: false,
+                correctOrientation: true
             };
 
-            document.addEventListener('deviceready', function () {
+            $cordovaCamera.getPicture(options).then(function (imagePath) {
+                // Grab the file name of the photo in the temporary directory
+                var currentName = imagePath.replace(/^.*[\\\/]/, '');
 
-                $cordovaFileTransfer.upload(server, filePath, options)
-                    .then(function (result) {
-                        console.log(result);
-                        // Success!
-                    }, function (err) {
-                        // Error
-                    }, function (progress) {
-                        // constant progress updates
+                //Create a new name for the photo
+                var d = new Date(),
+                    n = d.getTime(),
+                    newFileName = n + ".jpg";
+
+                // If you are trying to load image from the gallery on Android we need special treatment!
+                if ($cordovaDevice.getPlatform() == 'Android' && sourceType === Camera.PictureSourceType.PHOTOLIBRARY) {
+                    window.FilePath.resolveNativePath(imagePath, function (entry) {
+                        window.resolveLocalFileSystemURL(entry, success, fail);
+                        function fail(e) {
+                            console.error('Error: ', e);
+                        }
+
+                        function success(fileEntry) {
+                            var namePath = fileEntry.nativeURL.substr(0, fileEntry.nativeURL.lastIndexOf('/') + 1);
+                            // Only copy because of access rights
+                            $cordovaFile.copyFile(namePath, fileEntry.name, cordova.file.dataDirectory, newFileName).then(function (success) {
+                                $scope.image = newFileName;
+                            }, function (error) {
+                               console.log('Error:  ', error);
+                            });
+                        };
+                    }
+                    );
+                } else {
+                    var namePath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
+                    // Move the file to permanent storage
+                    $cordovaFile.moveFile(namePath, currentName, cordova.file.dataDirectory, newFileName).then(function (success) {
+                        $scope.image = newFileName;
+                    }, function (error) {
+                        console.log('Error:  ', error);
                     });
-
-            }, false);
+                }
+            },
+                function (err) {
+                    // Not always an error, maybe cancel was pressed...
+                })
+        };
+        $scope.pathForImage = function (image) {
+            if (image === null) {
+                return '';
+            } else {
+                return cordova.file.dataDirectory + image;
+            }
+        };
+        $scope.uploadImage = function () {
+            var targetPath = $scope.pathForImage($scope.image);                        
+            $ionicLoading.show({
+                template: '<p>Uploading...</p><ion-spinner></ion-spinner>',
+            });            
+            FileUpload.imageUpload(targetPath)
+                .then(function(imageUrl){
+                    $ionicLoading.hide();
+                    $cordovaToast.showShortCenter('Upload avatar successfully').then(function (success) { });
+                    $state.go('tabsController.eDITPROFILE',{'avatar':imageUrl});
+                })
+                .catch(function(err){
+                    $ionicLoading.hide();
+                    $cordovaToast.showShortCenter('Upload avatar failed' + err).then(function (success) { });
+                    $state.go('tabsController.eDITPROFILE');
+                })
         }
-
     })

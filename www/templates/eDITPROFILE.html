@@ -1,5 +1,8 @@
 <ion-view title="EDIT PROFILE" id="page21">
-  <ion-content padding="true" class="has-header">
+  <ion-content padding="true" class="has-header">    
+    <img style="max-width:230px;max-height:95px;width:auto;height:auto;" alt="No avatar" ng-src="{{currentUser.avatar}}">
+    <button ui-sref="tabsController.uploadPhoto" class="button icon-left ion-upload">Upload Avatar</button>
+
     <form id="cONTACT-form11" class="list">
       <label class="item item-input" id="cONTACT-input9">
         <span class="input-label">Nom</span>
@@ -16,21 +19,19 @@
             <option value="F">Female</option>
         </select>
       </label>      
-      <label class="item item-input" id="cONTACT-textarea3">
+      <label class="item item-input">
         <span class="input-label">Adresse</span>
         <textarea placeholder="" ng-model="currentUser.address"></textarea>
       </label>
-      <label class="item item-input" id="cONTACT-textarea3">
+      <label class="item item-input">
         <span class="input-label">About</span>
         <textarea placeholder="" ng-model="currentUser.about"></textarea>
       </label>                  
-      <label class="item item-input" id="cONTACT-textarea3">
+      <label class="item item-input">
         <span class="input-label" ng-model="currentUser.birthday">Birthday</span>
         <input type="date" ng-model="currentUser.birthday"></input>
       </label>                  
-    </form>
-        
-    <button ui-sref="tabsController.uploadPhoto" class="button icon-left ion-upload">Upload Avatar</button>
+    </form>        
 
     <button id="cONTACT-button21" class="button button-assertive  button-block" ng-click="update()">UPDATE</button>
   </ion-content>

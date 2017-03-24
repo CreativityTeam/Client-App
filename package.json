@@ -34,6 +34,7 @@
     "cordova-plugin-camera",
     "cordova-plugin-actionsheet",
     "cordova-plugin-image-picker",
+    "cordova-plugin-x-toast",
     {
       "locator": "https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
       "id": "call-number"

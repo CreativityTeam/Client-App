@@ -297,7 +297,7 @@ angular.module('app.routes', ['ionicUIRouter'])
   })
 
    .state('tabsController.eDITPROFILE', {
-    url: '/editProfile',
+    url: '/editProfile/:avatar',
     views: {
       'tab5': {
         templateUrl: 'templates/eDITPROFILE.html',
@@ -311,15 +311,13 @@ angular.module('app.routes', ['ionicUIRouter'])
     views: {
       'tab5': {
         templateUrl: 'templates/uploadPhoto.html',
-        controller: 'pROFILECtrl'
+        controller: 'uploadPhotoCtrl'
       }
     }
   })
 
 
 $urlRouterProvider.otherwise('/page1/food')
-
-  
 
 })
 
