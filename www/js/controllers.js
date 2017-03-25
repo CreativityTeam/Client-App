@@ -693,9 +693,6 @@ angular.module('app.controllers', ['ngMap'])
                 $ionicLoading.hide();
                 $scope.currentSubject = response.data
 
-                //Check if user already comment on this today
-                $scope.commentTodayOnThis = SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave());
-
                 for (var i = 0; i < $scope.currentSubject.ratings.length; ++i) {
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()) {
                         $scope.ratingsObject.rating = $scope.currentSubject.ratings[i].score;
@@ -720,7 +717,7 @@ angular.module('app.controllers', ['ngMap'])
                 $ionicLoading.show({
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                 });
-                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'food', idFood)
+                SubjectDetailService.saveComment($scope.comment, 'food', idFood)
                     .then(function (comment) {
                         $scope.currentSubject.comments.push(comment);
                         $ionicLoading.hide();
@@ -774,7 +771,7 @@ angular.module('app.controllers', ['ngMap'])
                 $ionicLoading.show({
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                 });
-                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'service', idService)
+                SubjectDetailService.saveComment($scope.comment, 'service', idService)
                     .then(function (comment) {
                         $scope.currentSubject.comments.push(comment);
                         $ionicLoading.hide();
@@ -795,10 +792,7 @@ angular.module('app.controllers', ['ngMap'])
             });
             $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject).success(function (response) {
                 $ionicLoading.hide();
-                $scope.currentSubject = response.data
-
-                //Check if user already comment on this today
-                $scope.commentTodayOnThis = SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave());
+                $scope.currentSubject = response.data                
 
                 for (var i = 0; i < $scope.currentSubject.ratings.length; ++i) {
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()) {
@@ -835,7 +829,7 @@ angular.module('app.controllers', ['ngMap'])
                 $ionicLoading.show({
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                 });
-                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'service', idService)
+                SubjectDetailService.saveComment($scope.comment, 'service', idService)
                     .then(function (comment) {
                         $scope.currentSubject.comments.push(comment);
                         $ionicLoading.hide();
@@ -857,9 +851,6 @@ angular.module('app.controllers', ['ngMap'])
             $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject).success(function (response) {
                 $ionicLoading.hide();
                 $scope.currentSubject = response.data
-
-                //Check if user already comment on this today
-                $scope.commentTodayOnThis = SubjectDetailService.checkIfCommentOnThisToday($scope.currentSubject.comments, AuthService.userInforIdSave());
 
                 for (var i = 0; i < $scope.currentSubject.ratings.length; ++i) {
                     if ($scope.currentSubject.ratings[i].userId == AuthService.userInforIdSave()) {
@@ -989,7 +980,7 @@ angular.module('app.controllers', ['ngMap'])
                 $ionicLoading.show({
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                 });
-                SubjectDetailService.saveComment($scope.commentTodayOnThis, $scope.comment, 'restaurant', idRes)
+                SubjectDetailService.saveComment($scope.comment, 'restaurant', idRes)
                     .then(function (comment) {
                         $scope.currentSubject.comments.push(comment);
                         $ionicLoading.hide();

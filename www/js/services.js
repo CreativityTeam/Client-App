@@ -1,8 +1,8 @@
 angular.module('app.services', [])
 
     .constant('API_ENDPOINT', {
-        root: 'https://test3721.herokuapp.com/',
-        url: 'https://test3721.herokuapp.com/server'
+        root: 'http://192.168.0.103:3000/',
+        url: 'http://192.168.0.103:3000/server'
     })
 
     .service('AuthService', function ($q, $http, API_ENDPOINT) {
@@ -194,16 +194,26 @@ angular.module('app.services', [])
     })
 
     .service('SubjectDetailService', function (API_ENDPOINT, AuthService, $http, $q) {
+        var checkSameDate = function(date1, date2){
+            if (! (date1 instanceof Date) || !(date2 instanceof Date)){
+                throw "Not Date object";
+            }            
+            return (date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getYear() == date2.getYear());
+        }
         this.checkIfCommentOnThisToday = function (comments, userIdCheck) {
             //comments is an array with 'date_created' ascending sorted
             for (var i=comments.length-1; i>=0; i--) {
                 if (comments[i].user_id._id == userIdCheck) {
-                    var date_created = new Date(comments[i].date_created);
-                    date_created = new Date(date_created.getTime() + (date_created.getTimezoneOffset() * 60000));
-                    var today = new Date();
-                    if ((date_created.getDate() == today.getDate()) && (date_created.getMonth() == today.getMonth()) && (date_created.getYear() == today.getYear())) {
-                        console.log("Already comment on this today");
-                        return true;
+                    var date_created = new Date(comments[i].date_created);                    
+                    var today = new Date();                    
+                    try{
+                        if (checkSameDate(date_created, today) == true){
+                            console.log("Already comment on this today");
+                            return true;
+                        }
+                    }
+                    catch (err){
+                        console.log(err);
                     }
                     break;
                 }
@@ -238,7 +248,7 @@ angular.module('app.services', [])
             });
         }        
 
-        this.saveComment = function(alreadyCommentOnThisToday, comment, subjectType, subjectId, callback){            
+        this.saveComment = function(comment, subjectType, subjectId, callback){            
             var tailUrl = '';
             switch (subjectType) {
                 case 'food':
@@ -252,27 +262,22 @@ angular.module('app.services', [])
                     break;
             }
 
-            var promise = $q(function(resolve, reject){                
-                if (alreadyCommentOnThisToday == true) {
+            var promise = $q(function(resolve, reject){                                
+                if (comment.content == "") {
                     reject(alreadyCommentOnThisToday);
-                }
-                else {
-                    if (comment.content == "") {
-                        reject(alreadyCommentOnThisToday);
-                    } else {
-                        var commentSave = {
-                            user_id: AuthService.userInforIdSave(),
-                            content: comment.content
-                        }
-                        $http.post(API_ENDPOINT.url + '/api/comments/create/', commentSave).success(function(response) {
-                            if (response.success == true) {
-                                var commentId = response.data._id;
-                                $http.put(API_ENDPOINT.url + tailUrl + subjectId + "/" + commentId).success(function(response) {
-                                    resolve(response.data);
-                                })
-                            }
-                        });
+                } else {
+                    var commentSave = {
+                        user_id: AuthService.userInforIdSave(),
+                        content: comment.content
                     }
+                    $http.post(API_ENDPOINT.url + '/api/comments/create/', commentSave).success(function(response) {
+                        if (response.success == true) {
+                            var commentId = response.data._id;
+                            $http.put(API_ENDPOINT.url + tailUrl + subjectId + "/" + commentId).success(function(response) {
+                                resolve(response.data);
+                            })
+                        }
+                    });
                 }
             })     
 
