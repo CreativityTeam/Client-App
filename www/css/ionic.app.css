@@ -9878,12 +9878,45 @@ a.button {
   border: none;
   border-top:1px solid red; 
 }
+
 #login-button14{
   width: 250px;
   border-radius: 30px;
 }
+
+#food-button18{
+  width: 200px;
+  border-radius: 8px;
+}
+
+#food-button19{
+ width: 200px;
+ border-radius: 8px;
+}
+
+#food-button20{
+ width: 200px;
+ border-radius: 8px;
+}
+
 #title_footer{
   font-size: 10px;
+}
+
+.itemListRes{
+  background-color: black;
+}
+
+.item-complex .item-content{
+  background-color: 	#696969;
+  color:orangered;
+};
+
+.row .col .resbutton{
+  border-radius: 8px;
+  background-color: black;
+  color: white;
+  height: 60px;
 }
 @keyframes blink-animation {
   to {

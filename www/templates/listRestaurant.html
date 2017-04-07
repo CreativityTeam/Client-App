@@ -6,16 +6,23 @@
         <input type="search" placeholder="Filter by postal code" ng-model="searchRestaurant" ng-change="setSearch(searchRestaurant)">
       </label>
       <ion-item>
-        <ion-label>Has Delivery?</ion-label>
-        <select ng-options="o.label for o in options" 
-        ng-model="selected" ng-change="setSelected(selected)">         
-        </select>
+        <div class="row">
+          <div class="col"><h2>Livraison à domicile ?</h2></div>
+          <div class="col">
+            <select style="width : 100%" ng-options="o.label for o in options" 
+            ng-model="selected" ng-change="setSelected(selected)">         
+            </select>
+          </div>        
+        </div>
       </ion-item>      
-      <ion-item class="item-thumbnail-left assertive" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : isActive">
+      <ion-item style="margin-bottom:10px;"class="item-thumbnail-left itemListRes" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : isActive">
         <img ng-src="{{restaurant.photo1}}">
-        <h2assertive>{{restaurant.res_name}}
-          <p>Description : {{restaurant.description}}</p>
-          <p>Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}</p>
+        <h2assertive>
+          <div class="row" style="height:40px; font-size:30px;">
+            {{restaurant.res_name}}
+          </div>
+          <p style="color:white">Description : {{restaurant.description}}</p>
+          <p style="color:white">Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}</p>
         </h2assertive>
       </ion-item>
     </form>

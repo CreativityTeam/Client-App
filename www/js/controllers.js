@@ -903,7 +903,27 @@ angular.module('app.controllers', ['ngMap'])
         initMap();
     })
 
-    .controller('foodCtrl', function ($scope, $stateParams, $state, $ionicLoading, $http, API_ENDPOINT) {
+    .controller('foodCtrl', function ($scope, $stateParams, $state, $ionicLoading, $http, API_ENDPOINT,AuthService,SubjectDetailService) {
+        $scope.likeImg = "../img/like.png";
+        
+        $scope.handleFoodFav = function (food) {
+            SubjectDetailService.checkIfSubjectLiked(food._id, 'food').then(function (liked) {
+                if (liked == true) {
+                    $http.delete(API_ENDPOINT.url + '/api/users/deleteFoodFav/' + AuthService.tokensave() + "/" + food._id).success(function (response) { })
+                    getHotFood();
+                }
+                else if (liked == false) {
+                    $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(), food).success(function (response) { });
+                    getHotFood();
+                }
+            }).catch(function (liked) {
+                if (liked == false) {
+                    $http.put(API_ENDPOINT.url + '/api/users/addfoodfav/' + AuthService.tokensave(), food).success(function (response) { });
+                    $scope.liked = true;
+                }
+            })
+        }
+
         var getPubLicities = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -914,8 +934,19 @@ angular.module('app.controllers', ['ngMap'])
             })
         }
 
-        getPubLicities()
-
+        var getHotFood = function() {
+            $scope.foods = [];
+            $http.get(API_ENDPOINT.url + '/api/foods/findinfo/all').success(function (responseGet) {
+                angular.forEach(responseGet.data,function(value){
+                        if(!value.hasOwnProperty('photo1')){
+                            value.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841";
+                        }
+                        $scope.foods.push(value);
+                })
+            })
+        }  
+        getHotFood();
+        getPubLicities();
     })
 
     .controller('tabsController', function ($scope, $stateParams, $state) {
