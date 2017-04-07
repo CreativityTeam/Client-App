@@ -58,7 +58,14 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 })
 
 /**Create RootScope For Order */
-.run(function($rootScope){
+.run(function($rootScope, AuthService, API_ENDPOINT){ 
+  if (AuthService.isAuthenticated()){
+    var ioServerUrl = API_ENDPOINT.root; 
+    $rootScope.ioConnection = io.connect(ioServerUrl);    
+    $rootScope.ioConnection.on('newOderNotification', function(newNotificationFromDB){
+        console.log(newNotificationFromDB);
+    });
+  }   
   $rootScope.listFoodForOrder = [];
   $rootScope.urlImage = '';
 })

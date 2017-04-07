@@ -569,7 +569,9 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.logout = function () {
             AuthService.logout();
-            $state.go('login');
+            $rootScope.ioConnection.disconnect();
+            $rootScope.listFoodForOrder = [];
+            $state.go('login');            
         };
         getCurrentUserInformation();
     })
@@ -602,7 +604,7 @@ angular.module('app.controllers', ['ngMap'])
 
     })
 
-    .controller('loginCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $ionicPopup, $ionicLoading, $cordovaOauth, $http, $cordovaToast) {
+    .controller('loginCtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $ionicPopup, $ionicLoading, $cordovaOauth, $http, $cordovaToast) {
         $scope.loginFace = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -644,6 +646,16 @@ angular.module('app.controllers', ['ngMap'])
                     template: '<p>Loading...</p><ion-spinner></ion-spinner>',
                 });
                 AuthService.login($scope.user).then(function (msg) {
+                    if (!$rootScope.ioConnection){
+                        var ioServerUrl = API_ENDPOINT.root; 
+                        $rootScope.ioConnection = io.connect(ioServerUrl);
+                        $rootScope.ioConnection.on('newOderNotification', function(newNotificationFromDB){
+                            console.log(newNotificationFromDB);
+                        });
+                    }
+                    else{
+                        $rootScope.ioConnection.connect();
+                    }
                     $ionicLoading.hide();
                     $state.go("tabsController.food");
                 }, function (errMsg) {
