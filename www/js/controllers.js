@@ -55,10 +55,10 @@ angular.module('app.controllers', ['ngMap'])
                 if ($scope.hasDelivery == "all") {
                     return true;
                 }
-                if ($scope.hasDelivery == "yes" && item.delivery == true) {
+                if ($scope.hasDelivery == "yes" && item.delievery == true) {
                     return true;
                 }
-                if ($scope.hasDelivery == "no" && item.delivery == false) {
+                if ($scope.hasDelivery == "no" && item.delievery == false) {
                     return true;
                 }
             }
@@ -680,7 +680,6 @@ angular.module('app.controllers', ['ngMap'])
             });
             SubjectDetailService.checkIfSubjectLiked($stateParams.idFood, 'food').then(function (liked) {
                 if (liked) {
-
                     $scope.liked = true;
                 }
                 else {

@@ -8,7 +8,6 @@
         name : currentSubject.location.housenumber + ', ' + currentSubject.location.street + ', ' + currentSubject.location.district + ', ' + currentSubject.location.city})">
         <h2assertive>{{currentSubject.res_name}}
           <p style="white-space:normal;">Address : {{currentSubject.location.housenumber}}, {{currentSubject.location.street}}, {{currentSubject.location.district}}, {{currentSubject.location.city}}</p>          
-          <!--<i class="icon ion-ios-heart" ng-click="addResFav(currentSubject)"></i>-->
           <i ng-class="{'icon ion-ios-heart': liked, 'icon ion-ios-heart-outline': !liked}" ng-click="handleResFav(currentSubject)"></i>
         </h2assertive>        
       </ion-item>     
