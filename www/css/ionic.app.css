@@ -9816,6 +9816,75 @@ a.button {
   animation: blink-animation 1s steps(5, start) infinite;
   -webkit-animation: blink-animation 1s steps(5, start) infinite;
 }
+
+
+#login-input11{
+  background-color: transparent;
+  border: none;
+}
+
+#login_mail{
+  border:none;
+  border-bottom:1px solid red;
+}
+
+#login_password{
+  border:none;
+  border-bottom:1px solid red;
+}
+
+#login-input12{
+  border:none;
+  background-color: transparent;
+  border-width: 0px;
+}
+
+#forgot_password{
+  float: right;
+  background-color: transparent;
+  border:none;
+}
+
+.signup{
+  border:none;
+  background-color: transparent;
+  border-width: 0px;
+}
+
+.signup .signup_input{
+  border:none;
+  border-bottom:1px solid red;
+}
+
+.center_div{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.center_col{
+  text-align: center;
+}
+
+.google_col{
+  text-align: right;
+}
+
+.weechat_col{
+  text-align: left;
+}
+
+#footer_app{
+  border: none;
+  border-top:1px solid red; 
+}
+#login-button14{
+  width: 250px;
+  border-radius: 30px;
+}
+#title_footer{
+  font-size: 10px;
+}
 @keyframes blink-animation {
   to {
     visibility: hidden;
