@@ -9903,21 +9903,12 @@ a.button {
   font-size: 10px;
 }
 
-.itemListRes{
-  background-color: black;
-}
 
 .item-complex .item-content{
-  background-color: 	#696969;
+  background-color:	#696969;
   color:orangered;
 };
 
-.row .col .resbutton{
-  border-radius: 8px;
-  background-color: black;
-  color: white;
-  height: 60px;
-}
 @keyframes blink-animation {
   to {
     visibility: hidden;

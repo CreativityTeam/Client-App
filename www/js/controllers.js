@@ -685,6 +685,18 @@ angular.module('app.controllers', ['ngMap'])
     })
 
     .controller('fOODDETAILCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, $cordovaToast, SubjectDetailService) {
+
+        var getAvatar = function(){
+             $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
+                 console.log(response);
+                 if(!response.data.hasOwnProperty('avatar')){
+                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                 }else{
+                    $scope.avatar = response.data.avatar;
+                 }
+             })
+        };
+
         var childUrl = '/api/foods/updaterating/' + $stateParams.idFood;
         $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
         $scope.comment = {
@@ -766,8 +778,8 @@ angular.module('app.controllers', ['ngMap'])
                 }
             })
         }
-
-        getFoodDetail()
+        getAvatar();
+        getFoodDetail();
     })
 
     .controller('DTailCtrl_tab6', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, SubjectDetailService) {
@@ -978,6 +990,16 @@ angular.module('app.controllers', ['ngMap'])
         };
         $scope.liked = false;
 
+        var getAvatar = function(){
+             $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
+                 if(!response.data.hasOwnProperty('avatar')){
+                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                 }else{
+                    $scope.avatar = response.data.avatar;
+                 }
+             })
+        };
+
         var getRestaurantDetail = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -1073,7 +1095,7 @@ angular.module('app.controllers', ['ngMap'])
             }
             return "No phone number now";
         }
-
+        getAvatar();
         getRestaurantDetail();
 
     })

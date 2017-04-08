@@ -1,7 +1,13 @@
 <ion-view title="LOISIR" id="page2">
   <ion-content padding="true" class="has-header">
-    <ion-list id="lOISIR-list10">
+    <!--<ion-list id="lOISIR-list10">
       <ion-item id="lOISIR-list-item81" ui-sref="tabsController.loisirListe({idLoisir : loisir._id})" ng-repeat="loisir in listLoisirCategory">{{loisir.name}}</ion-item>
-    </ion-list>
+
+    </ion-list>-->
+     <div class="row" ng-repeat="loisir in listLoisirCategory">
+        <button ui-sref="tabsController.loisirListe({idLoisir : loisir._id})" class="button button-assertive button-block center_div" 
+        style="width: 330px;
+        border-radius: 10px;">{{loisir.name}}</button>
+    </div>
   </ion-content>
 </ion-view>

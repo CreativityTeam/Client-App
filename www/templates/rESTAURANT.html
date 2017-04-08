@@ -7,13 +7,13 @@
       </label>
       <div class="row" ng-repeat="category in listCategoryRestaurant | filter : categoryName" ng-if="$index % 2 == 0">
         <div class="col">
-          <button class="button button-assertive button-block resbutton" 
+          <button class="button button-assertive button-block"  style="background-color:black;color:white;border-radius:8px"
               ui-sref="tabsController.listRestaurant({idCategory : listCategoryRestaurant[$index]._id})">
               {{listCategoryRestaurant[$index].name}}
           </button>
         </div>
         <div class="col" ng-if="listCategoryRestaurant.length > ($index + 1)">
-          <button class="button button-assertive button-block resbutton" 
+          <button class="button button-assertive button-block"  style="background-color:black;color:white;border-radius:8px"
              ui-sref="tabsController.listRestaurant({idCategory : listCategoryRestaurant[$index+1]._id})">
              {{listCategoryRestaurant[$index+1].name}}
           </button>

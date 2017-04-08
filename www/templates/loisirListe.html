@@ -5,11 +5,14 @@
         <i class="icon ion-search placeholder-icon"></i>
         <input type="search" placeholder="" ng-model="searchLoisir">
       </label>
-      <ion-item class="item-thumbnail-left assertive" id="loisirListe-list-item83" ui-sref="tabsController.DTail({idSubject : loisir._id})" ng-repeat="loisir in listLoisir | filter:searchLoisir">
+      <ion-item class="item-thumbnail-left assertive" id="loisirListe-list-item83" ui-sref="tabsController.DTail({idSubject : loisir._id})" ng-repeat="loisir in listLoisir | filter:searchLoisir" style="margin-top:10px">
         <img ng-src="{{loisir.photo1}}">
-        <h2assertive>{{loisir.service_name}}
-          <p>Description : {{loisir.service_desciption}}</p>
-          <p>Address : {{loisir.location.housenumber}}, {{loisir.location.street}}, {{loisir.location.district}}, {{loisir.location.city}}</p>
+        <h2assertive>
+          <div class="row" style="height:40px; font-size:20px;">
+            {{loisir.service_name}}
+          </div>
+          <p style="color:white">Description : {{loisir.service_desciption}}</p>
+          <p style="color:white">Address : {{loisir.location.housenumber}}, {{loisir.location.street}}, {{loisir.location.district}}, {{loisir.location.city}}</p>
         </h2assertive>
       </ion-item>
     </form>
