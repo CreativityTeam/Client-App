@@ -684,7 +684,7 @@ angular.module('app.controllers', ['ngMap'])
         }
     })
 
-    .controller('fOODDETAILCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, $cordovaToast, SubjectDetailService) {
+    .controller('fOODDETAILCtrl', function ($rootScope, $scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, $cordovaToast, SubjectDetailService) {
 
         var getAvatar = function(){
              $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
@@ -778,6 +778,68 @@ angular.module('app.controllers', ['ngMap'])
                 }
             })
         }
+
+        var checkCart = function (food) {
+            if ($rootScope.listFoodForOrder.length == 0) {
+                return true;
+            }
+            if (food.res_belong != $rootScope.listFoodForOrder[0].foodDetail.res_belong) {
+                return false;
+            }
+            return true;
+        }
+
+        $scope.orderFood = function (foodObject) {
+            if (checkCart(foodObject) == false) {
+                $ionicPopup.alert({
+                    title: 'Order Exception',
+                    template: "You could only order foods from only 1 restaurant at a time. Please check out in your Cart first!"
+                });
+                return;
+            }
+            $scope.foodForOrder = {};
+            var quantityPopup = $ionicPopup.show({
+                template: '<input type="text" ng-model="foodForOrder.quantity">',
+                title: 'Enter Your quantity',
+                scope: $scope,
+                buttons: [
+                    { text: 'Cancel' },
+                    {
+                        text: '<b>Save</b>',
+                        type: 'button-positive',
+                        onTap: function (e) {
+                            if (!$scope.foodForOrder.quantity) {
+                                //don't allow the user to close unless he enters wifi password
+                                e.preventDefault();
+                            } else {
+                                return $scope.foodForOrder.quantity;
+                            }
+                        }
+                    }
+                ]
+            });
+
+            quantityPopup.then(function (res) {
+                for (var item in $rootScope.listFoodForOrder) {
+                    if ($rootScope.listFoodForOrder[item].foodDetail._id == foodObject._id) {
+                        $rootScope.listFoodForOrder[item].quantity = $rootScope.listFoodForOrder[item].quantity + parseInt(res);
+                        foodObject = " ";
+                        res = 0;
+                    }
+                }
+                if (foodObject != " " && parseInt(res) != 0) {
+                    $rootScope.listFoodForOrder.push({
+                        foodDetail: foodObject,
+                        quantity: parseInt(res)
+                    })
+                }
+            });
+
+            $timeout(function () {
+                quantityPopup.close(); //close the popup after 3 seconds for some reason
+            }, 5000);
+        }
+
         getAvatar();
         getFoodDetail();
     })
@@ -787,6 +849,17 @@ angular.module('app.controllers', ['ngMap'])
         $scope.ratingsObject = RatingService.getRatingsObject(childUrl);
         $scope.comment = {
             content: ""
+        };
+
+        var getAvatar = function(){
+             $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
+                 console.log(response);
+                 if(!response.data.hasOwnProperty('avatar')){
+                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                 }else{
+                    $scope.avatar = response.data.avatar;
+                 }
+             })
         };
 
         $scope.handleComment = function (idService) {
@@ -835,7 +908,7 @@ angular.module('app.controllers', ['ngMap'])
                 }
             });
         };
-
+        getAvatar();
         getSubjectDetail()
     })
 
@@ -845,6 +918,17 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.comment = {
             content: ""
+        };
+
+        var getAvatar = function(){
+             $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
+                 console.log(response);
+                 if(!response.data.hasOwnProperty('avatar')){
+                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                 }else{
+                    $scope.avatar = response.data.avatar;
+                 }
+             })
         };
 
         $scope.handleComment = function (idService) {
@@ -895,6 +979,7 @@ angular.module('app.controllers', ['ngMap'])
             });
         };
 
+        getAvatar();
         getSubjectDetail()
     })
 
@@ -956,10 +1041,12 @@ angular.module('app.controllers', ['ngMap'])
             $scope.foods = [];
             $http.get(API_ENDPOINT.url + '/api/foods/findinfo/all').success(function (responseGet) {
                 angular.forEach(responseGet.data,function(value){
+                    if(value.isHot){
                         if(!value.hasOwnProperty('photo1')){
                             value.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841";
                         }
                         $scope.foods.push(value);
+                    }
                 })
             })
         }  

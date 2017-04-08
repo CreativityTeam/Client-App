@@ -1,58 +1,74 @@
 <ion-view title="PROFILE" id="page6">
   <ion-content padding="true" class="has-header">
+    <div class="row">
+      <div class="col center_col">
+          <img style="border-radius:50%" ng-src="{{currentUser.avatar}}" width="200px" height="200px">
+      </div>
+    </div>
+    <div class="row">
+      <p class="center_div" style="font-size:30px;color:orangered">{{currentUser.local.name}}</p>
+    </div>
+    <div class="row">
+      <p class="center_div" style="font-size:15px;color:black">{{currentUser.about}}</p>
+    </div>
+    <div class="row" style="background-color:orangered">
+      <div class="col" style="text-align:center" ui-sref="tabsController.fAVORITERESTAURANT">
+        <i style="font-size:30px;color:white" class="icon ion-android-restaurant"></i><br><p style="font-size:25px;color:white;margin:0px;margin-top:10px">{{currentUser.res_favorite.length}}</p>
+      </div>
+      <div class="col" style="text-align:center" ui-sref="tabsController.fAVORITEFOOD">
+        <i style="font-size:30px;color:white" class="icon ion-coffee"></i><br><p style="font-size:25px;color:white;margin:0px;margin-top:10px">{{currentUser.foods_favorite.length}}</p>
+      </div>
+      <div class="col" style="text-align:center" ui-sref="tabsController.mYORDER">
+         <i style="font-size:30px;color:white" class="icon ion-ios-cart"></i><br><p style="font-size:25px;color:white;margin:0px;margin-top:10px">{{orderCurrentUser.length}}</p>
+      </div>
+    </div>
     <ion-list id="pROFILE-list4">
-      <ion-item class="item-thumbnail-left assertive" id="pROFILE-list-item28">
-        <img ng-src="{{currentUser.avatar}}">
-        <h2assertive>{{currentUser.local.name}}
-          <p>{{currentUser.about}}</p>
-        </h2assertive>
-      </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item29">
         <div class="row">
-            <i class="icon ion-calendar"></i>DOB : {{currentUser.birthday}}
+            <i style="color:orangered" class="icon ion-calendar"></i>DOB : {{currentUser.birthday}}
         </div>
       </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item30">
         <div class="row">
-            <i class="icon ion-transgender"></i>Gender : {{currentUser.gender}}
+            <i style="color:orangered" class="icon ion-transgender"></i>Gender : {{currentUser.gender}}
         </div>
       </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item31">
         <div class="row">
-          <i class="icon ion-map"></i>Address : {{currentUser.address}}
+          <i style="color:orangered" class="icon ion-map"></i>Address : {{currentUser.address}}
         </div>
       </ion-item>
-      <ion-item class="item-icon-left" id="pROFILE-list-item32">
+      <!--<ion-item class="item-icon-left" id="pROFILE-list-item32">
         <div class="row" ui-sref="tabsController.fAVORITERESTAURANT">
-           <i class="icon ion-android-restaurant"></i>Favorite Restaurant : {{currentUser.res_favorite.length}}
+           <i style="color:orangered" class="icon ion-android-restaurant"></i>Favorite Restaurant : {{currentUser.res_favorite.length}}
         </div>
       </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item33">
         <div class="row" ui-sref="tabsController.fAVORITEFOOD">
-           <i class="icon ion-android-restaurant"></i>Favorite Food : {{currentUser.foods_favorite.length}}
+           <i style="color:orangered" class="icon ion-android-restaurant"></i>Favorite Food : {{currentUser.foods_favorite.length}}
         </div>
       </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item34">
         <div class="row" ui-sref="tabsController.mYORDER">
-            <i class="icon ion-ios-cart"></i>My Order : {{orderCurrentUser.length}}
+            <i style="color:orangered" class="icon ion-ios-cart"></i>My Order : {{orderCurrentUser.length}}
         </div>
-      </ion-item>
+      </ion-item>-->
       <ion-item class="item-icon-left" id="pROFILE-list-item80">
         <div class="row" ui-sref="tabsController.cONTACT">
-              <i class="icon ion-android-contact"></i>Contact
+              <i style="color:orangered" class="icon ion-android-contact"></i>Contact
         </div>
       </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item99">
         <div class="row" ui-sref="tabsController.eDITPROFILE">
-          <i class="icon ion-information-circled"></i>Edit Profile
+          <i style="color:orangered" class="icon ion-information-circled"></i>Edit Profile
         </div>
       </ion-item>
       <ion-item class="item-icon-left" id="pROFILE-list-item100">
         <div class="row" ui-sref="tabsController.cONDITIONS">
-          <i class="icon ion-alert-circled"></i>Conditions générales
+          <i style="color:orangered" class="icon ion-alert-circled"></i>Conditions générales
         </div>
       </ion-item>
     </ion-list>    
-    <a ng-click="logout()" id="pROFILE-button11" class="button button-royal  button-block icon-left ion-log-out">Sign Out</a>
+    <button ng-click="logout()" id="pROFILE-button11" style="border-radius:4px 4px 4px 4px;background-color:black;color:white" class="button button-royal  button-block icon-left ion-log-out">Se déconnecter</button>
   </ion-content>
 </ion-view>

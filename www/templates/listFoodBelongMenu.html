@@ -1,17 +1,31 @@
 <ion-view title="Food">
   <ion-content padding="true" class="has-header">
-    <ion-list id="mYCART-list2">
-      <ion-item class="item-thumbnail-left item-icon-right assertive" ng-repeat="food in listMenuFood">
-        <img src="img/KxegHHPOTYSq6XSp87kE_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
-        <h2assertive>{{food.food_name}}
-          <p style="white-space:normal;">Description : {{food.description}}</p>
-          <p style="white-space:normal;">Price : {{food.price}}</p>
+    <div class="row" style="margin-top:10px; background-color:#696969" ng-repeat="food in listMenuFood">
+      <div class="col">
+          <img src="{{food.photo1}}" height="100%" width="100%">
+      </div>
+      <div class="col">
+         <h2assertive>
+          <p style="font-size:20px;margin:0px;margin-top:9px;color:orangered">{{food.food_name}}</p>
+          <p style="white-space:normal;color:white; margin:0px">Description : {{food.description}}</p>
+          <p style="white-space:normal;color:white; margin:0px">Price : {{food.price}}</p>
+          <p><button class="button button-small button-assertive" ui-sref="tabsController.fOODDETAIL({idFood : food._id})">Détail</button></p>
+        </h2assertive>
+      </div>
+    </div>
+    <!--<ion-list id="mYCART-list2">
+      <ion-item class="item-thumbnail-left item-icon-right assertive" ng-repeat="food in listMenuFood" style="margin-top:10px; background-color:#696969">
+
+        <h2assertive>
+          <div class="row" style="height:40px; font-size:20px;">{{food.food_name}}</div>
+          <p style="white-space:normal;color:white">Description : {{food.description}}</p>
+          <p style="white-space:normal;color:white">Price : {{food.price}}</p>
           <p></p>
           <p><button class="button button-small button-assertive" ui-sref="tabsController.fOODDETAIL({idFood : food._id})">Détail</button></p>
           <i class="icon ion-android-cart" ng-hide="food.res_belong.delivery == false" ng-click="orderFood(food)"></i>
         </h2assertive>
       </ion-item>
-    </ion-list>
+    </ion-list>-->
     <rating max="5"></rating>
   </ion-content>
 </ion-view>
