@@ -306,3 +306,18 @@ angular.module('app.services', [])
             return promise;
         }        
     })
+
+    .service('LocalNotification', function($cordovaLocalNotification){
+        this.addOrderNotification = function(notificationId, data){
+            $cordovaLocalNotification.schedule({
+                id: notificationId,          
+                message: "Your order approved",
+                title: "Order approved",          
+                autoCancel: true,
+                sound: null,
+                data: data
+            }).then(function () {
+                console.log("The notification has been set");
+            }); 
+        }
+    })

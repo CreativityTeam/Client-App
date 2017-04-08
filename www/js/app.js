@@ -16,14 +16,14 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
 })
 
-.run(function($ionicPlatform,$ionicPopup) {
+.run(function($ionicPlatform,$ionicPopup,$cordovaLocalNotification,$state,$rootScope) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
-    }
+      cordova.plugins.Keyboard.disableScroll(true);              
+    }    
     if (window.StatusBar) {
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
@@ -58,16 +58,28 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 })
 
 /**Create RootScope For Order */
-.run(function($rootScope, AuthService, API_ENDPOINT){ 
+.run(function($rootScope, AuthService, API_ENDPOINT, $cordovaLocalNotification, $state, LocalNotification){   
   if (AuthService.isAuthenticated()){
+    $rootScope.listFoodForOrder = [];
+    $rootScope.urlImage = '';
+    $rootScope.idForNotification = 1;
+
     var ioServerUrl = API_ENDPOINT.root; 
-    $rootScope.ioConnection = io.connect(ioServerUrl);    
-    $rootScope.ioConnection.on('newOderNotification', function(newNotificationFromDB){
-        console.log(newNotificationFromDB);
+    $rootScope.ioConnection = io.connect(ioServerUrl);   
+    //Listen for order's msg 
+    $rootScope.ioConnection.on('pendingOrder', function(pendingOrder){
+      $cordovaLocalNotification.hasPermission(function(granted){
+        console.log(granted);        
+      });
+
+      LocalNotification.addOrderNotification($rootScope.idForNotification++, JSON.stringify(pendingOrder));
+
+      $rootScope.$on('$cordovaLocalNotification:click',
+        function (event, notification, state) {                 
+          $state.go('tabsController.mYORDER');
+        });
     });
-  }   
-  $rootScope.listFoodForOrder = [];
-  $rootScope.urlImage = '';
+  }     
 })
 
 /*

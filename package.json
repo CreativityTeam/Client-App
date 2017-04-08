@@ -38,7 +38,8 @@
     {
       "locator": "https://github.com/Rohfosho/CordovaCallNumberPlugin.git",
       "id": "call-number"
-    }
+    },
+    "de.appplant.cordova.plugin.local-notification"
   ],
   "cordovaPlatforms": []
 }

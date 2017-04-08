@@ -279,7 +279,7 @@ angular.module('app.controllers', ['ngMap'])
                 $interval.cancel(stop);
                 stop = undefined;
             }
-        });
+        });        
     })
 
     .controller('fAVORITEFOODCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $rootScope, $ionicPopup, $timeout) {
@@ -604,7 +604,7 @@ angular.module('app.controllers', ['ngMap'])
 
     })
 
-    .controller('loginCtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $ionicPopup, $ionicLoading, $cordovaOauth, $http, $cordovaToast) {
+    .controller('loginCtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $ionicPopup, $ionicLoading, $cordovaOauth, $http, $cordovaToast,LocalNotification) {
         $scope.loginFace = function () {
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
@@ -651,6 +651,12 @@ angular.module('app.controllers', ['ngMap'])
                         $rootScope.ioConnection = io.connect(ioServerUrl);
                         $rootScope.ioConnection.on('newOderNotification', function(newNotificationFromDB){
                             console.log(newNotificationFromDB);
+                            LocalNotification.addOrderNotification($rootScope.idForNotification++, JSON.stringify(newNotificationFromDB));
+
+                            $rootScope.$on('$cordovaLocalNotification:click',
+                                function (event, notification, state) {                 
+                                $state.go('tabsController.mYORDER');
+                                });
                         });
                     }
                     else{
