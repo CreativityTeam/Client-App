@@ -1,10 +1,12 @@
 <ion-view title="MY ORDER" id="page9">
   <ion-content padding="true" class="has-header">
     <ion-list id="mYORDER-list7">
-      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item47" ui-sref="{{order.shippingstatus==='shipping'? 'tabsController.sHIPPING({orderid: order._id, lat: order.location_ordered.point.latitude, lng: order.location_ordered.point.longitude})' : '.' }}" ng-repeat="order in orderCurrentUser" >
+      <ion-item class="item-thumbnail-left assertive" id="mYORDER-list-item47" ui-sref="{{order.shippingstatus==='shipping'? 'tabsController.sHIPPING({orderid: order._id, lat: order.location_ordered.point.latitude, lng: order.location_ordered.point.longitude})' : '.' }}" style="margin-top: 10px" ng-repeat="order in orderCurrentUser">
         <img src="img/KxegHHPOTYSq6XSp87kE_6YmT0SxQTAqeZj1S1KCN_ALS-Food-Hero.jpg">
-        <h2assertive>ORDER #{{$index}}
-          <p style="white-space:normal;">Price : {{total_price}}
+        <h2assertive><div class="row" style="height:40px; font-size:20px;">
+            ORDER #{{$index}}
+          </div>
+          <p style="color:white">Price : {{total_price}}
             <br> Fee Shipping : {{order.feeshipping}}
             <br> Status : {{order.shippingstatus}} </p>
         </h2assertive>
