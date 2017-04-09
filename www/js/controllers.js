@@ -239,10 +239,13 @@ angular.module('app.controllers', ['ngMap'])
                         $rootScope.listFoodForOrder = [];
                         $scope.listFood = [];
                         calculatePrice();
+                        $http.post(API_ENDPOINT.url + '/api/notifications/createNewNotification', {"_id": response.data._id}).success(function (response){
+                            console.log("Create 1 notification");
+                        });
                         $ionicPopup.alert({
                             title: 'Checkout successfully',
                             template: "You 've just checked out successfully!"
-                        });
+                        });                        
                     }
                 });
             }
@@ -262,24 +265,53 @@ angular.module('app.controllers', ['ngMap'])
     })
 
     .controller('mYORDERCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $interval) {
-
         var getOrderCurrentUser = function () {
             $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + AuthService.userInforIdSave()).success(function (response) {
-                if (response.success) {
-                    $scope.orderCurrentUser = response.data;
+                if (response.success) {  
+                    if ($stateParams.orderNewNoti){
+                        var orderGot = undefined;    
+                        var orderGotIndex = undefined;
+                        for (var i in response.data){
+                            if (response.data[i]._id == JSON.parse($stateParams.orderNewNoti)._id){
+                                orderGot = response.data[i];
+                                orderGotIndex = i;
+                                break;
+                            }
+                        }
+                        var orderArrayTemp = [];
+                        if (orderGot){
+                            orderArrayTemp[0] = orderGot;
+                        }                                        
+                        for (var i = 0; i < response.data.length; ++i){
+                            if (i != orderGotIndex){
+                                orderArrayTemp[i + 1] = response.data[i];
+                            }
+                        }
+
+                        $scope.orderCurrentUser = orderArrayTemp;
+                    }
+                    else{
+                        $scope.orderCurrentUser = response.data;
+                    }
                 }
             });
         }
 
         var stop = $interval(getOrderCurrentUser, 500);
 
-        $scope.$on('$destroy', function () {
-
+        $scope.$on('$destroy', function () {            
             if (angular.isDefined(stop)) {
                 $interval.cancel(stop);
                 stop = undefined;
             }
-        });        
+        });      
+
+        $scope.checkIfConfirmed = function(order){
+            if (!$stateParams.orderNewNoti){
+                return false;
+            }
+            return order._id == JSON.parse($stateParams.orderNewNoti)._id;
+        }  
     })
 
     .controller('fAVORITEFOODCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $rootScope, $ionicPopup, $timeout) {
@@ -684,7 +716,7 @@ angular.module('app.controllers', ['ngMap'])
         }
     })
 
-    .controller('fOODDETAILCtrl', function ($rootScope, $scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, $cordovaToast, SubjectDetailService) {
+    .controller('fOODDETAILCtrl', function ($rootScope, $scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading, $ionicPopup, RatingService, $cordovaToast, SubjectDetailService, $timeout) {
 
         var getAvatar = function(){
              $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {

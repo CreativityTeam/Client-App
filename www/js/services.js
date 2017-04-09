@@ -311,8 +311,8 @@ angular.module('app.services', [])
         this.addOrderNotification = function(notificationId, data){
             $cordovaLocalNotification.schedule({
                 id: notificationId,          
-                message: "Your order approved",
-                title: "Order approved",          
+                message: "Your order confirmed",
+                title: "Order confirmed",          
                 autoCancel: true,
                 sound: null,
                 data: data

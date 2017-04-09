@@ -67,16 +67,18 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     var ioServerUrl = API_ENDPOINT.root; 
     $rootScope.ioConnection = io.connect(ioServerUrl);   
     //Listen for order's msg 
-    $rootScope.ioConnection.on('pendingOrder', function(pendingOrder){
+    $rootScope.ioConnection.on('orderConfirmed', function(orderConfirmed){
       $cordovaLocalNotification.hasPermission(function(granted){
         console.log(granted);        
       });
 
-      LocalNotification.addOrderNotification($rootScope.idForNotification++, JSON.stringify(pendingOrder));
+      var notification = {"data": orderConfirmed};
+
+      LocalNotification.addOrderNotification($rootScope.idForNotification++, JSON.stringify(orderConfirmed));
 
       $rootScope.$on('$cordovaLocalNotification:click',
         function (event, notification, state) {                 
-          $state.go('tabsController.mYORDER');
+          $state.go('tabsController.mYORDER', {"orderNewNoti": JSON.stringify(orderConfirmed)});
         });
     });
   }     

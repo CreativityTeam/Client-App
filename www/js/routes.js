@@ -105,7 +105,7 @@ angular.module('app.routes', ['ionicUIRouter'])
   })
 
   .state('tabsController.mYORDER', {
-    url: '/myorder',
+    url: '/myorder/:orderNewNoti',
     views: {
       'tab5': {
         templateUrl: 'templates/mYORDER.html',
