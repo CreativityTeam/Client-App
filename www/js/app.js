@@ -32,7 +32,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
         if(navigator.connection.type == Connection.NONE) {
             $ionicPopup.alert({
                 title: "",
-                content: "Internet est requis dans cette application."
+                content: "Internet est requis dans cette application.",
+                okText: "J'accepte"
             })
             .then(function(result) {
                   ionic.Platform.exitApp();
@@ -42,7 +43,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
               if(!available){
                 var confirmPopup = $ionicPopup.alert({
                     title: '',
-                    template: "L'application a besoin d'activer la localisation"
+                    template: "L'application a besoin d'activer la localisation",
+                    okText: "J'accepte"
                 });
                 confirmPopup.then(function(res) {
                       cordova.plugins.diagnostic.switchToLocationSettings();
