@@ -1,15 +1,13 @@
 <ion-view title="ForgotPass" hide-nav-bar="true">
-  <ion-content padding="true" style="background: url(img/login_background.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
-    <form id="signup-form5" class="list">
+  <ion-content scroll="false" padding="true" style="background: url(img/login_background.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
+    <form id="signup-form5" class="list" ng-submit="resetPassword()">
       <div class="spacer" style="margin-top : 70%"></div>
-      <ion-list id="signup-list9">
-        <label class="item item-input signup">
-          <span class="input-label"><b>Email</b></span>
-          <input class="signup_input" type="email" placeholder="" ng-model="newUser.email" required>
-        </label>
-      </ion-list>
       <div class="row">
-          <button ng-click="resetPassword()" id="login-button14" class="button button-assertive button-block center_div">Confirmer</button>
+          <div class="col col-33"><b>Email</b></div>
+          <div class="col"><input id="email" class="signup" style="width:100%" type="email" ng-model="newUser.email" required></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+          <button type="submit" id="button_res" class="button button-assertive button-small button-block center_div">Confirmer</button>
       </div>
     </form>
     <div id="footer_app" class="bar bar-footer">

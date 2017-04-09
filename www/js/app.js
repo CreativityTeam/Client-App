@@ -31,8 +31,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
     if(window.Connection) {
         if(navigator.connection.type == Connection.NONE) {
             $ionicPopup.alert({
-                title: "System Exception",
-                content: "The internet is required in this application."
+                title: "",
+                content: "Internet est requis dans cette application."
             })
             .then(function(result) {
                   ionic.Platform.exitApp();
@@ -41,8 +41,8 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
             cordova.plugins.diagnostic.isLocationAvailable(function(available){
               if(!available){
                 var confirmPopup = $ionicPopup.alert({
-                    title: 'System Exception',
-                    template: 'LocationServices is required in this application.'
+                    title: '',
+                    template: "L'application a besoin d'activer la localisation"
                 });
                 confirmPopup.then(function(res) {
                       cordova.plugins.diagnostic.switchToLocationSettings();

@@ -1,33 +1,30 @@
 <ion-view title="Signup" hide-nav-bar="true" id="page12">
-  <ion-content padding="true" style="background: url(img/login_background.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
+  <ion-content scroll="false" padding="true" style="background: url(img/login_background.jpg) no-repeat center;background-size:cover;" class="manual-ios-statusbar-padding">
     <form id="signup-form5" class="list" ng-submit="register()">
-      <div class="spacer" style="margin-top: 65%;"></div>
-      <ion-list id="signup-list9">
-        <label class="item item-input signup">
-          <span class="input-label"><b>Email</b></span>
-          <input class="signup_input" type="email" ng-model="newUser.email" required>
-        </label>
-         <label class="item item-input signup">
-          <span class="input-label"><b>First Name</b></span>
-          <input class="signup_input" type="text" ng-model="newUser.firstname" required>
-        </label>
-        <label class="item item-input signup">
-          <span class="input-label"><b>Last Name</b></span>
-          <input class="signup_input" type="text" ng-model="newUser.lastname" required>
-        </label>
-        <label class="item item-input signup">
-          <span class="input-label"><b>Password</b></span>
-          <input class="signup_input" type="password" ng-model="newUser.password" required>
-        </label>
-        <label class="item item-input signup">
-          <span class="input-label"><b>Re-Password</b></span>
-          <input class="signup_input" type="password" ng-model="newUser.password2" required>
-        </label>
-      </ion-list>
+      <div class="spacer" style="margin-top: 70%;"></div>
       <div class="row">
-          <button ng-click="register()" id="login-button14" class="button button-assertive button-block center_div">S'inscrire</button>
+          <div class="col col-33"><b>Email</b></div>
+          <div class="col"><input id="email" class="signup" style="width:100%" type="email" ng-model="newUser.email" required></div>
       </div>
-      <!--<a ng-click="register()" id="signup-button9" class="button button-assertive  button-block">S'inscrire</a>-->
+      <div class="row" style="margin-top:10px">
+          <div class="col col-33"><b>First Name</b></div>
+          <div class="col"><input id="fnam" class="signup" style="width:100%" type="text" ng-model="newUser.firstname" required></div>
+      </div>
+        <div class="row" style="margin-top:10px">
+          <div class="col col-33"><b>Last Name</b></div>
+          <div class="col"><input id="lname" class="signup" style="width:100%" type="text" ng-model="newUser.lastname" required></div>
+      </div>
+        <div class="row" style="margin-top:10px">
+          <div class="col col-33"><b>Password</b></div>
+          <div class="col"><input id="pass" class="signup" style="width:100%" type="text" ng-model="newUser.password" required></div>
+      </div>
+      <div class="row" style="margin-top:10px">
+          <div class="col col-33"><b>Re-password</b></div>
+          <div class="col"><input id="Repass"class="signup" style="width:100%" type="text" ng-model="newUser.password2" required></div>
+      </div>
+      <div class="row">
+          <button type="submit" id="button_res" class="button button-assertive button-small button-block center_div">S'inscrire</button>
+      </div>
     </form>
     <div id="footer_app" class="bar bar-footer">
         <div class="row">
