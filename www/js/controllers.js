@@ -681,14 +681,16 @@ angular.module('app.controllers', ['ngMap'])
                     if (!$rootScope.ioConnection){
                         var ioServerUrl = API_ENDPOINT.root; 
                         $rootScope.ioConnection = io.connect(ioServerUrl);
-                        $rootScope.ioConnection.on('newOderNotification', function(newNotificationFromDB){
-                            console.log(newNotificationFromDB);
-                            LocalNotification.addOrderNotification($rootScope.idForNotification++, JSON.stringify(newNotificationFromDB));
+                        //Listen for order's msg 
+                        $rootScope.ioConnection.on('orderConfirmed', function(orderConfirmed){   
+                          if (AuthService.userInforIdSave() == orderConfirmed.user_order){
+                            LocalNotification.addOrderNotification($rootScope.idForNotification++, JSON.stringify(orderConfirmed));
 
                             $rootScope.$on('$cordovaLocalNotification:click',
-                                function (event, notification, state) {                 
-                                $state.go('tabsController.mYORDER');
-                                });
+                              function (event, notification, state) {                 
+                                $state.go('tabsController.mYORDER', {"orderNewNoti": JSON.stringify(orderConfirmed)});
+                              });
+                          }               
                         });
                     }
                     else{
