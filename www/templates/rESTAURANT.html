@@ -1,4 +1,4 @@
-<ion-view title="RESTAURANT" id="page17">
+<ion-view title="Restaurant" id="page17" style="font-family: 'Comfortaa', cursive;">
   <ion-content padding="true" class="has-header">
     <form id="rESTAURANT-form8" class="list">
       <label class="item item-input" id="rESTAURANT-search2">
@@ -7,13 +7,13 @@
       </label>
       <div class="row" ng-repeat="category in listCategoryRestaurant | filter : categoryName" ng-if="$index % 2 == 0">
         <div class="col">
-          <button class="button button-assertive button-block"  style="background-color:black;color:white;border-radius:8px"
+          <button class="button button-assertive button-block"  style="font-family: 'Comfortaa', cursive;font-size:13px;background-color:#404040;color:white;border-radius:5px"
               ui-sref="tabsController.listRestaurant({idCategory : listCategoryRestaurant[$index]._id})">
               {{listCategoryRestaurant[$index].name}}
           </button>
         </div>
         <div class="col" ng-if="listCategoryRestaurant.length > ($index + 1)">
-          <button class="button button-assertive button-block"  style="background-color:black;color:white;border-radius:8px"
+          <button class="button button-assertive button-block"  style="font-family: 'Comfortaa', cursive; font-size:13px;background-color:#404040;color:white;border-radius:5px"
              ui-sref="tabsController.listRestaurant({idCategory : listCategoryRestaurant[$index+1]._id})">
              {{listCategoryRestaurant[$index+1].name}}
           </button>

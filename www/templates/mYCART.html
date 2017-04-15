@@ -1,9 +1,9 @@
-<ion-view title="MY CART" id="page3">
-  <ion-content padding="true" class="has-header">
+<ion-view title="Mon panier" id="page3">
+  <ion-content scroll="listFood.length > 0" padding="true" class="has-header">
     <ion-list id="mYCART-list2">
       <label class="item item-input">
         <i class="icon ion-map placeholder-icon"></i>
-        <input type="text" placeholder="Address" ng-model="orderSaveDB.address">
+        <input type="search" placeholder="Saisir votre adresse" ng-model="orderSaveDB.address">
       </label>
       <ion-item id="mYCART-list-item21">
           <div class="parkmap" id="mapInOrder" data-tap-disabled="true"></div> 

@@ -68,17 +68,9 @@ angular.module('app.controllers', ['ngMap'])
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             });
-            $scope.listRestaurant = [];
             $http.get(API_ENDPOINT.url + '/api/restaurants/findresbytype/' + $stateParams.idCategory).success(function (response) {
                 $ionicLoading.hide();
-                for (var item in response.data) {
-                    if (!response.data[item].hasOwnProperty("photo1")) {
-                        response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                        $scope.listRestaurant.push(response.data[item]);
-                    } else {
-                        $scope.listRestaurant.push(response.data[item]);
-                    }
-                }
+                $scope.listRestaurant = response.data;
             });
         };
 
@@ -398,15 +390,13 @@ angular.module('app.controllers', ['ngMap'])
     })
 
     .controller('aroundCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http) {
-
+        var map, infoWindow;
         function initMap() {
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 15,
-                center: new google.maps.LatLng(51.508742, -0.120850)
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 6
             });
-            var infowindow = new google.maps.InfoWindow({
-                content: "Your Current Location"
-            });
+            infoWindow = new google.maps.InfoWindow;
 
             // Try HTML5 geolocation.
             if (navigator.geolocation) {
@@ -434,14 +424,12 @@ angular.module('app.controllers', ['ngMap'])
         }
 
         function findLocation(map) {
+            var infowindow = new google.maps.InfoWindow({});
             $http.get(API_ENDPOINT.url + '/api/restaurants/findres').success(function (response) {
-                for (var item in response.data) {
+                for (let item in response.data) {
                     var content = "<p><b>" + response.data[item].res_name + "</b></p><p>"
                         + response.data[item].location.housenumber + "," + response.data[item].location.street + "," + response.data[item].location.district + ","
                         + response.data[item].location.city; + "</p>";
-                    var infowindow = new google.maps.InfoWindow({
-                        content: content
-                    });
                     var position = {
                         lat: response.data[item].location.point.latitude,
                         lng: response.data[item].location.point.longitude
@@ -451,13 +439,14 @@ angular.module('app.controllers', ['ngMap'])
                         map: map,
                         title: response.data[item].res_name
                     });
-                    infowindow.open(map, marker);
-                    google.maps.event.addListener(marker, 'click', (function (marker) {
+                    google.maps.event.addListener(marker, 'click', (function (marker,content) {
                         return function () {
                             map.setZoom(15);
                             map.setCenter(marker.getPosition());
+                            infowindow.setContent(content);
+                            infowindow.open(map, marker);
                         };
-                    })(marker));
+                    })(marker,content));
                     /*marker.addListener('click',function(){
                        return function(){
                             map.setZoom(20);
