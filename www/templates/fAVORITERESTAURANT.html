@@ -1,4 +1,4 @@
-<ion-view title="List RESTAURANT">
+<ion-view title="Restaurant">
   <ion-content padding="true" class="has-header">
     <div class="row">
         <div class="col" style="padding-bottom:0px">
@@ -13,7 +13,7 @@
       </div>   
       <div class="row">
         <div class="col">
-          <ion-item style="margin-top:10px;" class="item-thumbnail-left" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : searchRestaurant">
+          <ion-item style="margin-top:10px;border-radius:5px" class="item-thumbnail-left" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : searchRestaurant">
             <img ng-src="{{restaurant.photo1}}" ng-if="restaurant.photo1">
             <img src="img/resdefault.jpg" height="10%" width="10%" ng-if="!restaurant.photo1">
             <h2assertive>

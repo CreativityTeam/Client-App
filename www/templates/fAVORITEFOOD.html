@@ -1,6 +1,6 @@
-<ion-view title="Favorite">
+<ion-view title="Food">
   <ion-content padding="true" class="has-header">
-    <div class="row" style="margin-top:20px; background-color:#404040" ng-repeat="food in listMenuFood">
+    <div class="row" style="margin-top:20px; background-color:#404040;border-radius:5px" ng-repeat="food in listMenuFood">
       <div class="col">
           <img src="{{food.photo1}}" height="100%" width="100%" ng-if="food.photo1">
           <img src="img/defaultfood.jpg" height="100%" width="100%" ng-if="!food.photo1">

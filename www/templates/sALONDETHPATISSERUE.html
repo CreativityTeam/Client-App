@@ -10,7 +10,7 @@
        </div>
         <div class="row">
         <div class="col">
-      <ion-item class="item-thumbnail-left assertive" id="loisirListe-list-item83" ui-sref="tabsController.DTail({idSubject : salon._id})" ng-repeat="salon in listSalon | filter:searchSalon" style="margin-top:10px">
+      <ion-item class="item-thumbnail-left assertive" id="loisirListe-list-item83" ui-sref="tabsController.DTail({idSubject : salon._id})" ng-repeat="salon in listSalon | filter:searchSalon" style="margin-top:10px;border-radius:5px">
        <img ng-src="{{salon.photo1}}" ng-if="salon.photo1">
             <img src="img/resdefault.jpg" height="10%" width="10%" ng-if="!salon.photo1">
             <h2assertive>
