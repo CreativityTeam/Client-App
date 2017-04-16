@@ -9996,3 +9996,8 @@ input::-webkit-input-placeholder {
     font-size: 20px;
     line-height: 3;
 }
+
+#pROFILE-list-item100 a{
+  background-color:transparent;
+  color:black;
+}

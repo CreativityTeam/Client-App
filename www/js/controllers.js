@@ -576,9 +576,6 @@ angular.module('app.controllers', ['ngMap'])
                     $scope.currentUser = response.data;
                     $scope.currentUser.gender = $scope.currentUser.gender == "M" ? "Male" : "Female";
                     $scope.currentUser.birthday = $scope.currentUser.birthday ? parseDateToDisplay(new Date($scope.currentUser.birthday)) : "";
-                    if (!$scope.currentUser.hasOwnProperty("avatar")) {
-                        $scope.currentUser.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                    }
                     $http.get(API_ENDPOINT.url + '/api/orders/findinfobyuser/' + $scope.currentUser._id).success(function (response) {
                         if (response.success) {
                             $scope.orderCurrentUser = response.data;
