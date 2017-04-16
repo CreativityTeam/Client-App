@@ -10,12 +10,21 @@ angular.module('app.routes', ['ionicUIRouter'])
     
   
 
-      .state('tabsController.lOISIR', {
+  //     .state('tabsController.lOISIR', {
+  //   url: '/loisir',
+  //   views: {
+  //     'tab1': {
+  //       templateUrl: 'templates/lOISIR.html',
+  //       controller: 'lOISIRCtrl'
+  //     }
+  //   }
+  // })
+     .state('tabsController.lOISIR', {
     url: '/loisir',
     views: {
       'tab1': {
-        templateUrl: 'templates/lOISIR.html',
-        controller: 'lOISIRCtrl'
+        templateUrl: 'templates/loisirListe.html',
+        controller: 'loisirListeCtrl'
       }
     }
   })

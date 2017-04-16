@@ -1,14 +1,19 @@
 <ion-view title="Favorite">
   <ion-content padding="true" class="has-header">
-    <div class="row" style="margin-top:10px; background-color:#696969" ng-repeat="food in listMenuFood">
+    <div class="row" style="margin-top:20px; background-color:#404040" ng-repeat="food in listMenuFood">
       <div class="col">
-          <img src="{{food.photo1}}" height="100%" width="100%">
+          <img src="{{food.photo1}}" height="100%" width="100%" ng-if="food.photo1">
+          <img src="img/defaultfood.jpg" height="100%" width="100%" ng-if="!food.photo1">
       </div>
       <div class="col">
          <h2assertive>
-          <p style="font-size:20px;margin:0px;margin-top:9px;color:orangered">{{food.food_name}}</p>
-          <p style="white-space:normal;color:white; margin:0px">Description : {{food.description}}</p>
-          <p style="white-space:normal;color:white; margin:0px">Price : {{food.price}}</p>
+            <div class="row" style="font-size:18px; padding:0px;padding-top:13px;padding-bottom:6px;color:#FF6633">
+                {{food.food_name}}
+              </div>
+              <div class="row" style="padding:0px;color:white;font-size:10px;">
+              Description : {{food.description}}<br>
+              Price : {{food.price}}
+              </div>
           <p><button class="button button-small button-assertive" ui-sref="tabsController.fOODDETAIL({idFood : food._id})">Détail</button></p>
         </h2assertive>
       </div>

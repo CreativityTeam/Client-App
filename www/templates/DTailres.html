@@ -1,64 +1,47 @@
-<ion-view title=" Détail" id="page13">
+<ion-view title="{{currentSubject.res_name}}" id="page13">
   <ion-content padding="true" class=" manual-remove-top-padding has-header">
-    <div class="row">
-      <div class="col">
-         <img src="{{currentSubject.photo1}}" height="150px" width="100%" ui-sref="tabsController.restaurantLocation({
+
+    <img src="{{currentSubject.photo1}}" height="150px" width="100%" ui-sref="tabsController.restaurantLocation({
             lat : currentSubject.location.point.latitude,
             lng : currentSubject.location.point.longitude,
-            name : currentSubject.location.housenumber + ', ' + currentSubject.location.street + ', ' + currentSubject.location.district + ', ' + currentSubject.location.city})">
-      </div>
-    </div>
-    <div class="row" style="background-color:#696969;border-radius:10px">
+            name : currentSubject.location.housenumber + ', ' + currentSubject.location.street + ', ' + currentSubject.location.district + ', ' + currentSubject.location.city})" style="padding-top:10px">
+
+    <div class="row" style="background-color:#404040;border-radius:5px">
       <div class="col col-90">
-            <div class="row" style="height:40px; font-size:20px; color:orangered;">
+            <div class="row" style="height:40px; font-size:20px; color:#FF6633;padding-left:0px">
               {{currentSubject.res_name}}
             </div>  
             <p style="color:white">Address : {{currentSubject.location.housenumber}}, {{currentSubject.location.street}}, {{currentSubject.location.district}}, {{currentSubject.location.city}}</p>  
+            <p style="color:white" ng-click="call(currentSubject.phone_number)"> Hotline : {{getPhoneNumber()}} 
       </div>
       <div class="col center_col" style="margin-top:10%">
-        <i style="font-size:30px;color:orangered" ng-class="{'icon ion-ios-heart': liked, 'icon ion-ios-heart-outline': !liked}" ng-click="handleResFav(currentSubject)"></i>
+        <i style="font-size:30px;color:#FF6633" ng-class="{'icon ion-ios-heart': liked, 'icon ion-ios-heart-outline': !liked}" ng-click="handleResFav(currentSubject)"></i>
       </div>
     </div>
-    <div class="row" style="margin-top:10px;">
-        <h3 class="center_div">NOTE</h3>
+    <div class="row" style="margin-top:10px;" ng-if="averageRating">
+        <p style="font-size:20px;font-weight:bold"class="center_div">Note</p>
     </div>
-    <div class="row">
-        <h3 class="center_div" style="font-size:50px">{{averageRating}}</h3>
+    <div class="row" style="margin-top:10px;" ng-if="averageRating">
+        <p class="center_div" style="font-size:35px;font-weight:bold">{{averageRating}}</p>
     </div>
-    <div class="row">
+    <div class="row" style="margin-top:10px;" ng-if="!averageRating">
         <ionic-ratings class="center_div" ratingsobj='ratingsObject' index='0'></ionic-ratings>
     </div>
-    <div class="row" style="margin-top:10px;">
+    <div class="row" ng-if="averageRating">
+        <ionic-ratings class="center_div" ratingsobj='ratingsObject' index='0'></ionic-ratings>
+    </div>
+    <div class="row" style="margin-top:10px;" ng-if="currentSubject.ratings.length">
         <p class="ion ion-person center_div" style="font-size:20px"> {{currentSubject.ratings.length}} vues</p>
     </div>
-    <div class="row">
-      <div class="phonecall center_div">
-        <p class="icon ion-android-call" align="center" ng-click="call(currentSubject.phone_number)">{{getPhoneNumber()}}</p>
-      </div>
+    <div class="row" style="margin-top:10px;" ng-if="currentSubject.photo1">
+      <img class="center_div" src="{{currentSubject.photo1}}" width="60%" height="150px;">
     </div>
-    <div class="row">
-      <img class="center_div" src="{{currentSubject.photo1}}" width="60%" height="200px;">
-    </div>
-    <div class="row" style="margin-top:10px;">
-      <img class="center_div" src="{{currentSubject.photo2}}" width="60%" height="200px;">
+    <div class="row" style="margin-top:10px;" ng-if="currentSubject.photo2">
+      <img class="center_div" src="{{currentSubject.photo2}}" width="60%" height="150px;">
     </div>
     <div class="row" style="margin-top:10px">
       <div class="col" style="background:url(img/menubar.png) no-repeat center;background-size:cover; height:60px;"><p style="padding-top: 4%;text-align: center;font-size: 20px;
 color: white;">Menu</p></div>
-    </div>
-    <div class="row" ng-repeat="menu in currentSubject.menus" ng-if="$index % 2 == 0">
-        <div class="col">
-          <button class="button button-assertive button-block"  style="background-color:orangeRed;color:white;border-radius:8px"
-              ui-sref="tabsController.listFoodBelongMenu({idMenu : currentSubject.menus[$index]._id})">
-              {{currentSubject.menus[$index].name}}
-          </button>
-        </div>
-        <div class="col" ng-if="currentSubject.menus.length > ($index + 1)">
-          <button class="button button-assertive button-block"  style="background-color:orangeRed;color:white;border-radius:8px"
-             ui-sref="tabsController.listFoodBelongMenu({idMenu : currentSubject.menus[$index+1]._id})">
-             {{currentSubject.menus[$index+1].name}}
-          </button>
-        </div>
     </div>
     <div class="row">
       <h4>Commentaires</h4>
@@ -67,8 +50,8 @@ color: white;">Menu</p></div>
     <div class="row">
       <form id="fOODDETAIL-form13" class="list" ng-submit="handleComment(currentSubject._id)" style="width:100%">
         <label class="item item-input" id="fOODDETAIL-input13">
-          <span class="input-label"><img src="{{avatar}}" height = "50px" width="50px" ></span>
-          <input type="text" placeholder="" ng-model="comment.content" style="width:100%">
+          <span class="input-label" style="width:0"><img src="{{avatar}}" height = "50px" width="50px"></span>
+          <input type="text" placeholder="Donnez votre avis sur ce restaurant" ng-model="comment.content" style="width:100%">
         </label>
       </form>
     </div>

@@ -83,15 +83,9 @@ angular.module('app.controllers', ['ngMap'])
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             });
-            $scope.listBarKtv = [];
             $http.get(API_ENDPOINT.url + '/api/services/findcategory/588328b0703173267024daf9').success(function (response) {
                 $ionicLoading.hide();
-                for (var item in response.data) {
-                    if (!response.data[item].hasOwnProperty("photo1")) {
-                        response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                        $scope.listBarKtv.push(response.data[item]);
-                    }
-                }
+                $scope.listBarKtv = response.data
             });
         };
 
@@ -104,15 +98,9 @@ angular.module('app.controllers', ['ngMap'])
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             });
-            $scope.listLoisir = [];
-            $http.get(API_ENDPOINT.url + '/api/services/findcategory/' + $stateParams.idLoisir).success(function (response) {
+            $http.get(API_ENDPOINT.url + '/api/services/findall').success(function (response) {
                 $ionicLoading.hide();
-                for (var item in response.data) {
-                    if (!response.data[item].hasOwnProperty("photo1")) {
-                        response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                        $scope.listLoisir.push(response.data[item]);
-                    }
-                }
+                $scope.listLoisir = response.data;
             });
         };
 
@@ -126,15 +114,9 @@ angular.module('app.controllers', ['ngMap'])
             $ionicLoading.show({
                 template: '<p>Loading...</p><ion-spinner></ion-spinner>',
             });
-            $scope.listSalon = [];
             $http.get(API_ENDPOINT.url + '/api/services/findcategory/5883289f703173267024daf6').success(function (response) {
                 $ionicLoading.hide();
-                for (var item in response.data) {
-                    if (!response.data[item].hasOwnProperty("photo1")) {
-                        response.data[item].photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                        $scope.listSalon.push(response.data[item]);
-                    }
-                }
+                $scope.listSalon = response.data;
             });
         };
 
@@ -710,7 +692,7 @@ angular.module('app.controllers', ['ngMap'])
              $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
                  console.log(response);
                  if(!response.data.hasOwnProperty('avatar')){
-                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                     $scope.avatar = "img/avatardefault.png"
                  }else{
                     $scope.avatar = response.data.avatar;
                  }
@@ -749,9 +731,6 @@ angular.module('app.controllers', ['ngMap'])
                     }
                 }
                 $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
-                if (!$scope.currentSubject.hasOwnProperty("photo1")) {
-                    $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                }
             });
         };
 
@@ -875,7 +854,7 @@ angular.module('app.controllers', ['ngMap'])
              $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
                  console.log(response);
                  if(!response.data.hasOwnProperty('avatar')){
-                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                     $scope.avatar = "img/avatardefault.png"
                  }else{
                     $scope.avatar = response.data.avatar;
                  }
@@ -923,9 +902,6 @@ angular.module('app.controllers', ['ngMap'])
                     }
                 }
                 $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
-                if (!$scope.currentSubject.hasOwnProperty("photo1")) {
-                    $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                }
             });
         };
         getAvatar();
@@ -944,7 +920,7 @@ angular.module('app.controllers', ['ngMap'])
              $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
                  console.log(response);
                  if(!response.data.hasOwnProperty('avatar')){
-                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                     $scope.avatar = "img/avatardefault.png"
                  }else{
                     $scope.avatar = response.data.avatar;
                  }
@@ -993,9 +969,6 @@ angular.module('app.controllers', ['ngMap'])
                 }
 
                 $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
-                if (!$scope.currentSubject.hasOwnProperty("photo1")) {
-                    $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                }
             });
         };
 
@@ -1100,7 +1073,7 @@ angular.module('app.controllers', ['ngMap'])
         var getAvatar = function(){
              $http.get(API_ENDPOINT.url + '/api/users/findone/' + AuthService.tokensave()).success(function (response) {
                  if(!response.data.hasOwnProperty('avatar')){
-                     $scope.avatar = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
+                     $scope.avatar = "img/avatardefault.png"
                  }else{
                     $scope.avatar = response.data.avatar;
                  }
@@ -1140,9 +1113,6 @@ angular.module('app.controllers', ['ngMap'])
                     }
                 }
                 $scope.averageRating = Math.round(($scope.currentSubject.totalRating / $scope.currentSubject.ratings.length) * 10) / 10;
-                if (!$scope.currentSubject.hasOwnProperty("photo1")) {
-                    $scope.currentSubject.photo1 = "http://vignette3.wikia.nocookie.net/galaxylife/images/7/7c/Noimage.png/revision/latest?cb=20120622041841"
-                }
             });
         };
 

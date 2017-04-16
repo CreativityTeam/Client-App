@@ -9953,7 +9953,7 @@ a.button {
   margin-top: -7%
 }
 .item-complex .item-content{
-  background-color:	#696969;
+  background-color:	#404040;
   color:orangered;
 };
 
@@ -10000,4 +10000,12 @@ input::-webkit-input-placeholder {
 #pROFILE-list-item100 a{
   background-color:transparent;
   color:black;
+}
+
+.ion-android-star:before{
+  font-size:35px;
+}
+
+.ion-android-star-outline:before{
+  font-size:35px;
 }

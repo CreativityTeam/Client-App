@@ -1,19 +1,29 @@
-<ion-view title="BAR, KTV" id="page19">
+<ion-view title="Bar Club" id="page19">
   <ion-content padding="true" class="has-header">
-    <form id="bARKTV-form10" class="list">
-      <label class="item item-input" id="bARKTV-search4">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input type="search" placeholder="" ng-model="searchBar">
-      </label>
-      <ion-item style="margin-top:10px;" class="item-thumbnail-left assertive" id="bARKTV-list-item76" ui-sref="tabsController.DTail({idSubject : barktv._id})" ng-repeat="barktv in listBarKtv | filter : searchBar">
-        <img ng-src="{{barktv.photo1}}">
-        <h2assertive>
-          <div class="row" style="height:40px; font-size:20px;">{{barktv.service_name}}</div>
-          <p style="color:white">Description : {{barktv.service_desciption}}</p>
-          <p style="color:white">Address : {{barktv.location.housenumber}}, {{barktv.location.street}}, {{barktv.location.district}}, {{barktv.location.city}}</p>
-        </h2assertive>
+    <div class="row">
+        <div class="col" style="padding-bottom:0px">
+      <label class="item item-input" id="ListrESTAURANT-search2" style="width:100%;padding:0px;">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="search" placeholder="Recherche" ng-model="searchBar">
+        </label>
+        </div>
+       </div>
+        <div class="row">
+        <div class="col">
+      <ion-item class="item-thumbnail-left assertive" id="loisirListe-list-item83" ui-sref="tabsController.DTail({idSubject : barktv._id})" ng-repeat="barktv in listBarKtv | filter:searchBar" style="margin-top:10px">
+       <img ng-src="{{barktv.photo1}}" ng-if="barktv.photo1">
+            <img src="img/resdefault.jpg" height="10%" width="10%" ng-if="!barktv.photo1">
+            <h2assertive>
+              <div class="row" style="font-size:18px; padding:0px;padding-top:13px;padding-bottom:6px;color:#FF6633">
+                {{barktv.service_name}}
+              </div>
+              <div class="row" style="padding:0px;color:white;font-size:10px;">
+              Description : {{barktv.service_desciption}}<br>
+              Address :{{barktv.location.housenumber}}, {{barktv.location.street}}, {{barktv.location.district}}, {{barktv.location.city}}
+              </div>
+            </h2assertive>
       </ion-item>
-    </form>
-    <rating max="5"></rating>
+    </div>
+    </div>
   </ion-content>
 </ion-view>

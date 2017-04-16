@@ -1,66 +1,63 @@
-<ion-view title="FOOD DETAIL" id="page11">
+<ion-view title="{{currentSubject.food_name}}" id="page11">
   <ion-content padding="true" class=" manual-remove-top-padding has-header">
-      <div class="row" style="margin-top:10px; background-color:#696969">
-        <div class="col">
-            <img src="{{food.photo1}}" height="100%" width="100%">
+      <div class="row" style="margin-top:10px; background-color:#404040">
+        <div class="col" style="padding:0">
+            <img src="{{food.photo1}}" height="100%" width="100%" ng-if="food.photo1">
+             <img src="img/defaultfood.jpg" height="100%" width="100%" ng-if="!food.photo1">
         </div>
         <div class="col">
           <h2assertive>
-            <p style="font-size:20px;margin:0px;margin-top:9px;color:orangered">{{currentSubject.food_name}}</p>
-            <p style="white-space:normal;color:white; margin:0px">Description : {{currentSubject.description}}</p>
-            <p style="white-space:normal;color:white; margin:0px">Price : {{currentSubject.price}}</p>
+            <p style="font-size:15px;margin:0px;margin-top:30px;color:#FF6633">{{currentSubject.food_name}}</p>
+            <p style="font-size:10px;white-space:normal;color:white; margin:0px">Description : {{currentSubject.description}}</p>
+            <p style="font-size:10px;white-space:normal;color:white; margin:0px">Price : {{currentSubject.price}}</p>
           </h2assertive>
           <div class="row">
             <div class="col">
-               <i style="font-size:40px;color:orangered" ng-class="{'icon ion-ios-heart': liked, 'icon ion-ios-heart-outline': !liked}" ng-click="handleFoodFav(currentSubject)"></i>
+               <i style="font-size:30px;color:#FF6633" ng-class="{'icon ion-ios-heart': liked, 'icon ion-ios-heart-outline': !liked}" ng-click="handleFoodFav(currentSubject)"></i>
             </div>
             <div class="col" style="text-align:right">
-              <i style="font-size:40px;color:orangered" class="icon ion-android-cart" ng-hide="food.res_belong.delivery == false" ng-click="orderFood(currentSubject)"></i>
+              <i style="font-size:30px;color:white" class="icon ion-android-cart" ng-hide="food.res_belong.delivery == false" ng-click="orderFood(currentSubject)"></i>
             </div>
           </div>
         </div>
       </div>
-      <div class="row" style="margin-top:10px;">
-        <h3 class="center_div">NOTE</h3>
-      </div>
-      <div class="row">
-          <h3 class="center_div" style="font-size:50px">{{averageRating}}</h3>
-      </div>
-      <div class="row">
-          <ionic-ratings class="center_div" ratingsobj='ratingsObject' index='0'></ionic-ratings>
-      </div>
-      <div class="row" style="margin-top:10px;">
-          <p class="ion ion-person center_div" style="font-size:20px"> {{currentSubject.ratings.length}} vues</p>
-      </div>
-      <div class="row">
-        <img class="center_div" src="{{currentSubject.photo1}}" width="60%" height="200px;">
-      </div>
-      <div class="row" style="margin-top:10px;">
-        <img class="center_div" src="{{currentSubject.photo2}}" width="60%" height="200px;">
-      </div> 
-      <div class="row">
-        <h4>Commentaires</h4>
-      </div>
-      <hr>   
-      <div class="row">
-        <form id="fOODDETAIL-form13" class="list" ng-submit="handleComment(currentSubject._id)" style="width:100%">
-          <label class="item item-input" id="fOODDETAIL-input13">
-            <span class="input-label"><img src="{{avatar}}" height = "50px" width="50px" ></span>
-            <input type="text" placeholder="" ng-model="comment.content" style="width:100%">
-          </label>
-        </form>
-      </div>
-      <div class="row">
-        <div class="list card">
-          <my-comments subject=currentSubject></my-comments>
-        </div>
-      </div>
-      <!--<form class="list" ng-submit="handleComment(currentSubject._id)">
-        <label class="item item-input item-stacked-label" id="fOODDETAIL-input13">
-          <span class="input-label">Your Comment</span>
-          <input type="text" placeholder="" ng-model="comment.content">
+      <div class="row" style="margin-top:15px;" ng-if="averageRating">
+        <p style="font-size:20px;font-weight:bold"class="center_div">Note</p>
+    </div>
+    <div class="row" style="margin-top:10px;" ng-if="averageRating">
+        <p class="center_div" style="font-size:35px;font-weight:bold">{{averageRating}}</p>
+    </div>
+    <div class="row" style="margin-top:10px;" ng-if="!averageRating">
+        <ionic-ratings class="center_div" ratingsobj='ratingsObject' index='0'></ionic-ratings>
+    </div>
+    <div class="row" ng-if="averageRating">
+        <ionic-ratings class="center_div" ratingsobj='ratingsObject' index='0'></ionic-ratings>
+    </div>
+    <div class="row" style="margin-top:10px;" ng-if="currentSubject.ratings.length">
+        <p class="ion ion-person center_div" style="font-size:20px"> {{currentSubject.ratings.length}} vues</p>
+    </div>
+    <div class="row" style="margin-top:10px;" ng-if="currentSubject.photo1">
+      <img class="center_div" src="{{currentSubject.photo1}}" width="60%" height="150px;">
+    </div>
+    <div class="row" style="margin-top:10px;" ng-if="currentSubject.photo2">
+      <img class="center_div" src="{{currentSubject.photo2}}" width="60%" height="150px;">
+    </div>
+    <div class="row">
+      <h4>Commentaires</h4>
+    </div>
+    <hr>
+    <div class="row">
+      <form id="fOODDETAIL-form13" class="list" ng-submit="handleComment(currentSubject._id)" style="width:100%">
+        <label class="item item-input" id="fOODDETAIL-input13">
+          <span class="input-label" style="width:0"><img src="{{avatar}}" height = "50px" width="50px"></span>
+          <input type="text" placeholder="Donnez votre avis sur ce restaurant" ng-model="comment.content" style="width:100%">
         </label>
       </form>
-      <my-comments subject=currentSubject></my-comments>-->
+    </div>
+    <div class="row">
+      <div class="list card">
+        <my-comments subject=currentSubject></my-comments>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

@@ -1,31 +1,32 @@
 <ion-view title="List RESTAURANT">
   <ion-content padding="true" class="has-header">
-     <form id="ListrESTAURANT-form8" class="list">
-     <label class="item item-input" id="ListrESTAURANT-search2">
-        <i class="icon ion-search placeholder-icon"></i>
-        <input type="search" placeholder="" ng-model="searchRestaurant">
-      </label>
-      <!--<ion-item>
-        <div class="row">
-          <div class="col"><h2>Livraison à domicile ?</h2></div>
-          <div class="col">
-            <select style="width : 100%" ng-options="o.label for o in options" 
-            ng-model="selected" ng-change="setSelected(selected)">         
-            </select>
-          </div>        
+    <div class="row">
+        <div class="col" style="padding-bottom:0px">
+        <label class="item item-input" id="ListrESTAURANT-search2" style="width:100%;padding:0px;">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="search" placeholder="Recherche" ng-model="searchRestaurant">
+        </label>
         </div>
-      </ion-item>      -->
-      <ion-item style="margin-bottom:10px;"class="item-thumbnail-left" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : isActive">
-        <img ng-src="{{restaurant.photo1}}">
-        <h2assertive>
-          <div class="row" style="height:40px; font-size:20px;">
-            {{restaurant.res_name}}
-          </div>
-          <p style="color:white">Description : {{restaurant.description}}</p>
-          <p style="color:white">Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}</p>
-        </h2assertive>
-      </ion-item>
-    </form>
-    <rating max="5"></rating>
+      </div>
+      </ion-item>      
+        </div>
+      </div>   
+      <div class="row">
+        <div class="col">
+          <ion-item style="margin-top:10px;" class="item-thumbnail-left" id="bARKTV-list-item76" ui-sref="tabsController.restaurantDetail({idRestaurant : restaurant._id})" ng-repeat="restaurant in listRestaurant | filter : searchRestaurant">
+            <img ng-src="{{restaurant.photo1}}" ng-if="restaurant.photo1">
+            <img src="img/resdefault.jpg" height="10%" width="10%" ng-if="!restaurant.photo1">
+            <h2assertive>
+              <div class="row" style="font-size:18px; padding:0px;padding-top:13px;padding-bottom:6px;color:#FF6633">
+                {{restaurant.res_name}}
+              </div>
+              <div class="row" style="padding:0px;color:white;font-size:10px;">
+              Description : {{restaurant.description}}<br>
+              Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}
+              </div>
+            </h2assertive>
+          </ion-item>
+        </div>
+      </div>
   </ion-content>
 </ion-view>

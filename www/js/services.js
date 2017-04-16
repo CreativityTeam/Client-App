@@ -156,10 +156,10 @@ angular.module('app.services', [])
     .service('RatingService', function (API_ENDPOINT, $http, AuthService) {
         this.getRatingsObject = function (childUrl) {
             return {
-                iconOn: 'ion-ios-star',    //Optional
-                iconOff: 'ion-ios-star-outline',   //Optional
-                iconOnColor: 'rgb(200, 200, 100)',  //Optional
-                iconOffColor: 'rgb(200, 100, 100)',    //Optional
+                iconOn: 'ion-android-star',    //Optional
+                iconOff: 'ion-android-star-outline',   //Optional
+                iconOnColor: 'rgb(255, 102, 51)',  //Optional
+                iconOffColor: 'rgb(255, 102, 51)',    //Optional
                 rating: 0, //Optional
                 minRating: 0,    //Optional
                 readOnly: true, //Optional
