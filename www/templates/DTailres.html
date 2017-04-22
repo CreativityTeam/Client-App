@@ -39,7 +39,7 @@
     <div class="row" style="margin-top:10px;" ng-if="currentSubject.photo2">
       <img class="center_div" src="{{currentSubject.photo2}}" width="60%" height="150px;">
     </div>
-    <div class="row" style="margin-top:10px">
+    <div class="row" style="margin-top:10px" ui-sref="tabsController.listFoodBelongMenu({idRes : currentSubject._id})">
       <div class="col" style="background:url(img/menubar.png) no-repeat center;background-size:cover; height:60px;"><p style="padding-top: 4%;text-align: center;font-size: 20px;
 color: white;">Menu</p></div>
     </div>

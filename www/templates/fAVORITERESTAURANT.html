@@ -21,8 +21,10 @@
                 {{restaurant.res_name}}
               </div>
               <div class="row" style="padding:0px;color:white;font-size:10px;">
-              Description : {{restaurant.description}}<br>
-              Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}
+              {{restaurant.description}}<br>
+              </div>
+              <div style="padding:0px;color:white;font-size:10px;white-space: nowrap; width: 20em; overflow: hidden;text-overflow: ellipsis; ">
+                  Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}
               </div>
             </h2assertive>
           </ion-item>

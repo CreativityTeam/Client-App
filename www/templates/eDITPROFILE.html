@@ -1,7 +1,7 @@
-<ion-view title="EDIT PROFILE" id="page21">
+<ion-view title="Modifier votre profile" id="page21">
   <ion-content padding="true" class="has-header">    
     <img style="max-width:230px;max-height:95px;width:auto;height:auto;" alt="No avatar" ng-src="{{currentUser.avatar}}">
-    <button ui-sref="tabsController.uploadPhoto" class="button icon-left ion-upload">Upload Avatar</button>
+    <button ui-sref="tabsController.uploadPhoto" class="button icon-left ion-upload">Télécharger avatar</button>
 
     <form id="cONTACT-form11" class="list">
       <label class="item item-input" id="cONTACT-input9">
@@ -13,7 +13,7 @@
         <input type="text" placeholder="" ng-model="currentUser.phone">
       </label>
       <label class="item item-input" id="cONTACT-textarea2">
-        <span class="input-label">Gender</span>        
+        <span class="input-label">Sexe</span>        
          <select ng-model="currentUser.gender">            
             <option value="M">Male</option>
             <option value="F">Female</option>
@@ -24,15 +24,15 @@
         <textarea placeholder="" ng-model="currentUser.address"></textarea>
       </label>
       <label class="item item-input">
-        <span class="input-label">About</span>
+        <span class="input-label">A propos de</span>
         <textarea placeholder="" ng-model="currentUser.about"></textarea>
       </label>                  
       <label class="item item-input">
-        <span class="input-label" ng-model="currentUser.birthday">Birthday</span>
+        <span class="input-label" ng-model="currentUser.birthday">Date de naissance</span>
         <input type="date" ng-model="currentUser.birthday"></input>
       </label>                  
     </form>        
 
-    <button id="cONTACT-button21" class="button button-assertive  button-block" ng-click="update()">UPDATE</button>
+    <button id="cONTACT-button21" class="button button-assertive  button-block" ng-click="update()">Sauvegarder</button>
   </ion-content>
 </ion-view>

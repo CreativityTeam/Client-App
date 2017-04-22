@@ -40,11 +40,11 @@ angular.module('app.controllers', ['ngMap'])
     .controller('listRestaurantCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading) {
         $scope.hasDelivery = "all";
         $scope.options = [
-            { value: "all", label: 'All' },
-            { value: "no", label: 'No' },
-            { value: "yes", label: 'Yes' },
+            { value: "no", label: 'Non' },
+            { value: "yes", label: 'Oui' },
         ];
         $scope.setSelected = function (delivery) {
+            console.log(delivery);
             $scope.hasDelivery = delivery.value;
         };
         $scope.setSearch = function (search) {
@@ -1195,6 +1195,12 @@ angular.module('app.controllers', ['ngMap'])
             });
         }
 
+        var getFoodByRestaurant = function () {
+            $http.get(API_ENDPOINT.url + '/api/foods/findres/' + $stateParams.idRes).success(function (data) {
+                $scope.listMenuFood = data.data;
+            });
+        }
+
         $scope.orderFood = function (foodObject) {
             if (checkCart(foodObject) == false) {
                 $ionicPopup.alert({
@@ -1245,7 +1251,8 @@ angular.module('app.controllers', ['ngMap'])
                 quantityPopup.close(); //close the popup after 3 seconds for some reason
             }, 5000);
         }
-        getFoodByMenu();
+        // getFoodByMenu();
+        getFoodByRestaurant();
     })
 
     .controller('cONDITIONSCtrl', function () {
@@ -1272,8 +1279,8 @@ angular.module('app.controllers', ['ngMap'])
             $http.put(API_ENDPOINT.url + '/api/users/update/' + AuthService.userInforIdSave(), $scope.currentUser).success(function (response) {
                 if (response.success) {
                     $ionicPopup.alert({
-                        title: 'Update done',
-                        template: "Update your info done"
+                        title: 'Modification avec succès',
+                        template: "Votre profile a été modifié avec succès."
                     });
                     $ionicLoading.hide();
                 }

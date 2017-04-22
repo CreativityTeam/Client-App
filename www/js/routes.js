@@ -50,7 +50,7 @@ angular.module('app.routes', ['ionicUIRouter'])
   })
 
   .state('tabsController.listFoodBelongMenu', {
-    url: '/listFood/:idMenu',
+    url: '/listFood/:idRes',
     views: {
       'tab6': {
         templateUrl: 'templates/listFoodBelongMenu.html',

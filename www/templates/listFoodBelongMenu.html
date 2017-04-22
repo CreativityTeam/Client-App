@@ -1,4 +1,4 @@
-<ion-view title="Food">
+<!--<ion-view title="Food">
   <ion-content padding="true" class="has-header">
     <div class="row" style="margin-top:10px; background-color:#696969" ng-repeat="food in listMenuFood">
       <div class="col">
@@ -13,19 +13,35 @@
         </h2assertive>
       </div>
     </div>
-    <!--<ion-list id="mYCART-list2">
-      <ion-item class="item-thumbnail-left item-icon-right assertive" ng-repeat="food in listMenuFood" style="margin-top:10px; background-color:#696969">
-
-        <h2assertive>
-          <div class="row" style="height:40px; font-size:20px;">{{food.food_name}}</div>
-          <p style="white-space:normal;color:white">Description : {{food.description}}</p>
-          <p style="white-space:normal;color:white">Price : {{food.price}}</p>
-          <p></p>
-          <p><button class="button button-small button-assertive" ui-sref="tabsController.fOODDETAIL({idFood : food._id})">Détail</button></p>
-          <i class="icon ion-android-cart" ng-hide="food.res_belong.delivery == false" ng-click="orderFood(food)"></i>
-        </h2assertive>
-      </ion-item>
-    </ion-list>-->
     <rating max="5"></rating>
+  </ion-content>
+</ion-view>-->
+<ion-view title="Food" id="page17">
+  <ion-content padding="true" class="has-header">
+      <div class="row">
+        <div class="col" style="padding-bottom:0px">
+        <label class="item item-input" id="ListrESTAURANT-search2" style="width:100%;padding:0px;">
+          <i class="icon ion-search placeholder-icon"></i>
+          <input type="search" placeholder="Recherche" ng-model="searchFood">
+        </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <ion-item style="margin-top:10px; border-radius:5px" class="item-thumbnail-left" id="bARKTV-list-item76" ui-sref="tabsController.fOODDETAIL({idFood : food._id})" ng-repeat="food in listMenuFood | filter : searchFood">
+            <img ng-src="{{food.photo1}}" ng-if="food.photo1">
+            <img src="img/resdefault.jpg" height="10%" width="10%" ng-if="!food.photo1">
+            <h2assertive>
+              <div class="row" style="font-size:18px; padding:0px;padding-top:13px;padding-bottom:6px;color:#FF6633">
+                {{food.food_name}}
+              </div>
+              <div class="row" style="padding:0px;color:white;font-size:10px;">
+              Description : {{food.description}}<br>
+              Price : {{food.price}}
+              </div>
+            </h2assertive>
+          </ion-item>
+        </div>
+      </div>
   </ion-content>
 </ion-view>

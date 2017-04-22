@@ -18,8 +18,10 @@
                 {{salon.service_name}}
               </div>
               <div class="row" style="padding:0px;color:white;font-size:10px;">
-              Description : {{salon.service_desciption}}<br>
-              Address :{{salon.location.housenumber}}, {{salon.location.street}}, {{salon.location.district}}, {{salon.location.city}}
+              {{salon.service_desciption}}<br>
+              </div>
+              <div style="padding:0px;color:white;font-size:10px;white-space: nowrap; width: 20em; overflow: hidden;text-overflow: ellipsis; ">
+                Address :{{salon.location.housenumber}}, {{salon.location.street}}, {{salon.location.district}}, {{salon.location.city}}
               </div>
             </h2assertive>
       </ion-item>

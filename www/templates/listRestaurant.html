@@ -1,4 +1,4 @@
-<ion-view title="List RESTAURANT" id="page17">
+<ion-view title="Restaurant {{listRestaurant[0].type.name}}" id="page17">
   <ion-content padding="true" class="has-header">
       <div class="row">
         <div class="col" style="padding-bottom:0px">
@@ -12,11 +12,13 @@
         <div class="col" style="padding-top:0px">
         <ion-item style="width:100%;padding:0px">
         <div class="row">
-          <div class="col col-75 center_col" style="font-size:100%;">checkbox Oui / Non</div>
-          <div class="col">
-            <select style="width : 100%" ng-options="o.label for o in options" 
+          <div class="col col-67 center_col" style="font-size:100%;">Livraison à domicile?</div>
+          <div class="col center_col">
+            <i ng-repeat="select in options" style="margin-right:5px">
+            <input type="radio" name="selected" ng-click="setSelected(select)">{{select.label}}</i>
+            <!--<select style="width : 100%" ng-options="o.label for o in options" 
             ng-model="selected" ng-change="setSelected(selected)">         
-            </select>
+            </select>-->
           </div>        
         </div>
       </ion-item>      
@@ -31,9 +33,11 @@
               <div class="row" style="font-size:18px; padding:0px;padding-top:13px;padding-bottom:6px;color:#FF6633">
                 {{restaurant.res_name}}
               </div>
-              <div class="row" style="padding:0px;color:white;font-size:10px;">
-              Description : {{restaurant.description}}<br>
-              Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}
+              <div class="row" style="padding:0px;color:white;font-size:10px;white-space: nowrap; width: 20em; overflow: hidden;text-overflow: ellipsis; ">
+              {{restaurant.description}}
+              </div>
+              <div style="padding:0px;color:white;font-size:10px;white-space: nowrap; width: 20em; overflow: hidden;text-overflow: ellipsis; ">
+                Address : {{restaurant.location.housenumber}}, {{restaurant.location.street}}, {{restaurant.location.district}}, {{restaurant.location.city}}
               </div>
             </h2assertive>
           </ion-item>
