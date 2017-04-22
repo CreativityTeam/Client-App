@@ -16,9 +16,6 @@
           <div class="col center_col">
             <i ng-repeat="select in options" style="margin-right:5px">
             <input type="radio" name="selected" ng-click="setSelected(select)">{{select.label}}</i>
-            <!--<select style="width : 100%" ng-options="o.label for o in options" 
-            ng-model="selected" ng-change="setSelected(selected)">         
-            </select>-->
           </div>        
         </div>
       </ion-item>      

@@ -8,6 +8,7 @@ angular.module('app.directives', [])
                 subject: '='
             },
             controller: ['$scope', function ($scope) {
+                $scope.limitSet = 5;
                 $scope.parseCommentDate = function (date) {
                     date = new Date(date);
                     var month = date.getMonth() + 1;
@@ -16,6 +17,9 @@ angular.module('app.directives', [])
                     var hour = date.getHours();
                     var minute = date.getMinutes();
                     return day + "/" + month + "/" + year + " " + hour + ":" + minute;
+                }
+                $scope.increaseComment = function(){
+                    $scope.limitSet += 5;
                 }
             }],
             templateUrl: 'templates/directives-templates/my-comments.html'

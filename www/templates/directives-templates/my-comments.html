@@ -1,6 +1,25 @@
-<ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in subject.comments | orderBy: '-date_created'">
+<!--<ion-item class="item-avatar assertive" id="fOODDETAIL-list-item58" ng-repeat="comment in subject.comments | orderBy: '-date_created'">
     <img ng-src="{{comment.user_id.avatar}}">
     <h2assertive>{{comment.user_id.local.name}} :</h2assertive>
     <h2assertive>{{comment.content}}</h2assertive>
     <h2assertive style="float: right">{{parseCommentDate(comment.date_created)}}</h2assertive>
-</ion-item>
+</ion-item>-->
+
+<div class="row" ng-repeat="comment in subject.comments | orderBy: '-date_created' | limitTo: limitSet">
+    <div class="col col-20">
+        <img src="{{comment.user_id.avatar}}" height = "50px" width="50px"></span>
+    </div>
+    <div class="col">
+        <p style="font-size:15px; color:#FF6633;padding-left:0px">{{comment.user_id.local.name}}</p>
+        <p>{{comment.content}}</p>  
+    </div>
+</div>
+ <div class="row" style="padding:0px">
+    <button id="food-button20" 
+            class="button button-small button-block center_div" 
+            style="background-color:#404040;margin-top:0px;margin-bottom:10px"
+            ng-click="increaseComment()"
+            ng-if="subject.comments.length > 0">
+            Show More
+    </button>
+</div>
