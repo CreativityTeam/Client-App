@@ -20,7 +20,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getListRestaurantCategory = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $scope.listCategoryRestaurant = [];
             $http.get(API_ENDPOINT.url + '/api/categories/getList').success(function (response) {
@@ -40,8 +40,8 @@ angular.module('app.controllers', ['ngMap'])
     .controller('listRestaurantCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading) {
         $scope.hasDelivery = "all";
         $scope.options = [
-            { value: "no", label: 'Non' },
             { value: "yes", label: 'Oui' },
+            { value: "no", label: 'Non' },
         ];
         $scope.setSelected = function (delivery) {
             console.log(delivery);
@@ -66,7 +66,7 @@ angular.module('app.controllers', ['ngMap'])
         }
         var getListRestaurant = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/restaurants/findresbytype/' + $stateParams.idCategory).success(function (response) {
                 $ionicLoading.hide();
@@ -81,7 +81,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getListBarKtv = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/services/findcategory/588328b0703173267024daf9').success(function (response) {
                 $ionicLoading.hide();
@@ -96,7 +96,7 @@ angular.module('app.controllers', ['ngMap'])
     .controller('loisirListeCtrl', function ($scope, $stateParams, $state, API_ENDPOINT, AuthService, $http, $ionicLoading) {
         var getListServiceBelongLoisir = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/services/findall').success(function (response) {
                 $ionicLoading.hide();
@@ -112,7 +112,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getListSaLonDeth = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/services/findcategory/5883289f703173267024daf6').success(function (response) {
                 $ionicLoading.hide();
@@ -588,7 +588,7 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.register = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             AuthService.register($scope.newUser).then(function (msg) {
                 $ionicLoading.hide();
@@ -607,7 +607,7 @@ angular.module('app.controllers', ['ngMap'])
     .controller('loginCtrl', function ($scope, $rootScope, $stateParams, $state, API_ENDPOINT, AuthService, $ionicPopup, $ionicLoading, $cordovaOauth, $http, $cordovaToast,LocalNotification) {
         $scope.loginFace = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $cordovaOauth.facebook("1878320485734515", ["email", "public_profile"], { redirect_uri: "http://localhost/callback" }).then(function (result) {
                 displayData($http, result.access_token);
@@ -643,7 +643,7 @@ angular.module('app.controllers', ['ngMap'])
                 });
             } else {
                 $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
                 });
                 AuthService.login($scope.user).then(function (msg) {
                     if (!$rootScope.ioConnection){
@@ -708,7 +708,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getFoodDetail = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             SubjectDetailService.checkIfSubjectLiked($stateParams.idFood, 'food').then(function (liked) {
                 if (liked) {
@@ -743,7 +743,7 @@ angular.module('app.controllers', ['ngMap'])
             }
             else {
                 $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
                 });
                 SubjectDetailService.saveComment($scope.comment, 'food', idFood)
                     .then(function (comment) {
@@ -870,7 +870,7 @@ angular.module('app.controllers', ['ngMap'])
             }
             else {
                 $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
                 });
                 SubjectDetailService.saveComment($scope.comment, 'service', idService)
                     .then(function (comment) {
@@ -889,7 +889,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getSubjectDetail = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject).success(function (response) {
                 $ionicLoading.hide();
@@ -936,7 +936,7 @@ angular.module('app.controllers', ['ngMap'])
             }
             else {
                 $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
                 });
                 SubjectDetailService.saveComment($scope.comment, 'service', idService)
                     .then(function (comment) {
@@ -955,7 +955,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getSubjectDetail = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/services/findinfo/' + $stateParams.idSubject).success(function (response) {
                 $ionicLoading.hide();
@@ -1022,7 +1022,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getPubLicities = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.get(API_ENDPOINT.url + '/api/publicities/findAllPublicity').success(function (responseGet) {
                 $ionicLoading.hide();
@@ -1082,7 +1082,7 @@ angular.module('app.controllers', ['ngMap'])
 
         var getRestaurantDetail = function () {
             $ionicLoading.show({
-                template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
 
             SubjectDetailService.checkIfSubjectLiked($stateParams.idRestaurant, 'restaurant').then(function (liked) {
@@ -1125,7 +1125,7 @@ angular.module('app.controllers', ['ngMap'])
             }
             else {
                 $ionicLoading.show({
-                    template: '<p>Loading...</p><ion-spinner></ion-spinner>',
+                    template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
                 });
                 SubjectDetailService.saveComment($scope.comment, 'restaurant', idRes)
                     .then(function (comment) {
@@ -1274,7 +1274,7 @@ angular.module('app.controllers', ['ngMap'])
 
         $scope.update = function () {
             $ionicLoading.show({
-                template: '<p>Updating...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             $http.put(API_ENDPOINT.url + '/api/users/update/' + AuthService.userInforIdSave(), $scope.currentUser).success(function (response) {
                 if (response.success) {
@@ -1378,7 +1378,7 @@ angular.module('app.controllers', ['ngMap'])
         $scope.uploadImage = function () {
             var targetPath = $scope.pathForImage($scope.image);
             $ionicLoading.show({
-                template: '<p>Uploading...</p><ion-spinner></ion-spinner>',
+                template: '<p>En cours de chargement...</p><ion-spinner></ion-spinner>',
             });
             FileUpload.imageUpload(targetPath)
                 .then(function (imageUrl) {

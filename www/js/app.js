@@ -61,7 +61,6 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
 
 /**Create RootScope For Order */
 .run(function($rootScope, AuthService, API_ENDPOINT, $cordovaLocalNotification, $state, LocalNotification){   
-  if (AuthService.isAuthenticated()){
     $rootScope.listFoodForOrder = [];
     $rootScope.urlImage = '';
     $rootScope.idForNotification = 1;
@@ -78,8 +77,7 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
             $state.go('tabsController.mYORDER', {"orderNewNoti": JSON.stringify(orderConfirmed)});
           });
       }               
-    });
-  }     
+    });   
 })
 
 /*
