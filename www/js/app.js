@@ -39,22 +39,19 @@ angular.module('app', ['ionic', 'app.controllers', 'app.routes', 'app.directives
                   ionic.Platform.exitApp();
             });
         }else{
-            cordova.plugins.diagnostic.isLocationAvailable(function(available){
-              if(!available){
-                var confirmPopup = $ionicPopup.alert({
-                    title: '',
-                    template: "L'application a besoin d'activer la localisation",
-                    okText: "J'accepte"
-                });
-                confirmPopup.then(function(res) {
+            backgroundGeolocation.isLocationEnabled(function(isRequest){
+               if(!isRequest){
+                  var confirmPopup = $ionicPopup.alert({
+                      title: '',
+                      template: "L'application a besoin d'activer la localisation",
+                      okText: "J'accepte"
+                  });
+                  confirmPopup.then(function(res) {
                       cordova.plugins.diagnostic.switchToLocationSettings();
                   });
-              }
-            }, function(error){
-          });
-
-          }
-                
+               }
+             });
+          }     
         }
     });
 })
