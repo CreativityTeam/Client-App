@@ -4,5 +4,6 @@
     "sass",
     "watch"
   ],
-  "app_id": "6e502990"
+  "app_id": "6e502990",
+  "type": "ionic1"
 }
